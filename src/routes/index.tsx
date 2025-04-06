@@ -1,22 +1,21 @@
-import Home from "@/pages/auth/user/Home";
-import Event from "@/pages/auth/user/Event";
-import Invitation from "@/pages/auth/user/Invitation";
-import Account from "@/pages/auth/user/Account";
-import Register from "@/pages/auth/Register";
-import Login from "@/pages/auth/Login";
-import { DefaultLayout } from "@/components/Layout";
+// src/routes/index.tsx
 
+import { Register, Login, Home, Event, Invitation, Account } from "@/pages";
+import { DefaultLayout } from "@/components/Layout";
+import ProtectedRoute from "./ProtectedRoute"; // This is better than using relative '../routes/...'
+
+// Public routes: accessible without authentication
 const publicRoutes = [
   { path: "/register", component: Register, layout: null },
   { path: "/login", component: Login, layout: null },
 ];
 
-// This is a list of routes that require authentication
+// Private routes: wrapped with ProtectedRoute
 const privateRoutes = [
-  { path: "/home", component: Home, layout: DefaultLayout},
-  { path: "/event", component: Event,layout: DefaultLayout },
-  { path: "/invitation", component: Invitation,layout: DefaultLayout },
-  { path: "/account", component: Account,layout: DefaultLayout },
+  { path: "/home", component: Home, layout: DefaultLayout },
+  { path: "/event", component: Event, layout: DefaultLayout },
+  { path: "/invitation", component: Invitation, layout: DefaultLayout },
+  { path: "/account", component: Account, layout: DefaultLayout },
 ];
 
-export { publicRoutes, privateRoutes };
+export { publicRoutes, privateRoutes, ProtectedRoute };
