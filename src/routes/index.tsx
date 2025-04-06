@@ -3,17 +3,20 @@ import Event from "@/pages/auth/user/Event";
 import Invitation from "@/pages/auth/user/Invitation";
 import Account from "@/pages/auth/user/Account";
 import Register from "@/pages/auth/Register";
+import Login from "@/pages/auth/Login";
 import { DefaultLayout } from "@/components/Layout";
 
-const publicRoutes = [];
+const publicRoutes = [
+  { path: "/register", component: Register, layout: null },
+  { path: "/login", component: Login, layout: null },
+];
 
 // This is a list of routes that require authentication
 const privateRoutes = [
   { path: "/home", component: Home, layout: DefaultLayout},
-  { path: "/event", component: Event },
-  { path: "/invitation", component: Invitation },
-  { path: "/account", component: Account },
-  { path: "/register", component: Register, layout: null },
+  { path: "/event", component: Event,layout: DefaultLayout },
+  { path: "/invitation", component: Invitation,layout: DefaultLayout },
+  { path: "/account", component: Account,layout: DefaultLayout },
 ];
 
 export { publicRoutes, privateRoutes };

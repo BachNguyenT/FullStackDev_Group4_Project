@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 import Dashboard from "@/assets/Icons/chart-square.svg";
 
 function Sidebar() {
@@ -50,7 +51,8 @@ function Sidebar() {
       <nav className="flex-1 mt-4">
         <ul>
           <li className="group">
-            <button
+            <Button
+              to="/home"
               className="
               items-center w-full px-4 py-2 flex items-center h-[50px] rounded-md text-purple-700 hover:bg-purple-100 transition-colors duration-200"
             >
@@ -58,12 +60,12 @@ function Sidebar() {
               <span
                 className={`ml-3 text-gray-700 ${!sidebarOpen && "hidden"}`}
               >
-                Events
+                Home
               </span>
-            </button>
+            </Button>
           </li>
           <li className="group">
-            <button className="flex items-center w-full px-4 py-2 hover:bg-gray-100">
+            <Button to='/event' className="flex items-center w-full px-4 py-2 hover:bg-gray-100">
               <svg
                 className="w-5 h-5 text-gray-600"
                 fill="none"
@@ -82,10 +84,10 @@ function Sidebar() {
               >
                 Events
               </span>
-            </button>
+            </Button>
           </li>
           <li className="group">
-            <button className="flex items-center w-full px-4 py-2 hover:bg-gray-100">
+            <Button to='/invitation' className="flex items-center w-full px-4 py-2 hover:bg-gray-100">
               <svg
                 className="w-5 h-5 text-gray-600"
                 fill="none"
@@ -109,10 +111,10 @@ function Sidebar() {
               >
                 Invitations
               </span>
-            </button>
+            </Button>
           </li>
           <li className="group">
-            <button className="flex items-center w-full px-4 py-2 hover:bg-gray-100">
+            <Button to='/account' className="flex items-center w-full px-4 py-2 hover:bg-gray-100">
               <svg
                 className="w-5 h-5 text-gray-600"
                 fill="none"
@@ -131,7 +133,7 @@ function Sidebar() {
               >
                 Account
               </span>
-            </button>
+            </Button>
           </li>
         </ul>
       </nav>
@@ -139,9 +141,9 @@ function Sidebar() {
       {/* Sidebar Footer */}
       <div className="p-4">
         {sidebarOpen ? (
-          <button className="flex items-center justify-center w-full py-2 text-white bg-purple-500 hover:bg-purple-600 rounded-md">
+          <Button className="flex items-center justify-center w-full py-2 text-white bg-purple-500 hover:bg-purple-600 rounded-md">
             Log out
-          </button>
+          </Button>
         ) : null}
       </div>
     </div>

@@ -1,7 +1,8 @@
 // src/Login.tsx
 import React, { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
 import LoginImage from "@/assets/Pictures/LoginImage.png"
+
 //  interface LoginProps {}
 
 interface APIResponse {
@@ -92,9 +93,9 @@ function Login() {
             Login
           </button>
 
-          <button className="border border-purple-500 text-purple-500 py-2 rounded-full hover:bg-purple-50 transition">
+          <Button to='/register' className="border border-purple-500 text-purple-500 py-2 rounded-full hover:bg-purple-50 transition">
             Register
-          </button>
+          </Button>
         </div>
       </div>
     </div>
