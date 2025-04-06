@@ -24,7 +24,10 @@ function Register() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Full Name */}
               <div className="flex flex-col">
-                <label htmlFor="fullName" className="text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="fullName"
+                  className="text-sm font-medium text-gray-700 mb-1"
+                >
                   Full name
                 </label>
                 <input
@@ -37,7 +40,10 @@ function Register() {
 
               {/* Email */}
               <div className="flex flex-col">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700 mb-1"
+                >
                   Email
                 </label>
                 <input
@@ -50,7 +56,10 @@ function Register() {
 
               {/* Phone Number */}
               <div className="flex flex-col">
-                <label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="phone"
+                  className="text-sm font-medium text-gray-700 mb-1"
+                >
                   Phone Number
                 </label>
                 <input
@@ -63,7 +72,10 @@ function Register() {
 
               {/* Birthday */}
               <div className="flex flex-col">
-                <label htmlFor="birthday" className="text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="birthday"
+                  className="text-sm font-medium text-gray-700 mb-1"
+                >
                   Birthday
                 </label>
                 <input
@@ -76,7 +88,10 @@ function Register() {
 
             {/* Username */}
             <div className="flex flex-col">
-              <label htmlFor="username" className="text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="username"
+                className="text-sm font-medium text-gray-700 mb-1"
+              >
                 Username
               </label>
               <input
@@ -89,7 +104,10 @@ function Register() {
 
             {/* Password */}
             <div className="flex flex-col">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <input
@@ -102,7 +120,10 @@ function Register() {
 
             {/* Confirm Password */}
             <div className="flex flex-col">
-              <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="confirmPassword"
+                className="text-sm font-medium text-gray-700 mb-1"
+              >
                 Confirm Password
               </label>
               <input
@@ -112,7 +133,20 @@ function Register() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
               />
             </div>
-
+            {/* Checkbox Agreement */}
+            <div className="flex items-center justify-center gap-2">
+              <input
+                id="terms"
+                type="checkbox"
+                className="accent-purple-500 w-4 h-4"
+              />
+              <label htmlFor="terms" className="text-sm text-gray-700">
+                I agree to all the{" "}
+                <a href="#" className="text-purple-600 underline">
+                  Private Policies
+                </a>
+              </label>
+            </div>
             {/* Submit Button */}
             <button
               type="submit"
