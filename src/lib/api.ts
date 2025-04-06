@@ -14,7 +14,8 @@ const loginUser = async (username: string, password: string) => {
       }
     }
 
-    return response.json();
+    const userData = await response.json();
+    return userData; // Ensure this includes user details
   } catch (error) {
     throw new Error(error.message || "An unexpected error occurred");
   }
