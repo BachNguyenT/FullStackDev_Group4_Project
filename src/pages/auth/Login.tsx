@@ -1,7 +1,7 @@
 // src/Login.tsx
 import React, { useState } from "react";
 import { Button } from "@/components/ui/Button";
-
+import LoginImage from "@/assets/Pictures/LoginImage.png"
 //  interface LoginProps {}
 
 interface APIResponse {
@@ -48,48 +48,54 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-semibold mb-4 text-center">
-          Login to Your Event Management App
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Username:
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Password:
-            </label>
+    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-400 flex items-center justify-center">
+      <div className="bg-white rounded-xl shadow-lg p-10 flex w-[800px]">
+        {/* Illustration Section */}
+        <div className="w-1/2 flex items-center justify-center">
+          <img
+            src={LoginImage} // Replace with your local or online image path
+            alt="Event Planning Illustration"
+            className="w-64 h-64 object-contain"
+          />
+        </div>
+
+        {/* Form Section */}
+        <div className="w-1/2 flex flex-col justify-center">
+          <h1 className="text-3xl font-light text-gray-700">
+            Plan<span className="font-semibold text-purple-600">Evnt</span>
+          </h1>
+
+          <p className="text-purple-600 mt-4 mb-6 text-lg font-medium">Login</p>
+
+          <input
+            type="text"
+            placeholder="Enter Username"
+            className="mb-4 p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          />
+
+          <div className="relative mb-4">
             <input
               type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Enter Password"
+              className="p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400"
             />
+            <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer">
+              👁️
+            </span>
           </div>
-          <Button variant="default" type="submit" className="w-full">
-            Log In
-          </Button>
-        </form>
+
+          <div className="text-right text-sm text-purple-500 mb-4 cursor-pointer hover:underline">
+            Forgot password?
+          </div>
+
+          <button className="bg-purple-500 text-white py-2 rounded-full mb-4 hover:bg-purple-600 transition">
+            Login
+          </button>
+
+          <button className="border border-purple-500 text-purple-500 py-2 rounded-full hover:bg-purple-50 transition">
+            Register
+          </button>
+        </div>
       </div>
     </div>
   );
