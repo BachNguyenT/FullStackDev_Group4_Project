@@ -1,0 +1,14 @@
+import Header from '@/components/Layout/components/Header'
+import Sidebar from '@/components/Layout/components/Sidebar'
+function DefaultLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <div>
+        <Header />
+        <div className="container">
+            <Sidebar />
+            <div className="content">{children}</div>
+        </div>
+        </div>
+    )
+}
+export default DefaultLayout
