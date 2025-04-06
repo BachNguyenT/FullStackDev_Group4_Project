@@ -1,14 +1,14 @@
-import Header from '@/components/Layout/components/Header'
-import Sidebar from '@/components/Layout/components/Sidebar'
+import Header from "@/components/Layout/components/Header";
+import Sidebar from "@/components/Layout/components/Sidebar";
 function DefaultLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div>
+  return (
+    <div className="w-screen h-screen flex">
+      <Sidebar />
+      <div className="container">
         <Header />
-        <div className="container">
-            <Sidebar />
-            <div className="content">{children}</div>
-        </div>
-        </div>
-    )
+        <div className="content">{children}</div>
+      </div>
+    </div>
+  );
 }
-export default DefaultLayout
+export default DefaultLayout;
