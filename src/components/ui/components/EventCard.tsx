@@ -1,7 +1,13 @@
+
+
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faIdCard, faCalendarAlt, faEye } from '@fortawesome/free-regular-svg-icons';
 
-function EventCard() {
+
+
+const EventCard = () => {
+  
   return (
     <div className="w-[320px] rounded-xl overflow-hidden shadow-lg bg-white transform transition duration-500 hover:scale-105">
       <img

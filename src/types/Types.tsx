@@ -4,4 +4,13 @@ type User = {
   password: string;
   // Add other user properties as needed
 };
-export type { User };
+
+type EventType = {
+  id: string;
+  name: string;
+  date: string;
+  visibility: 'Public' | 'Private';
+  attendees: number;
+  maxAttendees: number;
+}
+export type { User, EventType };
