@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "@/components/ui/components/Button";
+import {Button} from "@/components/ui/components/Button";
 import Dashboard from "@/assets/Icons/chart-square.svg";
 
 function Sidebar() {
