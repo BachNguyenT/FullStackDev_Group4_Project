@@ -10,7 +10,7 @@ import { publicRoutes, privateRoutes, ProtectedRoute } from "@/routes";
 
 function App() {
   return (
-    //<AuthProvider>
+    <AuthProvider>
     <Router>
       <div className="App">
         <Routes>
@@ -50,11 +50,11 @@ function App() {
                 key={index}
                 path={route.path}
                 element={
-                  //<ProtectedRoute>
+                  <ProtectedRoute>
                   <Layout>
                     <Page />
                   </Layout>
-                  //</ProtectedRoute>
+                  </ProtectedRoute>
                 }
               />
             );
@@ -62,7 +62,7 @@ function App() {
         </Routes>
       </div>
     </Router>
-    //</AuthProvider>
+    </AuthProvider>
   );
 }
 
