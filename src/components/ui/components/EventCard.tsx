@@ -1,15 +1,16 @@
-
-
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faIdCard, faCalendarAlt, faEye } from '@fortawesome/free-regular-svg-icons';
-
-
+//import components and libraries
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEdit,
+  faIdCard,
+  faCalendarAlt,
+  faEye,
+} from "@fortawesome/free-regular-svg-icons";
+import { Button } from "@/components/ui/components/Button";
 
 const EventCard = () => {
-  
   return (
-    <div className="w-[320px] rounded-xl overflow-hidden shadow-lg bg-white transform transition duration-500 hover:scale-105">
+    <div className="w-[280px] rounded-xl overflow-hidden shadow-lg bg-white transform transition duration-500 hover:scale-105">
       <img
         className="w-full h-48 object-cover"
         src="https://kbhgames.com/wp-content/uploads/2017/07/Bleach-Vs-Naruto-3.jpg"
@@ -19,7 +20,7 @@ const EventCard = () => {
         <h2 className="font-semibold text-lg text-gray-800 text-center mb-4">
           A & B’s Wedding
         </h2>
-        
+
         <div className="text-sm text-gray-600 space-y-2">
           {/* First Row: Event ID and Created on */}
           <div className="flex justify-between space-x-4">
@@ -60,13 +61,13 @@ const EventCard = () => {
       </div>
 
       <div className="border-t px-6 py-3">
-        <button className="w-full text-center text-gray-500 hover:text-[#A861FA] font-medium flex items-center justify-center gap-1 transform transition duration-300 hover:scale-110">
+        <Button className="w-full" variant="outline">
           Edit Event
           <FontAwesomeIcon icon={faEdit} className="ml-2" />
-        </button>
+        </Button>
       </div>
     </div>
   );
-}
+};
 
 export default EventCard;

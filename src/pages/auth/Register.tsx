@@ -1,5 +1,5 @@
 import RegisterImage from "@/assets/Pictures/RegisterImage.jpg";
-
+import { Button } from "@/components/ui/components/Button";
 function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 to-purple-400 p-4">
@@ -141,10 +141,10 @@ function Register() {
                 className="accent-purple-500 w-4 h-4"
               />
               <label htmlFor="terms" className="text-sm text-gray-700">
-                I agree to all the{" "}
-                <a href="#" className="text-purple-600 underline">
+                I agree to all the
+                <Button variant = "link" className="text-purple-600 underline">
                   Private Policies
-                </a>
+                </Button>
               </label>
             </div>
             {/* Submit Button */}
@@ -156,9 +156,9 @@ function Register() {
             </button>
 
             <div className="text-center mt-4">
-              <a href="/login" className="text-purple-600 hover:underline">
-                Back to login page
-              </a>
+              <Button to ="/login" size="lg" variant="link" className="text-purple-500 hover:text-purple-600">
+                Back to Login
+              </Button>
             </div>
           </form>
         </div>

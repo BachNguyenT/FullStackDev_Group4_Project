@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"; // <- Import Link
 import { cn } from "@/lib/utils";
 
 const variantStyles = {
-  default: "bg-blue-200 text-primary-foreground shadow hover:bg-primary/90",
+  default: "bg-[#fff] text-primary-foreground shadow hover:bg-[#F4ECFE]/90",
   destructive:
     "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
   outline:
@@ -22,7 +22,7 @@ const sizeStyles = {
 };
 
 const baseStyles =
-  "bg-blue-300 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:scale-[1.15] transition-transform duration-[450ms] ease-out cursor-pointer";
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -30,12 +30,28 @@ export interface ButtonProps
   size?: keyof typeof sizeStyles;
   to?: string; // <- For navigation
   replace?: boolean; // <- Optional: same as Link replace prop
+  animated?: boolean; // <- Optional: for animation
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size = "default", to, replace, ...props }, ref) => {
+  (
+    {
+      className,
+      variant = "default",
+      size = "default",
+      to,
+      replace,
+      animated = true,
+      ...props
+    },
+    ref
+  ) => {
+    const animatedStyles = animated
+      ? "hover:scale-[1.15] transition-transform duration-[450ms] ease-out"
+      : "";
     const buttonClassName = cn(
       baseStyles,
+      animatedStyles, // <-- apply conditionally
       variantStyles[variant],
       sizeStyles[size],
       className
