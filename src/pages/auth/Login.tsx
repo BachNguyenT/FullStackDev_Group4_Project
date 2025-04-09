@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks"; 
-import {Button} from "@/components/ui";
+import {Button} from "@/components/ui/components/Button";
 import LoginImage from "@/assets/Pictures/LoginImage.png";
 
 function Login() {
@@ -59,9 +59,9 @@ function Login() {
             className="p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400"
             aria-label="Password"
           />
-          <div className="text-right text-sm text-purple-500 mb-4 cursor-pointer hover:underline">
+          <Button variant="link" className = "w-full justify-end text-sm text-purple-500 " animated = {false}>
             Forgot password?
-          </div>
+          </Button>
           <button
             onClick={handleSubmit}
             className="bg-purple-500 text-white py-2 rounded-full mb-4 hover:bg-purple-600 transition"
@@ -72,7 +72,7 @@ function Login() {
           {error && <p>{error}</p>}
           <Button
             to="/register"
-            className="border border-purple-500 text-purple-500 py-2 rounded-full hover:bg-purple-50 transition"
+            className="border border-purple-500 text-purple-500 py-2 rounded-full"
           >
             Register
           </Button>
