@@ -12,7 +12,7 @@ import {
 
 function Event() {
   const { sidebarOpen } = useLayout();
-  const [events, setEvents] = useState(Array(12).fill(null));
+  const [events, setEvents] = useState(Array(20).fill(null));
 
   return (
     <div className="p-4 sm:p-6 md:p-4">

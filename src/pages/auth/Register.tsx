@@ -142,7 +142,7 @@ function Register() {
               />
               <label htmlFor="terms" className="text-sm text-gray-700">
                 I agree to all the
-                <Button variant = "link" className="text-purple-600 underline">
+                <Button to="/terms" variant = "link" className="text-purple-600 underline">
                   Private Policies
                 </Button>
               </label>

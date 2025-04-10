@@ -3,14 +3,14 @@ import { Fragment } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 //import the components
-import { Login } from "@/pages";
+import { Login, NotFoundPage } from "@/pages";
 import { DefaultLayout } from "@/components/Layout";
 import { AuthProvider } from "@/context";
 import { publicRoutes, privateRoutes, ProtectedRoute } from "@/routes";
 
 function App() {
   return (
-    <AuthProvider>
+    //<AuthProvider>
     <Router>
       <div className="App">
         <Routes>
@@ -50,19 +50,22 @@ function App() {
                 key={index}
                 path={route.path}
                 element={
-                  <ProtectedRoute>
+                  //<ProtectedRoute>
                   <Layout>
                     <Page />
                   </Layout>
-                  </ProtectedRoute>
+                  //</ProtectedRoute>
                 }
               />
             );
           })}
+
+          {/* Catch-All Route for 404 */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </Router>
-    </AuthProvider>
+    //</AuthProvider>
   );
 }
 
