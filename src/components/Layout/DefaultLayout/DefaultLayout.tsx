@@ -3,8 +3,10 @@ import { useState } from "react";
 import { LayoutContext } from "@/context";
 
 // import components and libraries
+
 import Header from "@/components/Layout/components/Header";
 import Sidebar from "@/components/Layout/components/Sidebar";
+import Footer from "@/components/Layout/components/Footer";
 
 function DefaultLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -33,6 +35,10 @@ function DefaultLayout({ children }: { children: React.ReactNode }) {
           {/* Scrollable Content */}
           <div className="mt-16 overflow-y-auto h-[calc(100vh-4rem)] p-4 bg-gray-50">
             {children}
+            {/* Footer */}
+            <div className="mt-auto ">
+              <Footer />
+            </div>
           </div>
         </div>
       </div>
