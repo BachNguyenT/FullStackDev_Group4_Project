@@ -10,7 +10,7 @@ import {
 const EventCard = () => {
   return (
     <Link
-      to="/"
+      to="/event/${event.id}/dashboard"
       className="w-[300px] rounded-xl overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
     >
       <img

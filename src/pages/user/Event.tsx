@@ -46,7 +46,7 @@ function Event() {
             />
           </div>
 
-          <Button animated={false} variant="secondary">
+          <Button animated={false} variant="outline">
             <span>Filter</span>
             <FontAwesomeIcon icon={faChevronDown} />
           </Button>
@@ -55,7 +55,7 @@ function Event() {
         {/* Right: Sort */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <span className="text-sm">Sort:</span>
-          <Button animated={false} variant="secondary">
+          <Button animated={false} variant="outline">
             Most Recent
             <FontAwesomeIcon icon={faChevronDown} />
           </Button>
