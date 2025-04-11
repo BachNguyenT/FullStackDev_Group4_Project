@@ -1,4 +1,4 @@
-import { AttendeeInfo } from "./AttendeeInfo";
+import AttendeeInfo  from "./AttendeeInfo";
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -34,6 +34,7 @@ function AttendeeList() {
   return (
     <div className="space-y-4">
       {/* Header row with filter/search/add */}
+      <h1 className="text-2xl font-semibold mb-4 mt-8">Attendees</h1>
       <div className="flex flex-wrap gap-2 justify-between items-center">
         {/* Left: Show and Search */}
         <div className="flex items-center gap-2 flex-wrap">
@@ -60,13 +61,13 @@ function AttendeeList() {
             />
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
-              className="absolute left-3 top-2.5 text-gray-500 text-xs"
+              className="absolute left-3 top-2.5 text-gray-500 text-base"
             />
           </div>
         </div>
 
         {/* Right: Add Attendee */}
-        <Button className="bg-purple-500 hover:bg-purple-600 text-white text-sm rounded-md h-9">
+        <Button animated={false} variant="secondary">
           <FontAwesomeIcon icon={faPlus} className="ml-1 text-xs" />
           Add Attendee
         </Button>

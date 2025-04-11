@@ -5,7 +5,7 @@ import { faRemove } from "@fortawesome/free-solid-svg-icons";
 
 import { FaUser } from "react-icons/fa6";
 
-export function AttendeeInfo({
+function AttendeeInfo({
   id,
   name,
   imageUrl,
@@ -55,7 +55,7 @@ export function AttendeeInfo({
         </span>
       </td>
       <td className="px-4 py-3">
-        <Button variant="outline">
+        <Button variant="destructive">
           <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs" />
           Remove
         </Button>
@@ -63,3 +63,5 @@ export function AttendeeInfo({
     </tr>
   );
 }
+
+export default AttendeeInfo;
