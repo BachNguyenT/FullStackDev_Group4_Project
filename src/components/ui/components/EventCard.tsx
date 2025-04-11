@@ -1,16 +1,18 @@
+import { Link } from "react-router-dom";
 //import components and libraries
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEdit,
   faIdCard,
   faCalendarAlt,
   faEye,
 } from "@fortawesome/free-regular-svg-icons";
-import { Button } from "@/components/ui/components/Button";
 
 const EventCard = () => {
   return (
-    <div className="w-[280px] rounded-xl overflow-hidden shadow-lg bg-white transform transition duration-500 hover:scale-105">
+    <Link
+      to="/"
+      className="w-[300px] rounded-xl overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+    >
       <img
         className="w-full h-48 object-cover"
         src="https://kbhgames.com/wp-content/uploads/2017/07/Bleach-Vs-Naruto-3.jpg"
@@ -59,14 +61,7 @@ const EventCard = () => {
           </div>
         </div>
       </div>
-
-      <div className="border-t px-6 py-3">
-        <Button className="w-full" variant="outline">
-          Edit Event
-          <FontAwesomeIcon icon={faEdit} className="ml-2" />
-        </Button>
-      </div>
-    </div>
+    </Link>
   );
 };
 

@@ -64,10 +64,10 @@ function Event() {
 
       {/* Event Cards Grid */}
       <div
-        className={`grid gap-4 transition-all duration-300 ${
+        className={`ml-10 mr-2 grid grid-cols-1 gap-x-[0px] gap-y-[16px] transition-all duration-300 ${
           sidebarOpen
-            ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
-            : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            ? "sm:grid-cols-2 xl:grid-cols-3"
+            : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         }`}
       >
         {events.map((_, index) => (
