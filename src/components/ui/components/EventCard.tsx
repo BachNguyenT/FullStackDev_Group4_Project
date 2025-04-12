@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { EventInfoProps } from "@/types/Types";
 //import components and libraries
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,10 +8,22 @@ import {
   faEye,
 } from "@fortawesome/free-regular-svg-icons";
 
-const EventCard = () => {
+const EventCard = ({
+  eventId,
+  eventName,
+  imageURL,
+  createdOn,
+  eventType,
+  visibility,
+  dateTime,
+  duration,
+  status,
+  description,
+  venue,
+}: EventInfoProps) => {
   return (
     <Link
-      to="/event/${event.id}/dashboard"
+      to="/event/${eventId}/dashboard"
       className="w-[300px] rounded-xl overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
     >
       <img
@@ -20,7 +33,7 @@ const EventCard = () => {
       />
       <div className="px-6 py-4">
         <h2 className="font-semibold text-lg text-gray-800 text-center mb-4">
-          A & B’s Wedding
+          {eventName || "Event Name"}
         </h2>
 
         <div className="text-sm text-gray-600 space-y-2">
@@ -31,14 +44,14 @@ const EventCard = () => {
                 <FontAwesomeIcon icon={faIdCard} className="mr-2" />
                 Event ID:
               </span>
-              <span>Evnt_109183</span>
+              <span>{eventId  || "123"}   </span>
             </div>
             <div className="flex flex-col text-right">
               <span className="font-medium flex items-center justify-end">
                 <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
                 Created on:
               </span>
-              <span>01/01/2025</span>
+              <span> {createdOn ||" 01/01/2025"}</span>
             </div>
           </div>
 
@@ -49,7 +62,7 @@ const EventCard = () => {
                 <FontAwesomeIcon icon={faEye} className="mr-2" />
                 Visibility:
               </span>
-              <span>Private</span>
+              <span>{ visibility ||"Private"}</span>
             </div>
             <div className="flex flex-col text-right">
               <span className="font-medium flex items-center justify-end">

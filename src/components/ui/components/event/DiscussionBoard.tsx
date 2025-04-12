@@ -6,11 +6,11 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 function DiscussionBoard() {
   return (
-    <div>
+    <div className="mb-4">
       {/* Header board */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold mb-6 mt-8">Discussion board</h1>
-        <div>
+      <div className="flex items-center justify-between mt-10 ">
+        <h1 className="text-2xl font-semibold mb-6 ">Discussion board</h1>
+        <div className ="mb-6">
           <span className="text-sm mr-2">Sort: </span>
           <Button animated={false} variant="outline">
             <span>Most Recent</span>
@@ -20,7 +20,7 @@ function DiscussionBoard() {
       </div>
 
       {/*Comment Section*/}
-      <div className="grid grid-cols-1 gap-4 bg-white rounded-lg shadow-md p-4">
+      <div className="grid grid-cols-1 gap-4 bg-white rounded-xl border shadow-md p-4">
         <Comment />
         <Comment />
         <Comment />

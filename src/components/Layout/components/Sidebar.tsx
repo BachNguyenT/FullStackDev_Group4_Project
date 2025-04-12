@@ -47,7 +47,7 @@ function Sidebar() {
             <Button
               to="/home"
               className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2"
-              animated={sidebarOpen}
+              animated={false}
             >
               <svg
                 className="w-5 h-5"
@@ -68,8 +68,8 @@ function Sidebar() {
           <li>
             <Button
               to="/event"
-              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2"
-              animated={sidebarOpen}
+              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2 "
+              animated={false}
             >
               <svg
                 className="w-5 h-5"
@@ -90,8 +90,8 @@ function Sidebar() {
           <li>
             <Button
               to="/invitation"
-              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2"
-              animated={sidebarOpen}
+              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2 "
+              animated={false}
             >
               <svg
                 className="w-5 h-5"
@@ -109,8 +109,8 @@ function Sidebar() {
           <li>
             <Button
               to="/account "
-              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2"
-              animated={sidebarOpen}
+              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2 "
+              animated={false}
             >
               <svg
                 className="w-5 h-5"

@@ -22,7 +22,7 @@ function Event() {
         {/* Add new event */}
         {sidebarOpen && (
           <span>
-            <Button className="mb-4" animated={false}>
+            <Button to="/event/addNewEvent" className="mb-4" animated={false}>
               <FontAwesomeIcon icon={faPlus} className="text-gray-500 ml-2" />
               Add New Event
             </Button>
