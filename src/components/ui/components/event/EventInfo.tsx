@@ -33,23 +33,26 @@ function EventInfo({
   return (
     <>
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
+        <h1 className="text-3xl font-semibold mt-4 mb-4">
           {eventName || "AB Wedding"}
         </h1>
-        <div className ="flex-end">
-        <Button to="/event/${eventId}/edit" animated={false} variant="secondary">
-          <FaPenToSquare className="mr-2" />
-          Edit
-        </Button>
-        <Button
-          animated={false}
-          variant="destructive"
-          className="bg-red-500 text-white ml-4"
-        >
-          <FaTrashCan />
-        </Button>
+        <div className="flex-end">
+          <Button
+            to="/event/${eventId}/edit"
+            animated={false}
+            variant="secondary"
+          >
+            <FaPenToSquare className="mr-2" />
+            Edit
+          </Button>
+          <Button
+            animated={false}
+            variant="destructive"
+            className="bg-red-500 text-white ml-4"
+          >
+            <FaTrashCan />
+          </Button>
         </div>
-        
       </div>
       <div className="flex">
         <img
@@ -57,7 +60,7 @@ function EventInfo({
             "https://i2-prod.mirror.co.uk/incoming/article30239516.ece/ALTERNATES/s1200d/0_Barca.jpg"
           }
           alt="Event"
-          className="w-140 object-cover rounded-t-lg"
+          className="w-140 object-cover rounded-bl-lg rounded-tl-lg shadow-md"
         />
 
         <Card className="flex-1">
@@ -69,7 +72,7 @@ function EventInfo({
           </div>
 
           <CardContent className="grid gap-4 p-6 text-sm">
-            <div className="border-t border-muted-foreground" />
+            <div className="border-t border-gray-300 " />
             {/* Top info grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* 3 columns of details */}
@@ -122,7 +125,7 @@ function EventInfo({
               </div>
             </div>
             {/* Add the outline */}
-            <div className="border-t border-muted-foreground " />
+            <div className="border-t border-gray-300" />
 
             {/* Image */}
             {/* Description + Venue */}

@@ -84,14 +84,14 @@ function InvitationCard() {
 
         {/* Buttons */}
         <div className="flex justify-between items-center  pt-4">
-          <Button to="/invitation/${invitation.id}/dashboard" variant="outline" animated={false}>
+          <Button to="/invitation/${invitation.id}/dashboard" variant="outline" animated={false} className="hover:bg-purple-500 hover:text-white">
             <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
             More Details
           </Button>
 
           <div className="space-x-2">
-            <Button variant="secondary">✓ Accept</Button>
-            <Button variant="destructive">✕ Decline</Button>
+            <Button variant="secondary" className="hover:bg-green-500 hover:text-white">✓ Accept</Button>
+            <Button variant="destructive" className="hover:bg-red-500 hover:text-white">✕ Decline</Button>
           </div>
         </div>
       </div>
