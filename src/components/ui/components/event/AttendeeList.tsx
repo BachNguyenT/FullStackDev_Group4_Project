@@ -30,7 +30,7 @@ const attendeeData = [
   },
 ];
 
-function AttendeeList() {
+function AttendeeList({ onDelete }: { onDelete: (id: string) => void }) {
   return (
     <div className="space-y-4">
       {/* Header row with filter/search/add */}
@@ -88,7 +88,7 @@ function AttendeeList() {
           </thead>
           <tbody>
             {attendeeData.map((attendee) => (
-              <AttendeeInfo key={attendee.id} {...attendee} />
+              <AttendeeInfo key={attendee.id} {...attendee} onDelete={onDelete}  />
             ))}
           </tbody>
         </table>

@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import { InvitationCard } from "@/components/ui";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/components/Button";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,
   faChevronDown,
