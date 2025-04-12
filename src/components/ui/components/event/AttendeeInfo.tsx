@@ -27,7 +27,7 @@ function AttendeeInfo({
   };
 
   return (
-    <tr className="border-t">
+    <tr className="border-t  border-gray-300">
       <td className="px-4 py-3">{id}</td>
       <td className="px-4 py-3 flex items-center gap-2">
         {imageUrl ? (
@@ -55,7 +55,7 @@ function AttendeeInfo({
         </span>
       </td>
       <td className="px-4 py-3">
-        <Button variant="destructive">
+        <Button variant="destructive" className="hover:bg-red-500 hover:text-white">
           <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs" />
           Remove
         </Button>

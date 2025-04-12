@@ -44,7 +44,7 @@ function AttendeeList() {
             </label>
             <select
               id="show"
-              className="text-sm py-1 border rounded-md"
+              className="text-sm py-1 border border-gray-300 rounded-md"
               defaultValue={10}
             >
               <option value={10}>10</option>
@@ -57,7 +57,7 @@ function AttendeeList() {
             <input
               type="text"
               placeholder="Search attendees..."
-              className="text-sm px-3 py-1.5 border rounded-md w-52 pl-9"
+              className="text-sm px-3 py-1.5 border border-gray-300 rounded-md w-52 pl-9"
             />
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
@@ -74,7 +74,7 @@ function AttendeeList() {
       </div>
 
       {/* Table */}
-      <div className="overflow-auto border rounded-md">
+      <div className="overflow-auto border border-gray-300 rounded-md">
         <table className="min-w-full text-sm">
           <thead className="bg-muted text-muted-foreground text-left">
             <tr>

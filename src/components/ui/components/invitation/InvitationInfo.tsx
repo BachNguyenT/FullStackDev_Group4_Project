@@ -39,7 +39,7 @@ function InvitationInfo({
             "https://i2-prod.mirror.co.uk/incoming/article30239516.ece/ALTERNATES/s1200d/0_Barca.jpg"
           }
           alt="Invitation"
-          className="w-140 object-cover rounded-t-lg"
+          className="w-140 object-cover rounded-tl-lg rounded-bl-lg shadow-md"
         />
 
         <Card className="flex-1">
@@ -51,7 +51,7 @@ function InvitationInfo({
           </div>
 
           <CardContent className="grid gap-4 p-6 text-sm">
-            <div className="border-t border-muted-foreground" />
+            <div className="border-t border-gray-300" />
             {/* Top info grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* 3 columns of details */}
@@ -104,7 +104,7 @@ function InvitationInfo({
               </div>
             </div>
             {/* Add the outline */}
-            <div className="border-t border-muted-foreground " />
+            <div className="border-t border-gray-300 " />
 
             {/* Image */}
             {/* Description + Venue */}

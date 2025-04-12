@@ -2,7 +2,10 @@ import Comment from "./Comment";
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faCommentDots,
+} from "@fortawesome/free-solid-svg-icons";
 
 function DiscussionBoard() {
   return (
@@ -10,7 +13,7 @@ function DiscussionBoard() {
       {/* Header board */}
       <div className="flex items-center justify-between mt-10 ">
         <h1 className="text-2xl font-semibold mb-6 ">Discussion board</h1>
-        <div className ="mb-6">
+        <div className="mb-6">
           <span className="text-sm mr-2">Sort: </span>
           <Button animated={false} variant="outline">
             <span>Most Recent</span>
@@ -20,7 +23,7 @@ function DiscussionBoard() {
       </div>
 
       {/*Comment Section*/}
-      <div className="grid grid-cols-1 gap-4 bg-white rounded-xl border shadow-md p-4">
+      <div className="grid grid-cols-1 gap-4 bg-white rounded-xl border border-gray-300 shadow-md p-4">
         <Comment />
         <Comment />
         <Comment />
@@ -31,6 +34,10 @@ function DiscussionBoard() {
             type="text"
             placeholder="Write reply..."
             className="flex-1 outline-none text-sm text-gray-600 placeholder-gray-400 bg-transparent"
+          />
+          <FontAwesomeIcon
+            icon={faCommentDots}
+            className="text-gray-400 ml-2"
           />
         </div>
       </div>

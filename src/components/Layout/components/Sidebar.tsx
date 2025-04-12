@@ -1,6 +1,9 @@
 //import state management
 import { useLayout } from "@/context";
 
+import { faArrowAltCircleRight } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 //import components and libraries
 import { Button } from "@/components/ui/components/Button";
 
@@ -131,7 +134,12 @@ function Sidebar() {
       {/* Sidebar Footer */}
       <div className="p-4">
         {sidebarOpen && (
-          <Button to="/login" variant="destructive">
+          <Button
+            to="/login"
+            variant="destructive"
+            className="hover:bg-red-500 hover:text-white"
+          >
+            <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2" />
             Log out
           </Button>
         )}

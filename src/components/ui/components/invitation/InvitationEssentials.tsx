@@ -8,7 +8,7 @@ import {
 
 function InvitationEssentials() {
   return (
-    <div className="bg-white shadow-md  rounded-xl border  p-4 w-full text-gray-800 mt-10">
+    <div className="bg-white shadow-md  rounded-xl border border-gray-300 p-4 w-full text-gray-800 mt-10">
       <h1 className="text-2xl font-semibold mt-2 ">🎉 Event Essentials</h1>
 
       {/* Details Table */}
