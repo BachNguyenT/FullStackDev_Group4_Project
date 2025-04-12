@@ -34,7 +34,7 @@ function AttendeeList() {
   return (
     <div className="space-y-4">
       {/* Header row with filter/search/add */}
-      <h1 className="text-2xl font-semibold mb-4 mt-8">Attendees</h1>
+      <h1 className="text-2xl font-semibold mb-4 mt-8 ">Attendees</h1>
       <div className="flex flex-wrap gap-2 justify-between items-center">
         {/* Left: Show and Search */}
         <div className="flex items-center gap-2 flex-wrap">
@@ -67,7 +67,7 @@ function AttendeeList() {
         </div>
 
         {/* Right: Add Attendee */}
-        <Button animated={false} variant="secondary">
+        <Button animated={false} variant="default">
           <FontAwesomeIcon icon={faPlus} className="ml-1 text-xs" />
           Add Attendee
         </Button>

@@ -1,6 +1,5 @@
 //import the internal files
 import { EventInfoProps } from "@/types/Types";
-import { Button } from "@/components/ui/components/Button";
 import { Card, CardContent, CardTitle } from "@/components/ui/components/Card";
 
 // Import the icons from react-icons
@@ -13,11 +12,9 @@ import {
   FaGitAlt,
   FaRegMap,
   FaRegCircleCheck,
-  FaPenToSquare,
-  FaTrashCan,
 } from "react-icons/fa6";
 
-function EventInfo({
+function InvitationInfo({
   eventId,
   eventName,
   imageURL,
@@ -32,31 +29,16 @@ function EventInfo({
 }: EventInfoProps) {
   return (
     <>
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
-          {eventName || "AB Wedding"}
-        </h1>
-        <div className ="flex-end">
-        <Button to="/event/${eventId}/edit" animated={false} variant="secondary">
-          <FaPenToSquare className="mr-2" />
-          Edit
-        </Button>
-        <Button
-          animated={false}
-          variant="destructive"
-          className="bg-red-500 text-white ml-4"
-        >
-          <FaTrashCan />
-        </Button>
-        </div>
-        
-      </div>
+      <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
+        {eventName || "AB Wedding"}
+      </h1>
+
       <div className="flex">
         <img
           src={
             "https://i2-prod.mirror.co.uk/incoming/article30239516.ece/ALTERNATES/s1200d/0_Barca.jpg"
           }
-          alt="Event"
+          alt="Invitation"
           className="w-140 object-cover rounded-t-lg"
         />
 
@@ -64,7 +46,7 @@ function EventInfo({
           {/* Add the button edit */}
           <div className="flex justify-between px-6 pt-4">
             <CardTitle className="text-lg  font-semibold">
-              Event information
+              Invitation information
             </CardTitle>
           </div>
 
@@ -170,4 +152,4 @@ function InfoItem({
   );
 }
 
-export default EventInfo;
+export default InvitationInfo;

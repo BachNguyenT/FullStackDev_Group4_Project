@@ -8,11 +8,13 @@ import {
   Home,
   Event,
   EventDashboardHost,
+  EventEdit,
+  EventAdd,
   Invitation,
   InvitationDashboardAttendee,
   Account,
 } from "@/pages";
-import { DefaultLayout } from "@/components/Layout";
+import { DefaultLayout,NotFooterLayout } from "@/components/Layout";
 import ProtectedRoute from "./ProtectedRoute"; // This is better than using relative '../routes/...'
 
 // Public routes: accessible without authentication
@@ -30,11 +32,14 @@ const privateRoutes = [
   //Event router pages
   { path: "/event", component: Event, layout: DefaultLayout },
   { path: "/event/:eventId/dashboard", component: EventDashboardHost, layout: DefaultLayout,},
+  { path: "/event/:eventId/edit", component: EventEdit, layout:NotFooterLayout ,},
+  { path: "/event/addNewEvent", component: EventAdd, layout: NotFooterLayout},
+
 
 
   //Invitation router pages
   { path: "/invitation", component: Invitation, layout: DefaultLayout },
-  {path: "/invitation/:invitationId/dashboard", component: InvitationDashboardAttendee, layout: DefaultLayout,},
+  { path: "/invitation/:invitationId/dashboard", component: InvitationDashboardAttendee, layout: DefaultLayout,},
 
 
 
