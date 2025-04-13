@@ -7,24 +7,28 @@ import { ConfirmModal } from "@/components/ui/components/modals";
 function EventDashboardHost() {
 
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null);
-    const [selectedAttendee, setSelectedAttendee] = useState(null);
+    const [deleteTarget, setDeleteTarget] = useState<{ type: "event" | "attendee", item: string } | null>(null);
 
 
 
     const handleDeleteEvent = (item) => {
-        setSelectedEvent(item);
+        setDeleteTarget({ type: "event", item });
         setDeleteModalOpen(true);
     }
     const handleDeleteAttendee = (item) => {
-        setSelectedAttendee(item);
+        setDeleteTarget({ type: "attendee", item });
         setDeleteModalOpen(true);
     }
 
     const handleDelete = () => {
         // Handle the delete action here
-        console.log("Deleting event:", selectedEvent);
-        console.log("Deleting attendee:", selectedAttendee);
+        if (deleteTarget) {
+            if (deleteTarget.type === "event") {
+                console.log("Event", deleteTarget.item);
+            } else {
+                console.log(deleteTarget.item);
+            }
+        }
         setDeleteModalOpen(false);
     }
     return (
@@ -34,18 +38,12 @@ function EventDashboardHost() {
             <AttendeeList onDelete={handleDeleteAttendee} />
             <DiscussionBoard />
 
-            {isDeleteModalOpen && (
+
+            {/* Delete modal for event and attendee */}
+            {isDeleteModalOpen && deleteTarget && (
                 <ConfirmModal
-                    title="Delete Event"
-                    message="Once the event is deleted all info and attendees will be removed."
-                    onCancel={() => setDeleteModalOpen(false)}
-                    onConfirm={handleDelete}
-                />
-            )}
-            {isDeleteModalOpen && (
-                <ConfirmModal
-                    title="Delete Attendee"
-                    message="Are you sure you want to delete this attendee? This action cannot be undone."
+                    title={deleteTarget.type === "event" ? "Delete Event" : "Delete Attendee"}
+                    message={deleteTarget.type === "event" ? "Once the event is deleted all info and attendees will be removed." : "Are you sure you want to delete this attendee? This action cannot be undone."}
                     onCancel={() => setDeleteModalOpen(false)}
                     onConfirm={handleDelete}
                 />
