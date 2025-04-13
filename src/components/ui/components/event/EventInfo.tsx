@@ -29,7 +29,9 @@ function EventInfo({
   status,
   description,
   venue,
+  onDelete,
 }: EventInfoProps) {
+
   return (
     <>
       <div className="flex justify-between items-center">
@@ -49,9 +51,11 @@ function EventInfo({
             animated={false}
             variant="destructive"
             className="bg-red-500 text-white ml-4"
+            onClick={() => onDelete(`${eventId}`)}
           >
             <FaTrashCan />
           </Button>
+
         </div>
       </div>
       <div className="flex">

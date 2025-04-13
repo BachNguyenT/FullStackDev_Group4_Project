@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import { InvitationCard } from "@/components/ui";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/components/Button";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,
   faChevronDown,
@@ -24,8 +24,8 @@ function Invitation() {
       {/* Search, Filter & Sort Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
         {/* Left: Search & Filter */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
-          <div className="flex items-center border rounded-lg px-3 py-2 bg-white shadow-sm w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 bg-white shadow-sm focus-within:border-gray-600">
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
               className="text-gray-500 mr-2"
@@ -37,7 +37,7 @@ function Invitation() {
             />
           </div>
 
-          <Button animated={false} variant="outline">
+          <Button animated={false} variant="ghost" className="border border-gray-300 shadow-sm">
             <span>Filter</span>
             <FontAwesomeIcon icon={faChevronDown} />
           </Button>
@@ -46,7 +46,7 @@ function Invitation() {
         {/* Right: Sort */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <span className="text-sm">Sort:</span>
-          <Button animated={false} variant="outline">
+          <Button animated={false} variant="ghost" className="border border-gray-300 shadow-sm">
             Most Recent
             <FontAwesomeIcon icon={faChevronDown} />
           </Button>

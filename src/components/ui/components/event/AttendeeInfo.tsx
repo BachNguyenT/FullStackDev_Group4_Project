@@ -12,6 +12,7 @@ function AttendeeInfo({
   invitationDate,
   replyDate,
   status,
+  onDelete,
 }: AttendeeInfoProps) {
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -55,7 +56,7 @@ function AttendeeInfo({
         </span>
       </td>
       <td className="px-4 py-3">
-        <Button variant="destructive" className="hover:bg-red-500 hover:text-white">
+        <Button variant="destructive" className="hover:bg-red-500 hover:text-white" onClick={() => onDelete(`${id}`)}>
           <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs" />
           Remove
         </Button>

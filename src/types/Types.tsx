@@ -19,6 +19,8 @@ type EventType = {
 
 interface EventInfoProps {
   eventId: string;
+  eventName: string;
+  imageURL: string;
   createdOn: string;
   eventType: string;
   visibility: string;
@@ -28,6 +30,7 @@ interface EventInfoProps {
   imageUrl: string;
   description: string;
   venue: string;
+  onDelete: (eventId: string) => void;
 }
 
 interface AttendeeInfoProps {
@@ -36,6 +39,7 @@ interface AttendeeInfoProps {
   imageUrl?: string;
   invitationDate: string;
   replyDate: string;
+  onDelete: (attendeeId: string) => void;
   status: "Accepted" | "Declined" | "Pending";
 }
 

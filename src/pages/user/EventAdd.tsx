@@ -146,11 +146,13 @@ function EventAdd() {
             />
           </div>
         </div>
-        <div className="bg-gray-100 h-full w-1/3">
+        <div className="bg-gray-100 w-1/3 h-70 flex justify-center items-center">
+          {" "}
+          {/* Example fixed height */}
           <img
             src={typeof image === "string" ? image : undefined}
             alt="Preview Image"
-            className="mt-4 max-w-full h-auto rounded-md"
+            className="h-full w-full object-cover text-center rounded-md"
           />
         </div>
       </div>

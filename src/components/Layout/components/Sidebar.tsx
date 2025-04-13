@@ -12,9 +12,8 @@ function Sidebar() {
 
   return (
     <div
-      className={`flex flex-col bg-white border-r border-gray-200 transition-all duration-300 h-full ${
-        sidebarOpen ? "w-64" : "w-16"
-      }`}
+      className={`flex flex-col bg-white border-r border-gray-200 transition-all duration-300 h-full ${sidebarOpen ? "w-64" : "w-16"
+        }`}
     >
       {/* Sidebar Header */}
       <div className="flex items-center justify-between px-4 py-3">
@@ -136,8 +135,9 @@ function Sidebar() {
         {sidebarOpen && (
           <Button
             to="/login"
-            variant="destructive"
-            className="hover:bg-red-500 hover:text-white"
+            variant="outline"
+            className="hover:bg-purple-600 hover:text-white"
+            animated={false}
           >
             <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2" />
             Log out
