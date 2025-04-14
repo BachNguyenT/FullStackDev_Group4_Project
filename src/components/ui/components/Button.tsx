@@ -47,7 +47,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const animatedStyles = animated
-      ? "hover:scale-[1.15] transition-transform duration-[450ms] ease-out"
+      ? "hover:scale-[1.01] transition-transform duration-[250ms] ease-out"
       : "";
     const buttonClassName = cn(
       baseStyles,
