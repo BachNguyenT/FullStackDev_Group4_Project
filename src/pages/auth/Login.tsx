@@ -49,7 +49,7 @@ function Login() {
           response.json()
           .then((data) => {
             if (data.result == "0x000") {
-              navigate("/landing");
+              navigate("/home"); // Redirect to home page on successful login
             }
             else if (data.result == "0x001") {
               setError("Service temporarily unavailable. Please try again later.");
@@ -140,7 +140,7 @@ function Login() {
           {error && <p>{error}</p>}
           
           <Button
-            
+            to="/register"
             className="border border-purple-500 text-purple-500 py-2 rounded-full"
             disabled={isLoading}>
             Register
