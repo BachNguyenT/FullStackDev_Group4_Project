@@ -1,7 +1,6 @@
 // src/Login.tsx
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks"; 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {Button} from "@/components/ui/components/Button";
 import LoginImage from "@/assets/Pictures/LoginImage.png";
 
@@ -44,32 +43,20 @@ function Login() {
           password: password, 
         }),
       })
-      .then(
-        (response) => {
-          response.json()
-          .then((data) => {
-            if (data.result == "0x000") {
-              navigate("/home"); // Redirect to home page on successful login
-            }
-            else if (data.result == "0x001") {
-              setError("Service temporarily unavailable. Please try again later.");
-              setLoading(false);
-            }
-            else if (data.result == "0x002") {
-              setError("Invalid username or password.");
-              setLoading(false);
-            }
-            else {
-              setError("Service temporarily unavailable. Please try again later.");
-              setLoading(false);
-            }
-          })
-          .catch(() => {
-            setError("Unexpected error occurred. Please try again later.");
-            setLoading(false);
-          });
+      .then((response) => response.text())
+      .then((result) => {
+        if (result == "0x000") {
+          navigate("/landing");
         }
-      )
+        else if (result == "0x001") {
+          setError("Invalid username or password.");
+          setLoading(false);
+        }
+        else {
+          setError("Service temporarily unavailable. Please try again later.");
+          setLoading(false);
+        }
+      })
       .catch(() => {
         setError("Unexpected error occurred. Please try again later.");
         setLoading(false); 
