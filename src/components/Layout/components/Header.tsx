@@ -11,7 +11,7 @@ function Header() {
       </Button>
 
       {/* Avatar Circle */}
-      <Button size="icon" variant="ghost">
+      <Button size="icon" variant="ghost" to="/account">
         <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold overflow-hidden">
           <img src="https://tse1.mm.bing.net/th?id=OIP.UyHfcv3FBLzxXpEd91eNzgHaFb&pid=Api&P=0&h=180"/>
         </div>

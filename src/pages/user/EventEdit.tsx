@@ -134,15 +134,13 @@ function EventEdit() {
             </div>
           </div>
           <div>
-            <label className="block mb-2 font-light text-base" htmlFor="image">
-              Image:
-            </label>
+            <label htmlFor="avatar" className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white">Change image event</label>
             <input
-              id="image"
+              id="avatar"
               onChange={(e) => previewImage(e)}
               type="file"
               accept="image/*"
-              className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
+              className="hidden"
             />
           </div>
         </div>
