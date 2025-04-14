@@ -15,7 +15,6 @@ import {
   Account,
 } from "@/pages";
 import { DefaultLayout,NotFooterLayout } from "@/components/Layout";
-import ProtectedRoute from "./ProtectedRoute"; // This is better than using relative '../routes/...'
 
 // Public routes: accessible without authentication
 const publicRoutes = [
@@ -35,16 +34,12 @@ const privateRoutes = [
   { path: "/event/:eventId/edit", component: EventEdit, layout:NotFooterLayout ,},
   { path: "/event/addNewEvent", component: EventAdd, layout: NotFooterLayout},
 
-
-
   //Invitation router pages
   { path: "/invitation", component: Invitation, layout: DefaultLayout },
   { path: "/invitation/:invitationId/dashboard", component: InvitationDashboardAttendee, layout: DefaultLayout,},
-
-
 
   //Account router pages
   { path: "/account", component: Account, layout: DefaultLayout },
 ];
 
-export { publicRoutes, privateRoutes, ProtectedRoute };
+export { publicRoutes, privateRoutes };
