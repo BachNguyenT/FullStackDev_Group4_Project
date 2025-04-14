@@ -1,8 +1,9 @@
 // src/Login.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Button} from "@/components/ui/components/Button";
+import { Button } from "@/components/ui/components/Button";
 import LoginImage from "@/assets/Pictures/LoginImage.png";
+const LOGIN_SUCCESS_TARGET = "/landing"; // Define the target URL for successful login
 
 function Login() {
   const [username, setUsername] = useState<string>("");
@@ -19,55 +20,84 @@ function Login() {
     setUCheck(""); // Clear previous username errors
     setPCheck(""); // Clear previous password errors
 
-    let check : Boolean = true;
-    if(username.length == 0) {
+    let check: Boolean = true;
+    if (username.length == 0) {
       setUCheck("Username is required");
       check = false;
     }
 
-    if(password.length == 0) {
+    if (password.length == 0) {
       setPCheck("Password is required");
       check = false;
     }
-    
-    if(check) {
+
+    if (check) {
       fetch("http://localhost:3000/authenticate-user", {
-        method: "POST", 
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "key": "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI"
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
         },
-        credentials: "include", 
+        credentials: "include",
         body: JSON.stringify({
-          username: username, 
-          password: password, 
+          username: username,
+          password: password,
         }),
       })
-      .then((response) => response.text())
-      .then((result) => {
-        if (result == "0x000") {
-          navigate("/landing");
-        }
-        else if (result == "0x001") {
-          setError("Invalid username or password.");
+        .then((response) => response.text())
+        .then((result) => {
+          if (result == "0x000") {
+            navigate(LOGIN_SUCCESS_TARGET);
+          } else if (result == "0x001") {
+            setError("Invalid username or password.");
+            setLoading(false);
+          } else {
+            setError(
+              "Service temporarily unavailable. Please try again later."
+            );
+            setLoading(false);
+          }
+        })
+        .catch(() => {
+          setError("Unexpected error occurred. Please try again later.");
           setLoading(false);
-        }
-        else {
-          setError("Service temporarily unavailable. Please try again later.");
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        setError("Unexpected error occurred. Please try again later.");
-        setLoading(false); 
-        return;
-      });
-    }
-    else {
+          return;
+        });
+    } else {
       setLoading(false);
       return;
     }
   }
+
+  function checkSession() {
+    setLoading(true);
+    fetch("http://localhost:3000/verify-session", {
+      method: "GET",
+      credentials: "include", 
+      headers: {
+        "Content-Type": "application/json",
+        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+      },
+    })
+      .then((response) => response.text())
+      .then((checkResult) => {
+        if (checkResult === "0x000") {
+          navigate(LOGIN_SUCCESS_TARGET);
+        } else {
+          setLoading(false); 
+        }
+      })
+      .catch(() => {
+        setLoading(false); 
+      })
+      .finally(() => {
+        setLoading(false); 
+      });
+  }
+
+  useEffect(() => {
+    checkSession();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-400 flex items-center justify-center">
@@ -108,31 +138,32 @@ function Login() {
 
           {passwordCheck && <p>{passwordCheck}</p>}
 
-          <Button 
-            
-            variant="link" 
-            className = "w-full justify-end text-sm text-purple-500"
-            disabled={isLoading} 
-            animated = {false}>
-              Forgot password?
+          <Button
+            variant="link"
+            className="w-full justify-end text-sm text-purple-500"
+            disabled={isLoading}
+            animated={false}
+          >
+            Forgot password?
           </Button>
 
           <Button
             onClick={() => handleLogin()}
             className="bg-purple-500 text-white py-2 rounded-full mb-4 hover:bg-purple-600 transition"
-            disabled={isLoading}>
-            {isLoading ? "Authenticating..." : "Login"}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Login"}
           </Button>
 
           {error && <p>{error}</p>}
-          
+
           <Button
-            to="/register"
+            onClick={() => navigate("/register")}
             className="border border-purple-500 text-purple-500 py-2 rounded-full"
-            disabled={isLoading}>
+            disabled={isLoading}
+          >
             Register
           </Button>
-
         </div>
       </div>
     </div>

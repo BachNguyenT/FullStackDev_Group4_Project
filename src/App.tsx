@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 import { Login, NotFoundPage } from "@/pages";
 import { privateRoutes, publicRoutes } from "@/routes";
 
-import SessionValidator from "./utils/SessionValidator";
+import SessionValidator from "./routes/SessionValidator";
 
 //import the components
 
@@ -14,9 +14,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Navigate to='/login' />} />
-        <Route path='/login' element={<Login />} />
-
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
 
         {/* Public Routes */}
         {publicRoutes.map((route, index) => {
@@ -25,7 +24,9 @@ function App() {
           if (route.layout) {
             Layout = route.layout;
           } else if (route.layout === null) {
-            Layout = ({ children }: { children: React.ReactNode }) => <Fragment>{children}</Fragment>;
+            Layout = ({ children }: { children: React.ReactNode }) => (
+              <Fragment>{children}</Fragment>
+            );
           }
           return (
             <Route
@@ -40,14 +41,15 @@ function App() {
           );
         })}
 
-
         {privateRoutes.map((route, index) => {
           const Page = route.component;
           let Layout = DefaultLayout; // Default layout for all private routes
           if (route.layout) {
             Layout = route.layout;
           } else if (route.layout === null) {
-            Layout = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+            Layout = ({ children } : { children: React.ReactNode }) => (
+              <>{children}</>
+            );
           }
           return (
             <Route
@@ -66,7 +68,6 @@ function App() {
 
         {/* Redirect to login if no route matches */}
         <Route path="*" element={<NotFoundPage />} />
-
       </Routes>
     </Router>
   );
