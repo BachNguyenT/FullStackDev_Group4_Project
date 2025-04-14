@@ -84,40 +84,35 @@ function Register() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "key": "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI"
+          "key": "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
         },
         credentials: "include",
         body: JSON.stringify({
-          fullName: fullName,
-          email: email,
-          phone: phone,
-          birthday: birthday,
-          username: username,
-          password: password,
+          Name: fullName,
+          PhoneNumber: phone,
+          Email: email,
+          Birthday: birthday,
+          Username: username,
+          Password: password,
         }),
       })
-        .then((response) => response.text())
+        .then((response) => {
+          if (!response.ok) {
+            // If the response is not OK, parse the error message
+            return response.json().then((data) => {
+              throw new Error(data.error || "An unexpected error occurred.");
+            });
+          }
+          return response.json();
+        })
         .then((result) => {
-          if (result == "0x000") {
+          if (result.success) {
             navigate("/login");
           }
-          else if (result == "0x001") {
-            setError("Username already exists.");
-            setLoading(false);
-          }
-          else if (result == "0x001") {
-            setError("Email already exists.");
-            setLoading(false);
-          }
-          else {
-            setError("Service temporarily unavailable. Please try again later.");
-            setLoading(false);
-          }
         })
-        .catch(() => {
-          setError("Unexpected error occurred. Please try again later.");
+        .catch((error) => {
+          setError(error.message); // Display the specific error message
           setLoading(false);
-          return;
         });
     }
     else {
@@ -146,7 +141,13 @@ function Register() {
           </h1>
           <h2 className="text-xl text-center text-gray-600 mb-8">Register</h2>
 
-          <form className="space-y-4">
+          <form 
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault(); // Prevent the default form submission
+              handleRegister(); // Call the registration logic
+            }}
+          >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Full Name */}
               <div className="flex flex-col">
@@ -312,7 +313,6 @@ function Register() {
             </div>
             {/* Submit Button */}
             <Button
-            onClick={() => handleRegister()}
             disabled={isLoading}
             type="submit"
             className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-full font-semibold transition"
