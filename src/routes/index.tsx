@@ -20,7 +20,6 @@ import ProtectedRoute from "./ProtectedRoute"; // This is better than using rela
 // Public routes: accessible without authentication
 const publicRoutes = [
   { path: "/register", component: Register, layout: null },
-  { path: "/login", component: Login, layout: null },
   { path: "/terms", component: PrivacyPolicy, layout: null },
   { path: "/about", component: About, layout: null },
 ];
