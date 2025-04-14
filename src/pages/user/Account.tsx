@@ -1,139 +1,109 @@
+import { useState } from "react";
+
 function Account() {
+  const [name, setName] = useState<string>("Name");
+  const [phone, setPhone] = useState<string>("Phone");
+  const [email, setEmail] = useState<string>("Email");
+  const [birthday, setBirthday] = useState<string>("Birthday");
+  const [userName, setUserName] = useState<string>("Username");
+
   return (
     <div>
       {/* Title */}
       <h2 className="text-xl sm:text-2xl font-semibold mb-4">My Account</h2>
       {/* Account Information */}
-      <div>
-
+      <div className="flex h-100 items-center bg-white shadow-md rounded-lg p-4 mb-4">
         {/* Avatar */}
-        <div>
-
+        <div className="w-60 h-60 flex justify-center items-center">
+          <img
+            src="https://b.fssta.com/uploads/application/nba/headshots/1120.vresize.350.350.medium.27.png"
+            alt="Avatar"
+            className="w-60 h-60 rounded-full mb-4 border-2 border-gray-200 shadow-md hover:scale-105 transition-transform duration-200"
+          />
         </div>
         {/* Text Information */}
-        {/* <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-1 justify-around items-center mb-4">
           <div>
-            <div>
-              <label htmlFor="name" className="block mb-2 font-light text-base">
-                Name:
-              </label>
-              <input
-                onChange={(e) => {
-                  setName(e.target.value);
-                }}
-                id="name"
-                value={name}
-                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="date" className="block mb-2 font-light text-base">
-                Date & Time:
-              </label>
-              <input
-                id="date"
-                onChange={(e) => {
-                  setDate(e.target.value);
-                }}
-                value={date}
-                type="datetime-local"
-                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
-              />
-            </div>
-            <div>
-              <label htmlFor="venue" className="block mb-2 font-light text-base">
-                Venue:
-              </label>
-              <input
-                onChange={(e) => {
-                  setVenue(e.target.value);
-                }}
-                id="venue"
-                value={venue}
-                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
-              />
-            </div>
-          </div>
-          <div>
-            <div>
-              <label
-                className="block mb-2 font-light text-base"
-                htmlFor="eventType"
-              >
-                Event Type:
-              </label>
-              <select
-                id="eventType"
-                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
-                onChange={(e) => {
-                  setEventType(e.target.value);
-                }}
-                value={eventType}
-              >
-                {eventTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label
-                htmlFor="duration"
-                className="block mb-2 font-light text-base"
-              >
-                Duration
-              </label>
-              <div className="flex items-center mb-4">
+            <div className="w-80">
+              <div>
+                <label htmlFor="name" className="block mb-2 font-light text-base">
+                  Full Name:
+                </label>
                 <input
                   onChange={(e) => {
-                    setDuration(parseInt(e.target.value));
+                    setName(e.target.value);
                   }}
-                  id="duration"
-                  value={duration}
-                  type="number"
-                  className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
+                  id="name"
+                  value={name}
+                  className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
                 />
-                <select
-                  className="border-2 border-gray-300 rounded-md p-2 mb-4 w-24 font-light text-sm ml-2"
+              </div>
+              <div>
+                <label htmlFor="phone" className="block mb-2 font-light text-base">
+                  Phone:
+                </label>
+                <input
                   onChange={(e) => {
-                    setDurationUnit(e.target.value);
+                    setPhone(e.target.value);
                   }}
-                  value={durationUnit}
-                >
-                  {durationUnits.map((unit) => (
-                    <option key={unit} value={unit}>
-                      {unit.charAt(0).toUpperCase() + unit.slice(1)}
-                    </option>
-                  ))}
-                </select>
+                  id="phone"
+                  value={phone}
+                  className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="userName" className="block mb-2 font-light text-base">
+                  UserName:
+                </label>
+                <input
+                  onChange={(e) => {
+                    setUserName(e.target.value);
+                  }}
+                  id="userName"
+                  value={userName}
+                  className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
+                />
               </div>
             </div>
-            <div>
-              <label className="block mb-2 font-light text-base" htmlFor="image">
-                Image:
+          </div>
+
+          <div>
+            <div className="w-80">
+              <label htmlFor="email" className="block mb-2 font-light text-base">
+                Email:
               </label>
               <input
-                id="image"
-                onChange={(e) => previewImage(e)}
-                type="file"
-                accept="image/*"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                id="email"
+                value={email}
+                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="birthday" className="block mb-2 font-light text-base">
+                Birthday:
+              </label>
+              <input
+                onChange={(e) => {
+                  setBirthday(e.target.value);
+                }}
+                id="birthday"
+                value={birthday}
                 className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
               />
             </div>
           </div>
-          <div className="bg-gray-100 w-1/3 h-70 flex justify-center items-center">
-            {" "}
-            
-            <img
-              src={typeof image === "string" ? image : undefined}
-              alt="Preview Image"
-              className="h-full w-full object-cover text-center rounded-md"
-            />
-          </div>
-        </div>*/}
+        </div>
+
+
+
       </div>
+
     </div>
+
   );
 }
 export default Account;

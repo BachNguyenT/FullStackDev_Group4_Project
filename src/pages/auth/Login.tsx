@@ -46,7 +46,7 @@ function Login() {
       .then((response) => response.text())
       .then((result) => {
         if (result == "0x000") {
-          navigate("/landing");
+          navigate("/home"); // Redirect to home page on successful login
         }
         else if (result == "0x001") {
           setError("Invalid username or password.");
