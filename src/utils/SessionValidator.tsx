@@ -7,7 +7,6 @@ function SessionValidator({ children } : any) {
 
     useEffect(() => {
         function checkSession() {
-            console.log(children);
             fetch('http://localhost:3000/verify-session', {
                 method: 'GET',
                 credentials: 'include', // Send cookies with the request
@@ -18,7 +17,6 @@ function SessionValidator({ children } : any) {
             })
             .then((response) => response.text())
             .then((checkResult) => {
-                console.log("Check result: ", checkResult);
                 if (checkResult === '0x000') {
                     setRenderChildren(1);
                 } else {
