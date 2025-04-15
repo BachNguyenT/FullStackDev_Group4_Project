@@ -1,7 +1,8 @@
-import RegisterImage from "@/assets/Pictures/RegisterImage.jpg";
+import AvatarIcon from "@/assets/Icons/avatar-placeholder.svg";
 import { Button } from "@/components/ui/components/Button";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import LogoText from "@/assets/Icons/plan-event-text.svg";
 
 function Register() {
   // State variables for form inputs
@@ -13,6 +14,7 @@ function Register() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isTermsAgreed, setIsTermsAgreed] = useState<boolean>(false);
+  const [image, setImage] = useState<string | ArrayBuffer | null>(null);
 
   // Validation states
   const [fullNameCheck, setNameCheck] = useState<string>("");
@@ -28,6 +30,15 @@ function Register() {
   const [generalError, setGeneralError] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  //preview avatar
+  const previewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const previewURL = URL.createObjectURL(file);
+      setImage(previewURL);
+    }
+  };
 
   function handleRegister() {
     setLoading(true);
@@ -97,7 +108,9 @@ function Register() {
         }),
       })
         .then((response) => {
-          return response.json().then((data) => ({ status: response.status, data }));
+          return response
+            .json()
+            .then((data) => ({ status: response.status, data }));
         })
         .then(({ status, data }) => {
           if (status === 200 && data.success && data.code === "0x000") {
@@ -135,21 +148,9 @@ function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 to-purple-400 p-4">
       <div className="bg-white w-full max-w-5xl rounded-3xl shadow-2xl p-10 flex flex-col md:flex-row items-center">
-        {/* Illustration Section */}
-        <div className="w-full md:w-1/2 flex justify-center mb-10 md:mb-0">
-          <img
-            src={RegisterImage}
-            alt="Event Planning Illustration"
-            className="max-w-full h-auto"
-          />
-        </div>
-
-        {/* Form Section */}
-        <div className="w-full md:w-1/2 px-4">
-          <h1 className="text-4xl font-semibold text-center text-gray-700 mb-2">
-            Plan<span className="text-purple-600 font-bold">Evnt</span>
-          </h1>
-          <h2 className="text-xl text-center text-gray-600 mb-8">Register</h2>
+        <div className="w-full px-4">
+          <img src={LogoText} alt="Logo" className="w-full h-10" />
+          <h2 className="text-xl text-center text-gray-600 my-8">Register</h2>
 
           <form
             className="space-y-4"
@@ -171,7 +172,7 @@ function Register() {
                   id="fullName"
                   type="text"
                   placeholder="Enter your full name..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={isLoading}
@@ -193,7 +194,7 @@ function Register() {
                   id="email"
                   type="email"
                   placeholder="Enter email..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
                   disabled={isLoading}
@@ -213,7 +214,7 @@ function Register() {
                   id="phone"
                   type="text"
                   placeholder="Enter phone number..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                   onChange={(e) => setPhone(e.target.value)}
                   value={phone}
                   disabled={isLoading}
@@ -232,7 +233,7 @@ function Register() {
                 <input
                   id="birthday"
                   type="date"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                   onChange={(e) => setBirthday(e.target.value)}
                   value={birthday}
                   disabled={isLoading}
@@ -241,26 +242,51 @@ function Register() {
                   <p className="text-red-500">{birthdayCheck}</p>
                 )}
               </div>
-            </div>
+              {/* Username */}
+              <div className="flex flex-col">
+                <label
+                  htmlFor="username"
+                  className="text-sm font-medium text-gray-700 mb-1"
+                >
+                  Username
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  placeholder="Enter your username..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                  disabled={isLoading}
+                />
+                {usernameCheck && (
+                  <p className="text-red-500">{usernameCheck}</p>
+                )}
+              </div>
 
-            {/* Username */}
-            <div className="flex flex-col">
-              <label
-                htmlFor="username"
-                className="text-sm font-medium text-gray-700 mb-1"
-              >
-                Username
-              </label>
-              <input
-                id="username"
-                type="text"
-                placeholder="Enter your username..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
-                onChange={(e) => setUsername(e.target.value)}
-                value={username}
-                disabled={isLoading}
-              />
-              {usernameCheck && <p className="text-red-500">{usernameCheck}</p>}
+              {/* image */}
+              <div className="flex flex-row items-end space-x-6">
+                <label
+                  htmlFor="avatar"
+                  className="h-[43px] rounded-md border border-gray-300 px-4 py-[11px] text-sm font-semibold hover:bg-purple-600 hover:text-white"
+                >
+                  Upload avatar
+                </label>
+                <input
+                  id="avatar"
+                  onChange={(e) => previewImage(e)}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                />
+                <div className="shrink-full">
+                  <img
+                    src={typeof image === "string" ? image : AvatarIcon}
+                    alt="Preview Image"
+                    className="h-[65px] w-[65px] rounded-full object-cover text-center border border-gray-300"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Password */}
@@ -275,7 +301,7 @@ function Register() {
                 id="password"
                 type="password"
                 placeholder="Enter your password..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 disabled={isLoading}
@@ -295,7 +321,7 @@ function Register() {
                 id="confirmPassword"
                 type="password"
                 placeholder="Re-enter your password..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 value={confirmPassword}
                 disabled={isLoading}
@@ -326,19 +352,23 @@ function Register() {
                 </Button>
               </label>
             </div>
-            {termsError && <p className="text-red-500 text-center">{termsError}</p>}
+            {termsError && (
+              <p className="text-red-500 text-center">{termsError}</p>
+            )}
 
             {/* Submit Button */}
             <Button
               disabled={isLoading}
               type="submit"
-              className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-full font-semibold transition"
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-md font-semibold transition"
             >
               {isLoading ? "Registering..." : "Register"}
             </Button>
 
             {/* Display general error message */}
-            {generalError && <p className="text-red-500 text-center mt-2">{generalError}</p>}
+            {generalError && (
+              <p className="text-red-500 text-center mt-2">{generalError}</p>
+            )}
 
             <div className="text-center mt-4">
               <Button
