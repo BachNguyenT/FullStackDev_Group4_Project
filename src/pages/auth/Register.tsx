@@ -2,8 +2,8 @@ import RegisterImage from "@/assets/Pictures/RegisterImage.jpg";
 import { Button } from "@/components/ui/components/Button";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-function Register() {
 
+function Register() {
   // State variables for form inputs
   const [fullName, setFullName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -12,6 +12,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isTermsAgreed, setIsTermsAgreed] = useState<boolean>(false);
 
   // Validation states
   const [fullNameCheck, setNameCheck] = useState<string>("");
@@ -21,70 +22,69 @@ function Register() {
   const [usernameCheck, setUCheck] = useState<string>("");
   const [passwordCheck, setPCheck] = useState<string>("");
   const [confirmPasswordCheck, setCPCheck] = useState<string>("");
-  const [checkboxCheck, setCheckboxCheck] = useState<string>("");
+  const [termsError, setTermsError] = useState<string>("");
+
   // Error and loading states
-  const [error, setError] = useState<string>("");
+  const [generalError, setGeneralError] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   function handleRegister() {
-    // Handle registration logic here
-    setLoading(true); // Show loading state
-    setError(""); // Clear previous errors
-    setNameCheck(""); // Clear previous name errors
-    setEmailCheck(""); // Clear previous email errors
-    setPhoneCheck(""); // Clear previous phone errors
-    setBirthdayCheck(""); // Clear previous birthday errors
-    setUCheck(""); // Clear previous username errors
-    setPCheck(""); // Clear previous password errors
-    setCPCheck(""); // Clear previous confirm password errors
+    setLoading(true);
+    setGeneralError("");
+    setNameCheck("");
+    setEmailCheck("");
+    setPhoneCheck("");
+    setBirthdayCheck("");
+    setUCheck("");
+    setPCheck("");
+    setCPCheck("");
+    setTermsError("");
 
-    let check: Boolean = true;
-    if (fullName.length == 0) {
+    let check = true;
+    if (fullName.length === 0) {
       setNameCheck("Full name is required");
       check = false;
     }
-    if (email.length == 0) {
-
+    if (email.length === 0) {
       setEmailCheck("Email is required");
       check = false;
     }
-    if (phone.length == 0) {
+    if (phone.length === 0) {
       setPhoneCheck("Phone number is required");
       check = false;
     }
-    if (birthday.length == 0) {
+    if (birthday.length === 0) {
       setBirthdayCheck("Birthday is required");
       check = false;
     }
-    if (username.length == 0) {
+    if (username.length === 0) {
       setUCheck("Username is required");
       check = false;
     }
-    if (password.length == 0) {
+    if (password.length === 0) {
       setPCheck("Password is required");
       check = false;
     }
-    if (confirmPassword.length == 0) {
-      setPCheck("Confirm Password is required");
+    if (confirmPassword.length === 0) {
+      setCPCheck("Confirm Password is required");
       check = false;
     }
     if (password !== confirmPassword) {
       setPCheck("Passwords do not match");
       check = false;
     }
-    if (checkboxCheck.length == 0) {
-      setCheckboxCheck("Please agree to the terms and conditions");
+    if (!isTermsAgreed) {
+      setTermsError("Please agree to the terms and conditions");
       check = false;
     }
-
 
     if (check) {
       fetch("http://localhost:3000/register-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "key": "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
         },
         credentials: "include",
         body: JSON.stringify({
@@ -97,30 +97,40 @@ function Register() {
         }),
       })
         .then((response) => {
-          if (!response.ok) {
-            // If the response is not OK, parse the error message
-            return response.json().then((data) => {
-              throw new Error(data.error || "An unexpected error occurred.");
-            });
-          }
-          return response.json();
+          return response.json().then((data) => ({ status: response.status, data }));
         })
-        .then((result) => {
-          if (result.success) {
+        .then(({ status, data }) => {
+          if (status === 200 && data.success && data.code === "0x000") {
             navigate("/login");
+          } else {
+            // Handle specific errors
+            if (status === 400 && data.code === "0x003") {
+              if (data.error.includes("Phone number")) {
+                setPhoneCheck(data.error);
+              } else if (data.error.includes("Email")) {
+                setEmailCheck(data.error);
+              } else if (data.error.includes("Username")) {
+                setUCheck(data.error);
+              }
+            } else if (status === 400 && data.code === "0x001") {
+              setGeneralError(data.error); // Missing fields
+            } else if (status === 401 && data.code === "Ux001") {
+              setGeneralError("Unauthorized API call");
+            } else {
+              setGeneralError(data.error || "An unexpected error occurred.");
+            }
+            setLoading(false);
           }
         })
         .catch((error) => {
-          setError(error.message); // Display the specific error message
+          console.error("Fetch error:", error);
+          setGeneralError("Failed to connect to the server.");
           setLoading(false);
         });
-    }
-    else {
+    } else {
       setLoading(false);
-      return;
     }
   }
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 to-purple-400 p-4">
@@ -141,11 +151,11 @@ function Register() {
           </h1>
           <h2 className="text-xl text-center text-gray-600 mb-8">Register</h2>
 
-          <form 
+          <form
             className="space-y-4"
             onSubmit={(e) => {
-              e.preventDefault(); // Prevent the default form submission
-              handleRegister(); // Call the registration logic
+              e.preventDefault();
+              handleRegister();
             }}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -166,7 +176,9 @@ function Register() {
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={isLoading}
                 />
-                {fullNameCheck && <p className="text-red-500">{fullNameCheck}</p>}
+                {fullNameCheck && (
+                  <p className="text-red-500">{fullNameCheck}</p>
+                )}
               </div>
 
               {/* Email */}
@@ -206,7 +218,7 @@ function Register() {
                   value={phone}
                   disabled={isLoading}
                 />
-                {phoneCheck && <p className="text-red-500">{phoneCheck}</p>}  
+                {phoneCheck && <p className="text-red-500">{phoneCheck}</p>}
               </div>
 
               {/* Birthday */}
@@ -225,7 +237,9 @@ function Register() {
                   value={birthday}
                   disabled={isLoading}
                 />
-                {birthdayCheck && <p className="text-red-500">{birthdayCheck}</p>}
+                {birthdayCheck && (
+                  <p className="text-red-500">{birthdayCheck}</p>
+                )}
               </div>
             </div>
 
@@ -286,44 +300,53 @@ function Register() {
                 value={confirmPassword}
                 disabled={isLoading}
               />
-              {confirmPasswordCheck && <p className="text-red-500">{confirmPasswordCheck}</p>}
+              {confirmPasswordCheck && (
+                <p className="text-red-500">{confirmPasswordCheck}</p>
+              )}
             </div>
+
             {/* Checkbox Agreement */}
             <div className="flex items-center justify-center gap-2">
               <input
                 id="terms"
                 type="checkbox"
                 className="accent-purple-500 w-4 h-4"
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setCheckboxCheck("");
-                  } else {
-                    setCheckboxCheck("Please agree to the terms and conditions");
-                  }
-                }}
+                checked={isTermsAgreed}
+                onChange={(e) => setIsTermsAgreed(e.target.checked)}
                 disabled={isLoading}
-
               />
               <label htmlFor="terms" className="text-sm text-gray-700">
                 I agree to all the
-                <Button to="/terms" variant = "link" className="text-purple-600 underline">
+                <Button
+                  to="/terms"
+                  variant="link"
+                  className="text-purple-600 underline"
+                >
                   Private Policies
                 </Button>
               </label>
             </div>
+            {termsError && <p className="text-red-500 text-center">{termsError}</p>}
+
             {/* Submit Button */}
             <Button
-            disabled={isLoading}
-            type="submit"
-            className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-full font-semibold transition"
-            > 
-            {isLoading ? "Registering..." : "Register"}
+              disabled={isLoading}
+              type="submit"
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-full font-semibold transition"
+            >
+              {isLoading ? "Registering..." : "Register"}
             </Button>
 
-            {error && <p className="text-red-500 text-center">{error}</p>}
+            {/* Display general error message */}
+            {generalError && <p className="text-red-500 text-center mt-2">{generalError}</p>}
 
             <div className="text-center mt-4">
-              <Button to ="/login" size="lg" variant="link" className="text-purple-500 hover:text-purple-600">
+              <Button
+                to="/login"
+                size="lg"
+                variant="link"
+                className="text-purple-500 hover:text-purple-600"
+              >
                 Back to Login
               </Button>
             </div>
