@@ -17,9 +17,9 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Info pages */}
-        <Route path="/terms" element={<Register />} />
+        <Route path="/terms" element={<About />} />
         <Route path="/about" element={<About />} />
-        <Route path="/not-found-page" element={<NotFoundPage />} />
+        <Route path="/not-found-page" element={<NotFoundPage returnTo="/home"/>} />
 
         {/* Protected Routes */}
         <Route path="/home/*" element={<Home />} />
