@@ -1,12 +1,9 @@
 //import the libraries
-import { Fragment } from "react";
-import { DefaultLayout } from "@/components/Layout";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import { Login, NotFoundPage } from "@/pages";
-import { privateRoutes, publicRoutes } from "@/routes";
-
-import SessionValidator from "./routes/SessionValidator";
+import { About, Login, NotFoundPage, Register } from "@/pages";
+import  Test  from "@/test.tsx";
+import Home from "./pages/user/Home";
 
 //import the components
 
@@ -14,60 +11,24 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Auth Routes */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-        {/* Public Routes */}
-        {publicRoutes.map((route, index) => {
-          const Page = route.component;
-          let Layout = DefaultLayout; // Default layout for all public routes
-          if (route.layout) {
-            Layout = route.layout;
-          } else if (route.layout === null) {
-            Layout = ({ children }: { children: React.ReactNode }) => (
-              <Fragment>{children}</Fragment>
-            );
-          }
-          return (
-            <Route
-              key={index}
-              path={route.path}
-              element={
-                <Layout>
-                  <Page />
-                </Layout>
-              }
-            />
-          );
-        })}
+        {/* Info pages */}
+        <Route path="/terms" element={<Register />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/not-found-page" element={<NotFoundPage />} />
 
-        {privateRoutes.map((route, index) => {
-          const Page = route.component;
-          let Layout = DefaultLayout; // Default layout for all private routes
-          if (route.layout) {
-            Layout = route.layout;
-          } else if (route.layout === null) {
-            Layout = ({ children } : { children: React.ReactNode }) => (
-              <>{children}</>
-            );
-          }
-          return (
-            <Route
-              key={index}
-              path={route.path}
-              element={
-                <SessionValidator>
-                  <Layout>
-                    <Page />
-                  </Layout>
-                </SessionValidator>
-              }
-            />
-          );
-        })}
+        {/* Protected Routes */}
+        <Route path="/home/*" element={<Home />} />
 
-        {/* Redirect to login if no route matches */}
-        <Route path="*" element={<NotFoundPage />} />
+        {/* Workspace Routes */}
+        <Route path="/workspace/*" element={<Test />} />
+
+        {/* Resolve invalid paths*/}
+        <Route path="*" element={<Navigate to="/not-found-page" />} />
       </Routes>
     </Router>
   );

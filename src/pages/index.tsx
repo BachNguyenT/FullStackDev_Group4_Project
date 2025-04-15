@@ -6,7 +6,7 @@ export {default as Landing} from './others/Landing'
 export {default as NotFoundPage} from './others/NotFoundPage'
 
 
-export {default as Home} from './user/Home'
+export {default as Home} from './user/home_bust'
 export {default as Account} from './user/Account'
 
 export {default as Event} from './user/Event'
