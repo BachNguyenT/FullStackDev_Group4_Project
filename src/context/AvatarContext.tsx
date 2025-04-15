@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
 
 const AvatarContext = createContext<{
-  avatar: boolean,
-  setAvatar: React.Dispatch<React.SetStateAction<string>>;
+  avatarURL: string,
+  setAvatarURL: React.Dispatch<React.SetStateAction<string>>;
 } | null>(null);
 
 const useAvatarContext = () => {

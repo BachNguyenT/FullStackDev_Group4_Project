@@ -1,16 +1,15 @@
 //import the libraries
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import { About, Login, NotFoundPage, Register } from "@/pages";
-import  Test  from "@/test.tsx";
-import Home from "./pages/user/Workspace";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import About from "./pages/info/About";
+import NotFoundPage from "./pages/others/NotFoundPage";
 import Workspace from "./pages/user/Workspace";
 
 //import the components
 
 function App() {
-  
-
   return (
     <Router>
       <Routes>

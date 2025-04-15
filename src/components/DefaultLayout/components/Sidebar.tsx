@@ -1,5 +1,5 @@
 //import state management
-import { useLayout } from "@/context";
+import { useLayoutContext } from "@/context/LayoutContext";
 
 import { faArrowAltCircleRight } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +12,7 @@ import LogoFull from "@/assets/Icons/plan-event.svg";
 import { useNavigate } from "react-router-dom";
 
 function Sidebar() {
-  const { sidebarOpen } = useLayout();
+  const { sidebarOpen } = useLayoutContext();
   const navigate = useNavigate();
 
   return (

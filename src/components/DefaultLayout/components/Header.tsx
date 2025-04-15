@@ -2,10 +2,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 import { Button } from "@/components/ui/components/Button";
-import { useLayout } from "@/context";
+import { useLayoutContext } from "@/context/LayoutContext";
+import { useAvatarContext } from "@/context/AvatarContext";
+import { useNavigate } from "react-router-dom";
+
 
 function Header() {
-  const { sidebarOpen, toggleSidebar } = useLayout();
+  const navigate = useNavigate();
+  const { toggleSidebar } = useLayoutContext();
+  const { avatarURL } = useAvatarContext();
 
   return (
     <div className="flex items-center justify-end gap-4 m-[16px] transition-all duration-300">
@@ -35,9 +40,9 @@ function Header() {
       </Button>
 
       {/* Avatar Circle */}
-      <Button size="icon" variant="ghost" to="/account">
+      <Button size="icon" variant="ghost" onClick={() => navigate("/workspace/account")}>
         <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold overflow-hidden">
-          <img src="https://tse1.mm.bing.net/th?id=OIP.UyHfcv3FBLzxXpEd91eNzgHaFb&pid=Api&P=0&h=180" />
+          <img src={avatarURL} />
         </div>
       </Button>
     </div>
