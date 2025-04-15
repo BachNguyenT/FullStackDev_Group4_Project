@@ -8,10 +8,11 @@ function Header() {
   const { sidebarOpen, toggleSidebar } = useLayout();
 
   return (
-    <div className="flex items-center justify-end w-full gap-4">
-      <button
+    <div className="flex items-center justify-end gap-4 m-[16px] transition-all duration-300">
+      <span className="w-full justify-start">
+        <button
           onClick={toggleSidebar}
-          className="p-2 bg-purple-100 hover:bg-purple-200 rounded-md"
+          className="p-2 hover:bg-purple-200 rounded-md"
         >
           <svg
             className="w-5 h-5 text-purple-500"
@@ -23,12 +24,11 @@ function Header() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d={
-                sidebarOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"
-              }
+              d={"M4 6h16M4 12h16M4 18h16"}
             />
           </svg>
         </button>
+      </span>
 
       <Button size="icon" variant="ghost">
         <FontAwesomeIcon icon={faBell} className="text-gray-500 text-5xl" />
@@ -37,7 +37,7 @@ function Header() {
       {/* Avatar Circle */}
       <Button size="icon" variant="ghost" to="/account">
         <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold overflow-hidden">
-          <img src="https://tse1.mm.bing.net/th?id=OIP.UyHfcv3FBLzxXpEd91eNzgHaFb&pid=Api&P=0&h=180"/>
+          <img src="https://tse1.mm.bing.net/th?id=OIP.UyHfcv3FBLzxXpEd91eNzgHaFb&pid=Api&P=0&h=180" />
         </div>
       </Button>
     </div>
