@@ -8,22 +8,25 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/components/Button";
 
 import Logo from "@/assets/Icons/app-logo.svg";
+import LogoFull from "@/assets/Icons/plan-event.svg";
 
 function Sidebar() {
   const { sidebarOpen, toggleSidebar } = useLayout();
 
   return (
     <div
-      className={`flex flex-col bg-white border-r border-gray-200 transition-all duration-300 h-full ${
-        sidebarOpen ? "w-64" : "w-16"
+      className={`flex flex-col bg-white border-r border-gray-200 h-full ${
+        sidebarOpen ? "w-[300px]" : "[50px]"
       }`}
     >
       {/* Sidebar Header */}
-      <img src={Logo} alt="Logo" className="w-10 h-10 mt-4" />
-
       <div className="flex items-center justify-between px-4 py-3">
-        {sidebarOpen && (
-          <span className="text-purple-600 font-bold text-xl">PlanEvnt</span>
+        {sidebarOpen ? (
+          <div>
+            <img src={LogoFull} alt="Logo" className="w-full h-10" />
+          </div>
+        ) : (
+          <img src={Logo} alt="Logo" className="w-full h-10" />
         )}
       </div>
 
@@ -33,7 +36,7 @@ function Sidebar() {
           <li>
             <Button
               to="/home"
-              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2"
+              className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2"
               animated={false}
             >
               <svg
@@ -55,7 +58,7 @@ function Sidebar() {
           <li>
             <Button
               to="/event"
-              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2 "
+              className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >
               <svg
@@ -77,7 +80,7 @@ function Sidebar() {
           <li>
             <Button
               to="/invitation"
-              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2 "
+              className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >
               <svg
@@ -96,7 +99,7 @@ function Sidebar() {
           <li>
             <Button
               to="/account "
-              className="w-full my-2 flex items-center justify-start gap-3 px-4 py-2 "
+              className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >
               <svg
@@ -116,7 +119,7 @@ function Sidebar() {
       </nav>
 
       {/* Sidebar Footer */}
-      <div className="p-4">
+      <div className="flex p-4 justify-center">
         {sidebarOpen && (
           <Button
             to="/login"
