@@ -7,43 +7,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import components and libraries
 import { Button } from "@/components/ui/components/Button";
 
+import Logo from "@/assets/Icons/app-logo.svg";
+
 function Sidebar() {
   const { sidebarOpen, toggleSidebar } = useLayout();
 
   return (
     <div
-      className={`flex flex-col bg-white border-r border-gray-200 transition-all duration-300 h-full ${sidebarOpen ? "w-64" : "w-16"
-        }`}
+      className={`flex flex-col bg-white border-r border-gray-200 transition-all duration-300 h-full ${
+        sidebarOpen ? "w-64" : "w-16"
+      }`}
     >
       {/* Sidebar Header */}
+      <img src={Logo} alt="Logo" className="w-10 h-10 mt-4" />
+
       <div className="flex items-center justify-between px-4 py-3">
         {sidebarOpen && (
           <span className="text-purple-600 font-bold text-xl">PlanEvnt</span>
         )}
-        <button
-          onClick={toggleSidebar}
-          className="p-2 bg-purple-100 hover:bg-purple-200 rounded-md"
-        >
-          <svg
-            className="w-5 h-5 text-purple-500"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d={
-                sidebarOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"
-              }
-            />
-          </svg>
-        </button>
       </div>
 
       {/* Sidebar Menu */}
-      <nav className="flex-1 mt-4">
+      <nav className="flex-1 mt-4 px-4 py-3">
         <ul>
           <li>
             <Button
