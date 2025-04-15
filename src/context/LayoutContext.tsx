@@ -1,4 +1,3 @@
-// context/LayoutContext.tsx
 import { createContext, useContext } from "react";
 
 const LayoutContext = createContext<{
@@ -12,4 +11,4 @@ const useLayout = () => {
   return context;
 };
 
-export {useLayout,LayoutContext}
+export {useLayout, LayoutContext}

@@ -19,11 +19,11 @@ function DefaultLayout({ children }: { children: React.ReactNode }) {
         {/* Sidebar */}
         <Sidebar />
 
-        {/* Main Area */}
+        {/* Header */}
         <div className="flex flex-col flex-1 transition-all duration-300">
           <Header />
 
-          {/* Scrollable Content */}
+          {/* Children */}
           <div className="overflow-y-auto h-[calc(100vh-4rem)] p-4 bg-gray-50">
             {children}
             {/* Footer */}
