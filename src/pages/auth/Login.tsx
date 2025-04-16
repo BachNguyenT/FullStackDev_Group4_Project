@@ -1,95 +1,170 @@
 // src/Login.tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/components/Button";
+import LoginImage from "@/assets/Pictures/LoginImage.png";
+const LOGIN_SUCCESS_TARGET = "/workspace"; // Define the target URL for successful login
 
-//  interface LoginProps {}
-
-interface APIResponse {
-  message: string;
-}
-
-//  function Login({}: LoginProps) {
 function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [usernameCheck, setUCheck] = useState<string>("");
+  const [passwordCheck, setPCheck] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  function handleLogin() {
+    setLoading(true); // Show loading state
+    setError(""); // Clear previous errors
+    setUCheck(""); // Clear previous username errors
+    setPCheck(""); // Clear previous password errors
 
-    const userData = {
-      username: username,
-      password: password,
-    };
+    let check: Boolean = true;
+    if (username.length == 0) {
+      setUCheck("Username is required");
+      check = false;
+    }
 
-    try {
-      const response = await fetch("YOUR_API_ENDPOINT", {
+    if (password.length == 0) {
+      setPCheck("Password is required");
+      check = false;
+    }
+
+    if (check) {
+      fetch("http://localhost:3000/authenticate-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
         },
-        body: JSON.stringify(userData),
-      });
-
-      const data: APIResponse = await response.json();
-
-      if (response.ok) {
-        // Handle successful login
-        console.log("Login successful:", data);
-        // Redirect or update state as needed
-      } else {
-        // Handle login error
-        console.error("Login failed:", data.message);
-        alert("Login failed: " + data.message);
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-      alert("Network error occurred");
+        credentials: "include",
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      })
+        .then((response) => response.text())
+        .then((result) => {
+          if (result == "0x000") {
+            navigate(LOGIN_SUCCESS_TARGET);
+          } else if (result == "0x001") {
+            setError("Invalid username or password.");
+            setLoading(false);
+          } else {
+            setError(
+              "Service temporarily unavailable. Please try again later."
+            );
+            setLoading(false);
+          }
+        })
+        .catch(() => {
+          setError("Unexpected error occurred. Please try again later.");
+          setLoading(false);
+          return;
+        });
+    } else {
+      setLoading(false);
+      return;
     }
-  };
+  }
+
+  function checkSession() {
+    setLoading(true);
+    fetch("http://localhost:3000/verify-session", {
+      method: "GET",
+      credentials: "include", 
+      headers: {
+        "Content-Type": "application/json",
+        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+      },
+    })
+      .then((response) => response.text())
+      .then((checkResult) => {
+        if (checkResult === "0x000") {
+          navigate(LOGIN_SUCCESS_TARGET);
+        } else {
+          setLoading(false); 
+        }
+      })
+      .catch(() => {
+        setLoading(false); 
+      })
+      .finally(() => {
+        setLoading(false); 
+      });
+  }
+
+  useEffect(() => {
+    checkSession();
+  }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-semibold mb-4 text-center">
-          Login to Your Event Management App
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Username:
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Password:
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
-          <Button variant="default" type="submit" className="w-full">
-            Log In
+    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-400 flex items-center justify-center">
+      <div className="bg-white rounded-xl shadow-lg p-10 flex w-[800px]">
+        <div className="w-1/2 flex items-center justify-center">
+          <img
+            src={LoginImage}
+            alt="Event Planning Illustration"
+            className="w-64 h-64 object-contain"
+          />
+        </div>
+        <div className="w-1/2 flex flex-col justify-center">
+          <h1 className="text-3xl font-light text-gray-700">
+            Plan<span className="font-semibold text-purple-600">Evnt</span>
+          </h1>
+          <p className="text-purple-600 mt-4 mb-6 text-lg font-medium">Login</p>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="mb-4 p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            aria-label="Username"
+            disabled={isLoading}
+          />
+
+          {usernameCheck && <p>{usernameCheck}</p>}
+
+          <input
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            aria-label="Password"
+            disabled={isLoading}
+          />
+
+          {passwordCheck && <p>{passwordCheck}</p>}
+
+          <Button
+            variant="link"
+            className="w-full justify-end text-sm text-purple-500"
+            disabled={isLoading}
+            animated={false}
+          >
+            Forgot password?
           </Button>
-        </form>
+
+          <Button
+            onClick={() => handleLogin()}
+            className="bg-purple-500 text-white py-2 rounded-full mb-4 hover:bg-purple-600 transition"
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Login"}
+          </Button>
+
+          {error && <p>{error}</p>}
+
+          <Button
+            onClick={() => navigate("/register")}
+            className="border border-purple-500 text-purple-500 py-2 rounded-full"
+            disabled={isLoading}
+          >
+            Register
+          </Button>
+        </div>
       </div>
     </div>
   );

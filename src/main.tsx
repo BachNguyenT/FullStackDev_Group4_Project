@@ -1,10 +1,10 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import PlanEvntLogin from './pages/auth/Login'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
 
-createRoot(document.getElementById('root')!).render(
+import App from "@/App";
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <PlanEvntLogin />
-  </StrictMode>,
-)
+    <App />
+  </StrictMode>
+);
