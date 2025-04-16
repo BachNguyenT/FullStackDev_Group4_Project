@@ -7,14 +7,48 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import components and libraries
 import { Button } from "@/components/ui/components/Button";
 
+//import icons
 import Logo from "@/assets/Icons/app-logo.svg";
 import LogoFull from "@/assets/Icons/plan-event.svg";
+import Dashboard from "@/assets/Icons/chart-square.svg";
+import Event from "@/assets/Icons/calendar.svg";
+import Invitation from "@/assets/Icons/invitation.svg";
+import Account from "@/assets/Icons/user-1.svg";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Sidebar() {
   const { sidebarOpen } = useLayoutContext();
+  const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  function handleLogout() {
+    // Perform logout logic here, such as clearing user data or redirecting to the login page
+    let check: Boolean = true;
+
+    if (check) {
+      setLoading(true); // Show loading state
+      fetch("http://localhost:3000/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        },
+        credentials: "include",
+      })
+        .then((response) => response.text())
+        .then((result) => {
+          if (result == "0x000") {
+            navigate("/login");
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    }
+  }
   return (
     <div
       className={`flex flex-col bg-white border-r border-gray-200 h-full ${
@@ -25,7 +59,7 @@ function Sidebar() {
       <div className="flex items-center justify-between px-4 py-3">
         {sidebarOpen ? (
           <div>
-            <img src={LogoFull} alt="Logo" className="w-full h-10" />
+            <img src={LogoFull} alt="Logo" className="pl-2 w-full h-10" />
           </div>
         ) : (
           <img src={Logo} alt="Logo" className="w-full h-10" />
@@ -33,88 +67,56 @@ function Sidebar() {
       </div>
 
       {/* Sidebar Menu */}
-      <nav className="flex-1 mt-4 px-4 py-3">
+      <nav className="flex-1 px-4 ">
         <ul>
+          {/* Dashboard button */}
           <li>
             <Button
+              variant="sidebar"
               onClick={() => navigate("/workspace")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2"
               animated={false}
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 12l2-2m0 0l7-7 7 7m-9 2v6a2 2 0 002 2h4a2 2 0 002-2v-6"
-                />
-              </svg>
-              {sidebarOpen && <span className="ml-3">Home</span>}
+              <img src={Dashboard} alt="Logo" className="w-[24px] h-[24px]" />
+              {sidebarOpen && <span className="ml-1 text-base">Dashboard</span>}
             </Button>
           </li>
+          {/* Event button */}
           <li>
             <Button
+              variant="sidebar"
               onClick={() => navigate("/workspace/event")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8 7V3m8 4V3m-9 9h10m-10 5h10m-9 5h8"
-                />
-              </svg>
-              {sidebarOpen && <span className="ml-3">Events</span>}
+              <img src={Event} alt="Logo" className="w-[24px] h-[24px]" />
+              {sidebarOpen && <span className="ml-1 text-base">Events</span>}
             </Button>
           </li>
+          {/* Invitation button */}
           <li>
             <Button
-              onClick={() => navigate("/invitation")}
+              variant="sidebar"
+              onClick={() => navigate("/workspace/invitation")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M17 8h2a2 2 0 012 2v10H3V10a2 2 0 012-2h2" />
-                <path d="M7 8V6a5 5 0 0110 0v2" />
-              </svg>
-              {sidebarOpen && <span className="ml-3">Invitations</span>}
+              <img src={Invitation} alt="Logo" className="w-[24px] h-[24px]" />
+              {sidebarOpen && (
+                <span className="ml-1 text-base">Invitations</span>
+              )}
             </Button>
           </li>
+          {/* Account button */}
           <li>
             <Button
+              variant="sidebar"
               onClick={() => navigate("/workspace/account")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M5.121 17.804A13.937 13.937 0 0112 15c2.492 0 4.79.64 6.879 1.804" />
-                <path d="M15 11A3 3 0 119 11a3 3 0 016 0z" />
-              </svg>
-              {sidebarOpen && <span className="ml-3">Account</span>}
+              <img src={Account} alt="Logo" className="w-[24px] h-[24px]" />
+              {sidebarOpen && <span className="ml-1 text-base">Account</span>}
             </Button>
           </li>
         </ul>
@@ -124,13 +126,14 @@ function Sidebar() {
       <div className="flex p-4 justify-center">
         {sidebarOpen && (
           <Button
-            to="/login"
+            disabled={isLoading}
+            onClick={() => handleLogout()}
             variant="outline"
             className="hover:bg-purple-600 hover:text-white"
             animated={false}
           >
-            <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2" />
-            Log out
+          <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2" />
+            {isLoading ? "Loading..." : "Logout"}
           </Button>
         )}
       </div>

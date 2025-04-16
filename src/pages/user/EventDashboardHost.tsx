@@ -38,7 +38,6 @@ function EventDashboardHost() {
             <AttendeeList onDelete={handleDeleteAttendee} />
             <DiscussionBoard />
 
-
             {/* Delete modal for event and attendee */}
             {isDeleteModalOpen && deleteTarget && (
                 <ConfirmModal
