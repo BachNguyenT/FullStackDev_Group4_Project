@@ -26,21 +26,22 @@ function Workspace() {
           "Content-Type": "application/json",
           key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
         },
-        credentials: "include",
+        credentials: "include"
       });
-  
-      const imageBlob = await response.blob();
-      console.log(imageBlob);
-      const imageURL = URL.createObjectURL(imageBlob);
-      console.log(imageURL);
-      avatarURLRef.current = imageURL; // Store the URL in the ref
-      setAvatarURL(imageURL); // Set the state to trigger a re-render
-      return;
+      
+      if (response.ok) {
+        const imageBlob = await response.blob();
+        const imageURL = URL.createObjectURL(imageBlob);
+        avatarURLRef.current = imageURL;
+        setAvatarURL(imageURL); 
+        return;
+      }
     }
     catch {
       return;
     }
   }
+
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -54,7 +55,6 @@ function Workspace() {
   }, []);
 
   return (
-    <AvatarContext.Provider value={{ avatarURL, setAvatarURL }}>
       <LayoutContext.Provider value={{ sidebarOpen, toggleSidebar }}>
         <div className="w-screen h-screen flex overflow-hidden">
           <Sidebar />
@@ -72,7 +72,6 @@ function Workspace() {
           </div>
         </div>
       </LayoutContext.Provider>
-    </AvatarContext.Provider>
   );
 }
 
