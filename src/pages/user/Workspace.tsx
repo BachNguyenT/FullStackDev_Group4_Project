@@ -7,6 +7,12 @@ import userDummyPFP from "@/assets/Icons/user-dummy.svg";
 import Sidebar from "@/components/DefaultLayout/components/Sidebar";
 import Header from "@/components/DefaultLayout/components/Header";
 import Footer from "@/components/DefaultLayout/components/Footer";
+import Event from "@/pages/user/Event";
+import Invitation from "@/pages/user/Invitation";
+import Account from "@/pages/user/Account";
+import EventDashboardHost from "@/pages/user/EventDashboardHost";
+import EventEdit from "./EventEdit";
+import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
 import { c } from "node_modules/vite/dist/node/moduleRunnerTransport.d-CXw_Ws6P";
 
 function Workspace() {
@@ -59,11 +65,27 @@ function Workspace() {
         <div className="w-screen h-screen flex overflow-hidden">
           <Sidebar />
           <div className="flex flex-col flex-1 transition-all duration-300">
-            <Header avatarURL={avatarURL}/>
-            <div className="overflow-y-auto h-[calc(100vh-4rem)] p-4 bg-gray-50">
+            <Header avatarURL={avatarURL} />
+            <div className="overflow-y-auto h-[calc(100vh-4rem)] px-1 py-2  bg-gray-50">
               <Routes>
                 <Route path="" element={<div>Name</div>} />
                 <Route path="*" element={<Navigate to="/not-found-page" />} />
+                <Route
+                  path="event"
+                  element={<Event sidebarOpen={sidebarOpen} />}
+                />
+                <Route
+                  path="event/${eventId}/dashboard"
+                  element={<EventDashboardHost />}
+                />
+                <Route path="event/${eventId}/edit" element={<EventEdit />} />
+                <Route path="invitation" element={<Invitation />} />
+                <Route
+                  path="invitation/${invitation.id}/dashboard"
+                  element={<InvitationDashboardAttendee />}
+                />
+
+                <Route path="account" element={<Account />} />
               </Routes>
               <div className="mt-auto ">
                 <Footer />

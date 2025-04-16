@@ -176,7 +176,7 @@ function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 to-purple-400 p-4">
-      <div className="bg-white w-full max-w-5xl rounded-3xl shadow-2xl p-10 flex flex-col md:flex-row items-center">
+      <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-10 flex flex-col md:flex-row items-center">
         <div className="w-full px-4">
           <img src={LogoText} alt="Logo" className="w-full h-10" />
           <h2 className="text-xl text-center text-gray-600 my-8">Register</h2>
@@ -188,7 +188,35 @@ function Register() {
               handleRegister();
             }}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
+              {/* image */}
+              <div className="flex flex-col">
+                <div className="flex flex-col items-center space-y-3">
+                  <input
+                    id="avatar"
+                    onChange={(e) => previewImage(e)}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <div className="shrink-full">
+                    <img
+                      src={typeof image === "string" ? image : AvatarIcon}
+                      alt="Preview Image"
+                      className="h-[150px] w-[150px] rounded-full object-cover text-center border border-gray-300"
+                    />
+                  </div>
+                  <label
+                    htmlFor="avatar"
+                    className="h-[43px] rounded-md border border-gray-300 px-4 py-[11px] text-sm font-semibold hover:bg-purple-600 hover:text-white"
+                  >
+                    Upload avatar
+                  </label>
+                  <p className="flex items-start text-xs text-slate-400">
+                    PNG or JPG, Below 2Mb
+                  </p>
+                </div>
+              </div>
               {/* Full Name */}
               <div className="flex flex-col">
                 <label
@@ -271,6 +299,7 @@ function Register() {
                   <p className="text-red-500">{birthdayCheck}</p>
                 )}
               </div>
+
               {/* Username */}
               <div className="flex flex-col">
                 <label
@@ -293,71 +322,48 @@ function Register() {
                 )}
               </div>
 
-              {/* image */}
-              <div className="flex flex-row items-end space-x-6">
+              {/* Password */}
+              <div className="flex flex-col">
                 <label
-                  htmlFor="avatar"
-                  className="h-[43px] rounded-md border border-gray-300 px-4 py-[11px] text-sm font-semibold hover:bg-purple-600 hover:text-white"
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700 mb-1"
                 >
-                  Upload avatar
+                  Password
                 </label>
                 <input
-                  id="avatar"
-                  onChange={(e) => previewImage(e)}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  disabled={isLoading}
                 />
-                <div className="shrink-full">
-                  <img
-                    src={typeof image === "string" ? image : AvatarIcon}
-                    alt="Preview Image"
-                    className="h-[65px] w-[65px] rounded-full object-cover text-center border border-gray-300"
-                  />
-                </div>
+                {passwordCheck && (
+                  <p className="text-red-500">{passwordCheck}</p>
+                )}
               </div>
-            </div>
-
-            {/* Password */}
-            <div className="flex flex-col">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium text-gray-700 mb-1"
-              >
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter your password..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                disabled={isLoading}
-              />
-              {passwordCheck && <p className="text-red-500">{passwordCheck}</p>}
-            </div>
-
-            {/* Confirm Password */}
-            <div className="flex flex-col">
-              <label
-                htmlFor="confirmPassword"
-                className="text-sm font-medium text-gray-700 mb-1"
-              >
-                Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                type="password"
-                placeholder="Re-enter your password..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                value={confirmPassword}
-                disabled={isLoading}
-              />
-              {confirmPasswordCheck && (
-                <p className="text-red-500">{confirmPasswordCheck}</p>
-              )}
+              {/* Confirm Password */}
+              <div className="flex flex-col">
+                <label
+                  htmlFor="confirmPassword"
+                  className="text-sm font-medium text-gray-700 mb-1"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Re-enter your password..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  value={confirmPassword}
+                  disabled={isLoading}
+                />
+                {confirmPasswordCheck && (
+                  <p className="text-red-500">{confirmPasswordCheck}</p>
+                )}
+              </div>
             </div>
 
             {/* Checkbox Agreement */}

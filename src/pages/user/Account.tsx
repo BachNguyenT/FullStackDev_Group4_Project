@@ -29,7 +29,7 @@ function Account() {
   }, [avatar]);
 
   return (
-    <div>
+    <div className="p-4 sm:p-6 md:p-4">
       {/* Title */}
       <h2 className="text-xl sm:text-2xl font-semibold mb-4">My Account</h2>
       <div className="mb-4 gap-4">

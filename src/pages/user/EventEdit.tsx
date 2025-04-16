@@ -31,8 +31,8 @@ function EventEdit() {
     };
   }, [image]);
   return (
-    <div>
-      <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
+    <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
+      <h1 className="text-2xl font-semibold mb-4">
         Edit Event
       </h1>
       <div className="flex justify-between items-center mb-4">
@@ -134,7 +134,12 @@ function EventEdit() {
             </div>
           </div>
           <div>
-            <label htmlFor="avatar" className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white">Change image event</label>
+            <label
+              htmlFor="avatar"
+              className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white"
+            >
+              Change image event
+            </label>
             <input
               id="avatar"
               onChange={(e) => previewImage(e)}
@@ -171,7 +176,7 @@ function EventEdit() {
       </div>
       <div className="flex justify-end mt-4">
         <Button
-          to={`/event/${eventId}/dashboard`}
+          to={`/workspace/event/${eventId}/dashboard`}
           variant="secondary"
           className="mr-2"
         >
