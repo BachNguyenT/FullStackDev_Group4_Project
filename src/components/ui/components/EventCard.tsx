@@ -23,7 +23,7 @@ const EventCard = ({
 }: EventInfoProps) => {
   return (
     <Link
-      to="/event/${eventId}/dashboard"
+      to="/workspace/event/${eventId}/dashboard"
       className="w-[300px] rounded-xl overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
     >
       <img

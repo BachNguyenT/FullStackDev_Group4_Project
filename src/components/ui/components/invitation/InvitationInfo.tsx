@@ -29,7 +29,7 @@ function InvitationInfo({
 }: EventInfoProps) {
   return (
     <>
-      <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
+      <h1 className="text-2xl font-semibold mb-4">
         {eventName || "AB Wedding"}
       </h1>
 
