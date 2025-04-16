@@ -7,10 +7,9 @@ import { useAvatarContext } from "@/context/AvatarContext";
 import { useNavigate } from "react-router-dom";
 
 
-function Header() {
+function Header({avatarURL}: {avatarURL: string}) {
   const navigate = useNavigate();
   const { toggleSidebar } = useLayoutContext();
-  const { avatarURL } = useAvatarContext();
 
   return (
     <div className="flex items-center justify-end gap-4 m-[16px] transition-all duration-300">
