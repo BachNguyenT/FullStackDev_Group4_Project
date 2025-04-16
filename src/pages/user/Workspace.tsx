@@ -1,6 +1,5 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { AvatarContext } from "@/context/AvatarContext";
 import { LayoutContext } from "@/context/LayoutContext";
 import { useRef } from "react";
 import userDummyPFP from "@/assets/Icons/user-dummy.svg";
@@ -13,7 +12,6 @@ import Account from "@/pages/user/Account";
 import EventDashboardHost from "@/pages/user/EventDashboardHost";
 import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
-import { c } from "node_modules/vite/dist/node/moduleRunnerTransport.d-CXw_Ws6P";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -39,7 +37,7 @@ function Workspace() {
         const imageBlob = await response.blob();
         const imageURL = URL.createObjectURL(imageBlob);
         avatarURLRef.current = imageURL;
-        setAvatarURL(imageURL); 
+        setAvatarURL(imageURL);
         return;
       }
     }
@@ -47,6 +45,7 @@ function Workspace() {
       return;
     }
   }
+
 
 
   useEffect(() => {

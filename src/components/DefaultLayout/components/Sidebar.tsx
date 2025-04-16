@@ -43,7 +43,7 @@ function Sidebar() {
           <li>
             <Button
               variant="sidebar"
-              onClick={() => navigate("workspace")}
+              onClick={() => navigate("/workspace")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2"
               animated={false}
             >
