@@ -60,10 +60,7 @@ function Workspace() {
             <Header avatarURL={avatarURL}/>
             <div className="overflow-y-auto h-[calc(100vh-4rem)] p-4 bg-gray-50">
               <Routes>
-                <Route path="" element={
-                <div>
-                  Home
-                </div>} />
+                <Route path="" element={<div>Home</div>} />
                 <Route path="*" element={<Navigate to="/not-found-page" />} />
               </Routes>
               <div className="mt-auto ">
