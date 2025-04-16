@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/components/Button";
+import { useNavigate } from "react-router-dom";
 
-function NotFoundPage() {
+function NotFoundPage({ returnTo }: { returnTo : string}) {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-purple-900 to-purple-400 font-sans text-center relative">
       <div>
@@ -13,7 +15,7 @@ function NotFoundPage() {
           If you saved this URL, try accessing it from the homepage instead.
         </p>
         <Button
-          to="/" // Links to homepage
+          onClick={() => navigate(returnTo)}
           variant="default"
           size="default"
           className="mt-6 px-6 py-3 text-gray-800 bg-yellow-300 rounded-lg shadow-md hover:bg-yellow-400 hover:scale-105 transition-all duration-200"

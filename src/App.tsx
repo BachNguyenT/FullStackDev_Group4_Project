@@ -1,9 +1,11 @@
 //import the libraries
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import { About, Login, NotFoundPage, Register } from "@/pages";
-import  Test  from "@/test.tsx";
-import Home from "./pages/user/Home";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import About from "./pages/info/About";
+import NotFoundPage from "./pages/others/NotFoundPage";
+import Workspace from "./pages/user/Workspace";
 
 //import the components
 
@@ -17,15 +19,12 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Info pages */}
-        <Route path="/terms" element={<Register />} />
+        <Route path="/terms" element={<About />} />
         <Route path="/about" element={<About />} />
-        <Route path="/not-found-page" element={<NotFoundPage />} />
-
-        {/* Protected Routes */}
-        <Route path="/home/*" element={<Home />} />
+        <Route path="/not-found-page" element={<NotFoundPage returnTo="/workspace"/>} />
 
         {/* Workspace Routes */}
-        <Route path="/workspace/*" element={<Test />} />
+        <Route path="/workspace/*" element={<Workspace />} />
 
         {/* Resolve invalid paths*/}
         <Route path="*" element={<Navigate to="/not-found-page" />} />

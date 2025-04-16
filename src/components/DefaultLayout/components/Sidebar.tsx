@@ -1,5 +1,5 @@
 //import state management
-import { useLayout } from "@/context";
+import { useLayoutContext } from "@/context/LayoutContext";
 
 import { faArrowAltCircleRight } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/components/Button";
 
 import Logo from "@/assets/Icons/app-logo.svg";
 import LogoFull from "@/assets/Icons/plan-event.svg";
+import { useNavigate } from "react-router-dom";
 
 function Sidebar() {
-  const { sidebarOpen, toggleSidebar } = useLayout();
+  const { sidebarOpen } = useLayoutContext();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -35,7 +37,7 @@ function Sidebar() {
         <ul>
           <li>
             <Button
-              to="/home"
+              onClick={() => navigate("/workspace")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2"
               animated={false}
             >
@@ -57,7 +59,7 @@ function Sidebar() {
           </li>
           <li>
             <Button
-              to="/event"
+              onClick={() => navigate("/workspace/event")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >
@@ -79,7 +81,7 @@ function Sidebar() {
           </li>
           <li>
             <Button
-              to="/invitation"
+              onClick={() => navigate("/invitation")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >
@@ -98,7 +100,7 @@ function Sidebar() {
           </li>
           <li>
             <Button
-              to="/account "
+              onClick={() => navigate("/workspace/account")}
               className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
               animated={false}
             >

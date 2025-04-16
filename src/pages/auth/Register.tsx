@@ -1,8 +1,9 @@
 import AvatarIcon from "@/assets/Icons/avatar-placeholder.svg";
 import { Button } from "@/components/ui/components/Button";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LogoText from "@/assets/Icons/plan-event-text.svg";
+import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
 
 function Register() {
   // State variables for form inputs
@@ -14,7 +15,8 @@ function Register() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isTermsAgreed, setIsTermsAgreed] = useState<boolean>(false);
-  const [image, setImage] = useState<string | ArrayBuffer | null>(null);
+  const [image, setImage] = useState<string>(userDummyPFP);
+  const imageRef = useRef<string>(userDummyPFP);
 
   // Validation states
   const [fullNameCheck, setNameCheck] = useState<string>("");
@@ -36,9 +38,19 @@ function Register() {
     const file = e.target.files?.[0];
     if (file) {
       const previewURL = URL.createObjectURL(file);
+      console.log(previewURL);
+      imageRef.current = previewURL; 
       setImage(previewURL);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if(imageRef.current !== userDummyPFP) {
+        URL.revokeObjectURL(imageRef.current);
+      }
+    }
+  },[]);
 
   function handleRegister() {
     setLoading(true);
@@ -91,55 +103,72 @@ function Register() {
     }
 
     if (check) {
-      fetch("http://localhost:3000/register-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          Name: fullName,
-          PhoneNumber: phone,
-          Email: email,
-          Birthday: birthday,
-          Username: username,
-          Password: password,
-        }),
+      
+      fetch(image)
+      .then((response) => response.blob())
+      .then((blob) => blob.arrayBuffer())
+      .then((arrayBuffer) => {
+        const byteArray = new Uint8Array(arrayBuffer);
+        const hexString = Array.from(byteArray)
+          .map((byte) => byte.toString(16).padStart(2, "0")) 
+          .join("");
+        return "\\x" + hexString;
       })
-        .then((response) => {
-          return response
-            .json()
-            .then((data) => ({ status: response.status, data }));
+      .then((hexString) => {
+        fetch("http://localhost:3000/register-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            Name: fullName,
+            PhoneNumber: phone,
+            Email: email,
+            Birthday: birthday,
+            Username: username,
+            Password: password,
+            Pfp: (image == userDummyPFP) ? "" : hexString,
+          }),
         })
-        .then(({ status, data }) => {
-          if (status === 200 && data.success && data.code === "0x000") {
-            navigate("/login");
-          } else {
-            // Handle specific errors
-            if (status === 400 && data.code === "0x003") {
-              if (data.error.includes("Phone number")) {
-                setPhoneCheck(data.error);
-              } else if (data.error.includes("Email")) {
-                setEmailCheck(data.error);
-              } else if (data.error.includes("Username")) {
-                setUCheck(data.error);
-              }
-            } else if (status === 400 && data.code === "0x001") {
-              setGeneralError(data.error); // Missing fields
-            } else if (status === 401 && data.code === "Ux001") {
-              setGeneralError("Unauthorized API call");
+          .then((response) => {
+            return response
+              .json()
+              .then((data) => ({ status: response.status, data }));
+          })
+          .then(({ status, data }) => {
+            if (status === 200 && data.success && data.code === "0x000") {
+              navigate("/login");
             } else {
-              setGeneralError(data.error || "An unexpected error occurred.");
+              // Handle specific errors
+              if (status === 400 && data.code === "0x003") {
+                if (data.error.includes("Phone number")) {
+                  setPhoneCheck(data.error);
+                } else if (data.error.includes("Email")) {
+                  setEmailCheck(data.error);
+                } else if (data.error.includes("Username")) {
+                  setUCheck(data.error);
+                }
+              } else if (status === 400 && data.code === "0x001") {
+                setGeneralError(data.error); // Missing fields
+              } else if (status === 401 && data.code === "Ux001") {
+                setGeneralError("Unauthorized API call");
+              } else {
+                setGeneralError(data.error || "An unexpected error occurred.");
+              }
+              setLoading(false);
             }
+          })
+          .catch((error) => {
+            console.error("Fetch error:", error);
+            setGeneralError("Failed to connect to the server.");
             setLoading(false);
-          }
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-          setGeneralError("Failed to connect to the server.");
-          setLoading(false);
-        });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     } else {
       setLoading(false);
     }
