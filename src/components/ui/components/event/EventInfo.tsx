@@ -31,16 +31,15 @@ function EventInfo({
   venue,
   onDelete,
 }: EventInfoProps) {
-
   return (
     <>
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-semibold mt-4 mb-4">
+      <div className="flex justify-between items-start">
+        <h1 className="text-2xl font-semibold mb-4">
           {eventName || "AB Wedding"}
         </h1>
         <div className="flex-end">
           <Button
-            to="/event/${eventId}/edit"
+            to="/workspace/event/${eventId}/edit"
             animated={false}
             variant="secondary"
           >
@@ -55,7 +54,6 @@ function EventInfo({
           >
             <FaTrashCan />
           </Button>
-
         </div>
       </div>
       <div className="flex">

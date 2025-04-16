@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/components/Button";
-import { EventCard } from "@/components/ui";
-import { useLayout } from "@/context";
+import  EventCard  from "@/components/ui/components/EventCard"
 
 import {
   faMagnifyingGlass,
@@ -10,19 +9,18 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
-function Event() {
-  const { sidebarOpen } = useLayout();
+function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
   const [events, setEvents] = useState(Array(20).fill(null));
 
   return (
     <div className="p-4 sm:p-6 md:p-4">
       <div className="flex items-center justify-between mb-4">
         {/* Title */}
-        <h2 className="text-xl sm:text-2xl font-semibold mb-4">My Events</h2>
+        <h2 className="text-2xl sm:text-2xl font-semibold mb-4">My Events</h2>
 
         {/* Add new event */}
         <span>
-          <Button to="/event/addNewEvent" className="mb-4" animated={false}>
+          <Button to="/event/addNewEvent" className="mb-2" animated={false}>
             <FontAwesomeIcon icon={faPlus} className="ml-2" />
             Add New Event
           </Button>
@@ -64,9 +62,9 @@ function Event() {
 
       {/* Event Cards Grid */}
       <div
-        className={`ml-10 mr-2 grid grid-cols-1 gap-x-[0px] gap-y-[16px] transition-all duration-300 ${sidebarOpen
-          ? "sm:grid-cols-2 xl:grid-cols-3"
-          : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        className={`ml-10 mr-2 grid gap-x-[0px] gap-y-[24px] transition-all duration-300 ${sidebarOpen
+          ? "sm:grid-cols-1 lg:grid-cols-3"
+          : "sm:grid-cols-1 lg:grid-cols-4"
           }`}
       >
         {events.map((_, index) => (
