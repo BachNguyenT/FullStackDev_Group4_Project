@@ -15,11 +15,40 @@ import Event from "@/assets/Icons/calendar.svg";
 import Invitation from "@/assets/Icons/invitation.svg";
 import Account from "@/assets/Icons/user-1.svg";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Sidebar() {
   const { sidebarOpen } = useLayoutContext();
+  const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  function handleLogout() {
+    // Perform logout logic here, such as clearing user data or redirecting to the login page
+    let check: Boolean = true;
+
+    if (check) {
+      setLoading(true); // Show loading state
+      fetch("http://localhost:3000/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        },
+        credentials: "include",
+      })
+        .then((response) => response.text())
+        .then((result) => {
+          if (result == "0x000") {
+            navigate("/login");
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    }
+  }
   return (
     <div
       className={`flex flex-col bg-white border-r border-gray-200 h-full ${
@@ -40,6 +69,7 @@ function Sidebar() {
       {/* Sidebar Menu */}
       <nav className="flex-1 px-4 ">
         <ul>
+          {/* Dashboard button */}
           <li>
             <Button
               variant="sidebar"
@@ -51,6 +81,7 @@ function Sidebar() {
               {sidebarOpen && <span className="ml-1 text-base">Dashboard</span>}
             </Button>
           </li>
+          {/* Event button */}
           <li>
             <Button
               variant="sidebar"
@@ -62,6 +93,7 @@ function Sidebar() {
               {sidebarOpen && <span className="ml-1 text-base">Events</span>}
             </Button>
           </li>
+          {/* Invitation button */}
           <li>
             <Button
               variant="sidebar"
@@ -75,6 +107,7 @@ function Sidebar() {
               )}
             </Button>
           </li>
+          {/* Account button */}
           <li>
             <Button
               variant="sidebar"
@@ -93,13 +126,14 @@ function Sidebar() {
       <div className="flex p-4 justify-center">
         {sidebarOpen && (
           <Button
-            to="/login"
+            disabled={isLoading}
+            onClick={() => handleLogout()}
             variant="outline"
             className="hover:bg-purple-600 hover:text-white"
             animated={false}
           >
-            <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2" />
-            Log out
+          <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2" />
+            {isLoading ? "Loading..." : "Logout"}
           </Button>
         )}
       </div>
