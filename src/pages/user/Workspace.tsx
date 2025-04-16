@@ -7,6 +7,7 @@ import userDummyPFP from "@/assets/Icons/user-dummy.svg";
 import Sidebar from "@/components/DefaultLayout/components/Sidebar";
 import Header from "@/components/DefaultLayout/components/Header";
 import Footer from "@/components/DefaultLayout/components/Footer";
+import { c } from "node_modules/vite/dist/node/moduleRunnerTransport.d-CXw_Ws6P";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -17,33 +18,34 @@ function Workspace() {
     setSidebarOpen((prevState) => !prevState);
   }
 
-  function fillPageData(): void {
-    fetch("http://localhost:3000/get-user-pfp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-      },
-      body: JSON.stringify({
-        userID: "UID-2",
-      }),
-      credentials: "include",
-    })
-      .then((response) => response.blob())
-      .then((data) => {
-        const img = URL.createObjectURL(data);
-        avatarURLRef.current = img; 
-        setAvatarURL(img);
-      })
-      .catch((err) => {
-        console.log(err);
+  async function fetchPFP () {
+    try {
+      const response = await fetch("http://localhost:3000/get-user-pfp", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        },
+        credentials: "include",
       });
+  
+      const imageBlob = await response.blob();
+      console.log(imageBlob);
+      const imageURL = URL.createObjectURL(imageBlob);
+      console.log(imageURL);
+      avatarURLRef.current = imageURL; // Store the URL in the ref
+      setAvatarURL(imageURL); // Set the state to trigger a re-render
+      return;
+    }
+    catch {
+      return;
+    }
   }
 
   useEffect(() => {
     const abortController = new AbortController();
 
-    fillPageData();
+    fetchPFP();
 
     return () => {
       URL.revokeObjectURL(avatarURLRef.current); // Clean up the object URL when the component unmounts
@@ -60,7 +62,7 @@ function Workspace() {
             <Header avatarURL={avatarURL}/>
             <div className="overflow-y-auto h-[calc(100vh-4rem)] p-4 bg-gray-50">
               <Routes>
-                <Route path="" element={<div>Home</div>} />
+                <Route path="" element={<div>Name</div>} />
                 <Route path="*" element={<Navigate to="/not-found-page" />} />
               </Routes>
               <div className="mt-auto ">
