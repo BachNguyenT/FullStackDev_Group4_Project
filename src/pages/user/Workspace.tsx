@@ -2,7 +2,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LayoutContext } from "@/context/LayoutContext";
 import { useRef } from "react";
-import userDummyPFP from "@/assets/Icons/user-dummy.svg";
+import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
 import Sidebar from "@/components/DefaultLayout/components/Sidebar";
 import Header from "@/components/DefaultLayout/components/Header";
 import Footer from "@/components/DefaultLayout/components/Footer";

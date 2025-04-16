@@ -37,9 +37,24 @@ function Register() {
   const previewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check file type
+      const validTypes = ["image/png", "image/jpeg"];
+      if (!validTypes.includes(file.type)) {
+        alert("Invalid file type. Please upload a PNG or JPEG image.");
+        return;
+      }
+
+      // Check file size (5MB = 5 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert("File size must be smaller than 5MB.");
+        return;
+      }
+
+      // Generate preview URL
       const previewURL = URL.createObjectURL(file);
       console.log(previewURL);
-      imageRef.current = previewURL; 
+      imageRef.current = previewURL;
       setImage(previewURL);
     }
   };
@@ -52,7 +67,7 @@ function Register() {
     }
   },[]);
 
-  function handleRegister() {
+  async function handleRegister() {
     setLoading(true);
     setGeneralError("");
     setNameCheck("");
@@ -66,56 +81,53 @@ function Register() {
 
     let check = true;
     if (fullName.length === 0) {
-      setNameCheck("Full name is required");
+      setNameCheck("Full name is required!");
       check = false;
     }
     if (email.length === 0) {
-      setEmailCheck("Email is required");
+      setEmailCheck("Email is required!");
       check = false;
     }
     if (phone.length === 0) {
-      setPhoneCheck("Phone number is required");
+      setPhoneCheck("Phone number is required!");
       check = false;
     }
     if (birthday.length === 0) {
-      setBirthdayCheck("Birthday is required");
+      setBirthdayCheck("Birthday is required!");
       check = false;
     }
     if (username.length === 0) {
-      setUCheck("Username is required");
+      setUCheck("Username is required!");
       check = false;
     }
     if (password.length === 0) {
-      setPCheck("Password is required");
+      setPCheck("Password is required!");
       check = false;
     }
     if (confirmPassword.length === 0) {
-      setCPCheck("Confirm Password is required");
+      setCPCheck("Confirm Password is required!");
       check = false;
     }
     if (password !== confirmPassword) {
-      setPCheck("Passwords do not match");
+      setPCheck("Passwords do not match!");
       check = false;
     }
     if (!isTermsAgreed) {
-      setTermsError("Please agree to the terms and conditions");
+      setTermsError("Please agree to the terms and conditions!");
       check = false;
     }
 
     if (check) {
-      
-      fetch(image)
-      .then((response) => response.blob())
-      .then((blob) => blob.arrayBuffer())
-      .then((arrayBuffer) => {
-        const byteArray = new Uint8Array(arrayBuffer);
-        const hexString = Array.from(byteArray)
+      try {
+        const getImage = await fetch(image);
+        const imageBlob = await getImage.blob();
+        const imageArrayBuffer = await imageBlob.arrayBuffer();
+        const imageByteArray =  new Uint8Array(imageArrayBuffer);
+        const imageHexString = Array.from(imageByteArray)
           .map((byte) => byte.toString(16).padStart(2, "0")) 
           .join("");
-        return "\\x" + hexString;
-      })
-      .then((hexString) => {
-        fetch("http://localhost:3000/register-user", {
+
+        const registerResult = await fetch("http://localhost:3000/register-user", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -129,48 +141,52 @@ function Register() {
             Birthday: birthday,
             Username: username,
             Password: password,
-            Pfp: (image == userDummyPFP) ? "" : hexString,
+            Pfp: (image == userDummyPFP) ? "" : "\\x" + imageHexString,
           }),
-        })
-          .then((response) => {
-            return response
-              .json()
-              .then((data) => ({ status: response.status, data }));
-          })
-          .then(({ status, data }) => {
-            if (status === 200 && data.success && data.code === "0x000") {
-              navigate("/login");
-            } else {
-              // Handle specific errors
-              if (status === 400 && data.code === "0x003") {
-                if (data.error.includes("Phone number")) {
-                  setPhoneCheck(data.error);
-                } else if (data.error.includes("Email")) {
-                  setEmailCheck(data.error);
-                } else if (data.error.includes("Username")) {
-                  setUCheck(data.error);
-                }
-              } else if (status === 400 && data.code === "0x001") {
-                setGeneralError(data.error); // Missing fields
-              } else if (status === 401 && data.code === "Ux001") {
-                setGeneralError("Unauthorized API call");
-              } else {
-                setGeneralError(data.error || "An unexpected error occurred.");
-              }
-              setLoading(false);
+        });
+
+        if(registerResult.ok) {
+          alert("Registration successful!");
+          navigate("/login");
+        }
+        else {
+          if(registerResult.status === 400) {
+            const verificationResult = await registerResult.json();
+            if(verificationResult[1] === "0x002") {
+              setPhoneCheck("Phone number already exists!");  
             }
-          })
-          .catch((error) => {
-            console.error("Fetch error:", error);
-            setGeneralError("Failed to connect to the server.");
+            else  {
+              setPhoneCheck("Invalid phone number!");  
+            }
+
+            if(verificationResult[2] === "0x002") {
+              setEmailCheck("Email already exists!");  
+            }
+
+            if(verificationResult[3] === "0x002") {
+              setUCheck("Username already exists!");  
+            }
+
             setLoading(false);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+            return;
+          }
+          else {
+            console.log("2");
+            setGeneralError("An error occurred while registering. Please try again.");
+            setLoading(false);
+            return;
+          }
+        }
+      }
+      catch (error) {
+        console.log(error);
+        setGeneralError("An error occurred while registering. Please try again.");
+        setLoading(false);
+        return;
+      }
     } else {
       setLoading(false);
+      return;
     }
   }
 
@@ -217,6 +233,7 @@ function Register() {
                   </p>
                 </div>
               </div>
+
               {/* Full Name */}
               <div className="flex flex-col">
                 <label
