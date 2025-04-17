@@ -12,14 +12,15 @@ const variantStyles = {
     "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/90 hover:shadow-md hover:scale-105 active:scale-100 active:shadow-xs active:bg-secondary/95 transition-all duration-150 ease-out rounded-lg border border-secondary/30",
   ghost: "bg-[#fff] hover:bg-accent hover:text-accent-foreground",
   link: "text-primary underline-offset-4 hover:underline",
-  sidebar: "bg-[#fff] text-primary-foreground hover:bg-purple-50",
+  sidebar: "bg-[#fff] text-primary-foreground hover:bg-purple-100",
+  icon: "px-2 hover:bg-purple-100",
 };
 
 const sizeStyles = {
   default: "h-9 px-4 py-2",
   sm: "h-8 rounded-md px-3 text-xs",
   lg: "h-10 rounded-md px-8",
-  icon: "h-9 w-9",
+  icon: "h-7 w-7",
 };
 
 const baseStyles =

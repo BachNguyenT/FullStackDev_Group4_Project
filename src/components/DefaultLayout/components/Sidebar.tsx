@@ -20,6 +20,7 @@ import { useState } from "react";
 function Sidebar() {
   const { sidebarOpen } = useLayoutContext();
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [eventsOpen, setEventsOpen] = useState(false);
   const navigate = useNavigate();
 
   function handleLogout() {
@@ -81,17 +82,42 @@ function Sidebar() {
               {sidebarOpen && <span className="ml-1 text-base">Dashboard</span>}
             </Button>
           </li>
-          {/* Event button */}
+          {/* Event button (Accordion) */}
           <li>
             <Button
               variant="sidebar"
-              onClick={() => navigate("/workspace/event")}
-              className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
+              onClick={() => setEventsOpen(!eventsOpen)} // Toggle accordion
+              className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2"
               animated={false}
             >
               <img src={Event} alt="Logo" className="w-[24px] h-[24px]" />
               {sidebarOpen && <span className="ml-1 text-base">Events</span>}
             </Button>
+            {/* Accordion Content */}
+            {eventsOpen && sidebarOpen && (
+              <ul className="ml-6">
+                <li>
+                  <Button
+                    variant="sidebar"
+                    onClick={() => navigate("/workspace/event")}
+                    className="w-full h-[40px] my-1 flex items-center justify-start gap-3 px-4 py-2 text-sm"
+                    animated={false}
+                  >
+                    <span>My Events</span>
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    variant="sidebar"
+                    onClick={() => navigate("/workspace/event/browse")}
+                    className="w-full h-[40px] my-1 flex items-center justify-start gap-3 px-4 py-2 text-sm"
+                    animated={false}
+                  >
+                    <span>Browse Events</span>
+                  </Button>
+                </li>
+              </ul>
+            )}
           </li>
           {/* Invitation button */}
           <li>
@@ -132,7 +158,7 @@ function Sidebar() {
             className="hover:bg-purple-600 hover:text-white"
             animated={false}
           >
-          <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2" />
+            <FontAwesomeIcon icon={faArrowAltCircleRight} className="mr-2" />
             {isLoading ? "Loading..." : "Logout"}
           </Button>
         )}
