@@ -14,6 +14,7 @@ import Dashboard from "@/assets/Icons/chart-square.svg";
 import Event from "@/assets/Icons/calendar.svg";
 import Invitation from "@/assets/Icons/invitation.svg";
 import Account from "@/assets/Icons/user-1.svg";
+import Arrow from "@/assets/Icons/arrow-right.svg";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -91,7 +92,17 @@ function Sidebar() {
               animated={false}
             >
               <img src={Event} alt="Logo" className="w-[24px] h-[24px]" />
-              {sidebarOpen && <span className="ml-1 text-base">Events</span>}
+              {sidebarOpen && (
+                <div className="flex justify-between w-full items-center">
+                  <span className="ml-1 text-base">Events</span>
+                  <img
+                    src={Arrow}
+                    className={` w-[18px] h-[18px] ${
+                      eventsOpen ? "rotate-90" : ""
+                    }`}
+                  />
+                </div>
+              )}
             </Button>
             {/* Accordion Content */}
             {eventsOpen && sidebarOpen && (
@@ -103,6 +114,7 @@ function Sidebar() {
                     className="w-full h-[40px] my-1 flex items-center justify-start gap-3 px-4 py-2 text-sm"
                     animated={false}
                   >
+                    <span className="text-xl"> • </span>
                     <span>My Events</span>
                   </Button>
                 </li>
@@ -113,6 +125,7 @@ function Sidebar() {
                     className="w-full h-[40px] my-1 flex items-center justify-start gap-3 px-4 py-2 text-sm"
                     animated={false}
                   >
+                    <span className="text-xl"> • </span>
                     <span>Browse Events</span>
                   </Button>
                 </li>
