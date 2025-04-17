@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/components/Button";
-import  EventCard  from "@/components/ui/components/EventCard"
+import EventCard from "@/components/ui/components/EventCard";
 
 import {
   faMagnifyingGlass,
@@ -9,7 +9,7 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
-function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
+function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [events, setEvents] = useState(Array(20).fill(null));
 
   return (
@@ -25,26 +25,32 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
             Add New Event
           </Button>
         </span>
-
       </div>
 
       {/* Search, Filter & Sort Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
         {/* Left: Search & Filter */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
-          <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 bg-white shadow-sm focus-within:border-gray-600">
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className="text-gray-500 mr-2"
-            />
+          <div className="flex items-center border border-gray-300 rounded-lg px-1 py-1 bg-white shadow-sm focus-within:border-gray-600">
+            <Button variant="icon" size="icon">
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className="text-gray-500"
+              />
+            </Button>
+
             <input
               type="text"
               placeholder="Search Events..."
-              className="w-full outline-none text-sm"
+              className="ml-2 w-full outline-none text-sm"
             />
           </div>
 
-          <Button animated={false} variant="ghost" className="border border-gray-300 shadow-sm">
+          <Button
+            animated={false}
+            variant="ghost"
+            className="border border-gray-300 shadow-sm"
+          >
             <span>Filter</span>
             <FontAwesomeIcon icon={faChevronDown} />
           </Button>
@@ -53,7 +59,11 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
         {/* Right: Sort */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <span className="text-sm">Sort:</span>
-          <Button animated={false} variant="ghost" className="border border-gray-300 shadow-sm">
+          <Button
+            animated={false}
+            variant="ghost"
+            className="border border-gray-300 shadow-sm"
+          >
             Most Recent
             <FontAwesomeIcon icon={faChevronDown} />
           </Button>
@@ -62,10 +72,11 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
 
       {/* Event Cards Grid */}
       <div
-        className={`ml-10 mr-2 grid gap-x-[0px] gap-y-[24px] transition-all duration-300 ${sidebarOpen
-          ? "sm:grid-cols-1 lg:grid-cols-3"
-          : "sm:grid-cols-1 lg:grid-cols-4"
-          }`}
+        className={`ml-10 mr-2 grid gap-x-[0px] gap-y-[24px] transition-all duration-300 ${
+          sidebarOpen
+            ? "sm:grid-cols-1 lg:grid-cols-3"
+            : "sm:grid-cols-1 lg:grid-cols-4"
+        }`}
       >
         {events.map((_, index) => (
           <EventCard key={index} />
