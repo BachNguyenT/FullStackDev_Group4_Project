@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/components/Button";
 import EventCard from "@/components/ui/components/EventCard";
@@ -9,10 +9,66 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
-function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
-  const [events, setEvents] = useState(Array(20).fill(null));
+import eventDummyImage from "@/assets/Pictures/event-image-placeholder.jpg";
+
+function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
+  // Visibility: 0 = Private, 1 = Public, 2 = All
+  // SortDirection: 0 = Ascending, 1 = Descending, 2 = Default
+  const [events, setEvents] = useState([]);
+  const [maxAttendeeCount, setMaxAttendeeCount] = useState(0);
+  const [eventNameSearch, setEventNameSearch] = useState("");
+  const [eventVisibilitySearch, setEventVisibilitySearch] = useState(2);
+  const [sortDirection, setSortDirection] = useState(2);
+  const [isLoading, setIsLoading] = useState(false);
+
+  
+
+  async function fetchEvents(abortSignal : AbortSignal | null) {
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:3000/get-organizing-events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        },
+        body: JSON.stringify({
+          eventName: eventNameSearch,
+          visibilitySearch: eventVisibilitySearch,
+          sortDirection: sortDirection
+        }),
+        credentials: "include",
+        signal: abortSignal
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setEvents(data.events);
+        setMaxAttendeeCount(data.maxAttendeeCount);
+        setIsLoading(false);
+      }
+      else {
+        console.log("Error fetching events:", response.status);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    fetchEvents(abortController.signal);
+
+    return () => {
+      abortController.abort(); // Clean up the fetch request on component unmount
+    };
+  }, []);
 
   return (
+    
     <div className="p-4 sm:p-6 md:p-4">
       <div className="flex items-center justify-between mb-4">
         {/* Title */}
@@ -32,7 +88,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Left: Search & Filter */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
           <div className="flex items-center border border-gray-300 rounded-lg px-1 py-1 bg-white shadow-sm focus-within:border-gray-600">
-            <Button variant="icon" size="icon">
+            <Button variant="icon" size="icon" disabled={isLoading} onClick={() => fetchEvents(null)}>
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className="text-gray-500"
@@ -40,6 +96,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
             </Button>
 
             <input
+              onChange={(e) => setEventNameSearch(e.target.value)}
               type="text"
               placeholder="Search Events..."
               className="ml-2 w-full outline-none text-sm"
@@ -78,9 +135,11 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
             : "sm:grid-cols-1 lg:grid-cols-4"
         }`}
       >
-        {events.map((_, index) => (
-          <EventCard key={index} />
-        ))}
+        {isLoading ? <div>Loading...</div> : 
+        events.map((element, index) => {
+          let date = new Date(element.Date);
+          return <EventCard key={index} eventId={element.ID} eventName={element.Name} createdOn={date.toLocaleDateString()} visibility={element.IsPrivate ? "Private" : "Public"} attendeeCount={element.AtendeeCount} maxAttendeeCount={maxAttendeeCount} />
+        })}
       </div>
     </div>
   );
