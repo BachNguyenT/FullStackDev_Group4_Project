@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 
 import { Button } from "@/components/ui/components/Button";
 
-const eventTypes = ["conference", "workshop", "webinar", "meetup"];
+const eventTypes = ["conference", "workshop", "webinar", "meetup", "other"];
 const durationUnits = ["hours", "minutes", "days"];
 
 function EventAdd() {
-  const [image, setImage] = useState<string | ArrayBuffer | null>(null);
+  const [image, setImage] = useState<string | null>(null);
   const [name, setName] = useState<string>("Event Name");
   const [date, setDate] = useState<string>("2023-10-01");
   const [venue, setVenue] = useState<string>("Venue Name");
@@ -22,6 +22,7 @@ function EventAdd() {
       setImage(previewURL);
     }
   };
+
   useEffect(() => {
     //clean up function to revoke the object URL
     return () => {
@@ -30,6 +31,8 @@ function EventAdd() {
       }
     };
   }, [image]);
+
+
   return (
     <div>
       <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
@@ -38,19 +41,21 @@ function EventAdd() {
       <div className="flex justify-between items-center mb-4">
         <div>
           <div>
+            {/* Event name input */}
             <label htmlFor="name" className="block mb-2 font-light text-base">
-              Name:
+              Event Name:
             </label>
             <input
               onChange={(e) => {
                 setName(e.target.value);
               }}
               id="name"
-              value={name}
+              placeholder="Event name..."
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
           </div>
           <div>
+            {/* Date and Time of the event input */}
             <label htmlFor="date" className="block mb-2 font-light text-base">
               Date & Time:
             </label>
@@ -59,27 +64,28 @@ function EventAdd() {
               onChange={(e) => {
                 setDate(e.target.value);
               }}
-              value={date}
               type="datetime-local"
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
           </div>
           <div>
+            {/* Event venue input */}
             <label htmlFor="venue" className="block mb-2 font-light text-base">
-              Venue:
+              Event Venue:
             </label>
             <input
               onChange={(e) => {
                 setVenue(e.target.value);
               }}
               id="venue"
-              value={venue}
+              placeholder="Event venue..."
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
           </div>
         </div>
         <div>
           <div>
+            {/* Event type input */}
             <label
               className="block mb-2 font-light text-base"
               htmlFor="eventType"
@@ -102,36 +108,71 @@ function EventAdd() {
             </select>
           </div>
           <div>
+            {/* Event duration input */}
             <label
               htmlFor="duration"
               className="block mb-2 font-light text-base"
             >
-              Duration
+              Event Duration:
             </label>
             <div className="flex items-center mb-4">
               <input
                 onChange={(e) => {
                   setDuration(parseInt(e.target.value));
                 }}
-                id="duration"
-                value={duration}
+                id="Hour"
+                placeholder="Hour..."
                 type="number"
+                min={0}
                 className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
               />
-              <select
-                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-24 font-light text-sm ml-2"
+              <div>Hour(s)</div>
+              <input
                 onChange={(e) => {
-                  setDurationUnit(e.target.value);
+                  setDuration(parseInt(e.target.value));
                 }}
-                value={durationUnit}
-              >
-                {durationUnits.map((unit) => (
-                  <option key={unit} value={unit}>
-                    {unit.charAt(0).toUpperCase() + unit.slice(1)}
-                  </option>
-                ))}
-              </select>
+                id="Minute"
+                placeholder="Minute..."
+                type="number"
+                min={0}
+                max={59} 
+                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
+              />
+              <div>Min(s)</div>
+              <input
+                onChange={(e) => {
+                  setDuration(parseInt(e.target.value));
+                }}
+                id="Second"
+                placeholder="Second..."
+                type="number"
+                min={0}
+                max={59} 
+                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
+              />
+              <div>Sec(s)</div>
             </div>
+          </div>
+          <div>
+            {/* Reminder time input */}
+          <label
+            htmlFor="Reminder"
+            className="block mb-2 font-light text-base"
+          >
+            Reminder:
+          </label>
+          <input
+                onChange={(e) => {
+                  setDuration(parseInt(e.target.value));
+                }}
+                id="Reminder"
+                placeholder="Second..."
+                type="number"
+                min={0}
+                max={59} 
+                className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
+              />
+              <div>Sec(s)</div>
           </div>
           <div>
             <label htmlFor="avatar" className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white">Upload image event</label>

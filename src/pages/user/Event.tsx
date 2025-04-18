@@ -76,7 +76,7 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
 
         {/* Add new event */}
         <span>
-          <Button to="/event/addNewEvent" className="mb-2" animated={false}>
+          <Button to="/workspace/create-event" className="mb-2" animated={false}>
             <FontAwesomeIcon icon={faPlus} className="ml-2" />
             Add New Event
           </Button>

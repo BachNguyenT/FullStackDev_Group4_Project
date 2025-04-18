@@ -13,6 +13,7 @@ import EventDashboardHost from "@/pages/user/EventDashboardHost";
 import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
 import eventDummyImage from "@/assets/Pictures/event-image-placeholder.jpg";
+import EventAdd from "./EventAdd";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -66,13 +67,24 @@ function Workspace() {
             <Header avatarURL={avatarURL} />
             <div className="overflow-y-auto h-[calc(100vh-4rem)] px-1 py-2  bg-gray-50">
               <Routes>
+                {/* Dashboard of the workspace */}
                 <Route path="" element={<div>Name <Footer /> </div>} />
+                {/* Resolve invalid path */}
                 <Route path="*" element={<Navigate to="/not-found-page" />} />
+                {/* Show all events */}
                 <Route path="event" element={<Event sidebarOpen={sidebarOpen} />} />
-                <Route path="event/${eventId}/dashboard" element={<EventDashboardHost />} />
+                {/* Dashboard of a specific event */}
+                <Route path="event/${eventId}" element={<EventDashboardHost />} />
+
+                {/* Create new event page */}
+                <Route path="create-event" element={<EventAdd />} />
+
+
+
+
                 <Route path="event/${eventId}/edit" element={<EventEdit />} />
                 <Route path="invitation" element={<Invitation />} />
-                <Route path="invitation/${invitation.id}/dashboard" element={<InvitationDashboardAttendee />}/>
+                <Route path="invitation/${invitation.id}" element={<InvitationDashboardAttendee />}/>
                 <Route path="account" element={<Account />} />
               </Routes>
               <div className="mt-auto ">
