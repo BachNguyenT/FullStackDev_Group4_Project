@@ -1,26 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 
-interface DropdownItem {
-  text: string;
-}
 
-interface DropdownProps {
-  items: DropdownItem[];
-}
+function Dropdown ({ placeholder, items, valueSetter }) {
 
-const Dropdown: React.FC<DropdownProps> = ({ items }) => {
-  // `sort` will always reflect the currently selected item's text
-  const [sort, setSort] = useState<string>(items[0]?.text || "");
-
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSort(event.target.value);
+  const handleChange = (selectedItem) => {
+    valueSetter(selectedItem);
   };
 
   return (
     <div className="relative inline-block text-left">
       <select
-        value={sort}
-        onChange={handleChange}
+        onChange={(e) => handleChange(e.target.selectedIndex - 1)}
         className="
           w-full rounded-md border border-gray-300 shadow-sm
           px-4 py-2 bg-white text-sm font-medium text-gray-700
@@ -29,7 +19,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items }) => {
         "
       >
         <option value="" disabled>
-          Select an option
+          {placeholder}
         </option>
         {items.map((item, idx) => (
           <option key={idx} value={item.text}>

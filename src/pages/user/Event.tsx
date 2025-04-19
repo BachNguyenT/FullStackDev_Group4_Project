@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/components/Button";
 import EventCard from "@/components/ui/components/EventCard";
 import Dropdown from "@/components/ui/components/Dropdown";
+import { useNavigate } from "react-router-dom";
 import {
   faMagnifyingGlass,
   faPlus,
@@ -10,47 +11,75 @@ import {
 
 
 function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
-  // Visibility: 0 = Private, 1 = Public, 2 = All
-  // SortDirection: 0 = Ascending, 1 = Descending, 2 = Default
+  // Visibility: 0 = All, 1 = Private, 2 = Public
+  // SortDirection: 0 = Default, 1 = Most recent, 2 = Oldest
+  // Status: 0 = All, 1 = Completed, 2 = Ongoing
+  const sortItems = [
+    { text: "Default" },
+    { text: "Most Recent" }, 
+    { text: "Oldest" }
+  ];
+  const statusItems = [
+    { text: "All" },
+    { text: "Completed" },
+    { text: "Ongoing" },
+  ];
+  const visibilityItems = [
+    { text: "All" },
+    { text: "Private" },
+    { text: "Public" },
+  ];
+
   const [events, setEvents] = useState([]);
   const [maxAttendeeCount, setMaxAttendeeCount] = useState(0);
   const [eventNameSearch, setEventNameSearch] = useState("");
-  const [eventVisibilitySearch, setEventVisibilitySearch] = useState(2);
-  const [sortDirection, setSortDirection] = useState(2);
+  const [eventVisibilitySearch, setEventVisibilitySearch] = useState(0);
+  const [sortDirection, setSortDirection] = useState(0);
+  const [eventStatusSearch, setEventStatusSearch] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate();
 
   async function fetchEvents(abortSignal : AbortSignal | null) {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/get-organizing-events", {
-        method: "POST",
+      const searchParams = new URLSearchParams({
+        name: eventNameSearch,
+        status: eventStatusSearch.toString(),
+        visibility: eventVisibilitySearch.toString(),
+        order: sortDirection.toString()
+      });
+
+      const response = await fetch(`http://localhost:3000/query-organizing-events?${searchParams.toString()}`,{
+        method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          eventName: eventNameSearch,
-          visibilitySearch: eventVisibilitySearch,
-          sortDirection: sortDirection
-        }),
         credentials: "include",
         signal: abortSignal
       });
 
-      if (response.ok) {
+      if (response.status == 200) {
         const data = await response.json();
-        setEvents(data.events);
         setMaxAttendeeCount(data.maxAttendeeCount);
+        setEvents(data.events);
         setIsLoading(false);
+        return;
+      }
+      else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+        return;
       }
       else {
-        console.log("Error fetching events:", response.status);
+        alert("Service temporarily unavailable. Please try again later.");
         setIsLoading(false);
+        return;
       }
-    } catch (error) {
-      console.error("Error fetching events:", error);
+
+    } catch {
+      alert("Service temporarily unavailable. Please try again later.");
       setIsLoading(false);
+      return;
     }
   }
 
@@ -63,20 +92,9 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
       abortController.abort(); // Clean up the fetch request on component unmount
     };
   }, []);
-  const sortItems = [{ text: "Most Recent" }, { text: "Oldest" }];
-  const statusItems = [
-    { text: "Status: All" },
-    { text: "Completed" },
-    { text: "Ongoing" },
-  ];
-  const visibilityItems = [
-    { text: "Visibility: All" },
-    { text: "Private" },
-    { text: "Ongoing" },
-  ];
+  
 
   return (
-    
     <div className="p-4 sm:p-6 md:p-4">
       <div className="flex items-center justify-between mb-4">
         {/* Title */}
@@ -104,13 +122,14 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
             />
           </div>
 
-          <Dropdown items={sortItems}></Dropdown>
-          <Dropdown items={statusItems}></Dropdown>
-          <Dropdown items={visibilityItems}></Dropdown>
+          <Dropdown placeholder="Order events by:" items={sortItems} valueSetter={setSortDirection}></Dropdown>
+          <Dropdown placeholder="Event status:" items={statusItems} valueSetter={setEventStatusSearch}></Dropdown>
+          <Dropdown placeholder="Event visibility:" items={visibilityItems} valueSetter={setEventVisibilitySearch}></Dropdown>
           <Button
             animated={false}
             variant="ghost"
             className="border border-gray-300 shadow-sm"
+            onClick={() => fetchEvents(null)}
           >
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </Button>
