@@ -1,4 +1,5 @@
 //import the internal files
+import {useState} from "react";
 import { EventInfoProps } from "@/types/Types";
 import { Button } from "@/components/ui/components/Button";
 import { Card, CardContent, CardTitle } from "@/components/ui/components/Card";
@@ -30,7 +31,9 @@ function EventInfo({
   description,
   venue,
   onDelete,
+  isEdit = true,
 }: EventInfoProps) {
+  const [isEditable, setIsEditable] = useState(isEdit);
   return (
     <>
       <div className="flex justify-between items-start">
@@ -38,14 +41,14 @@ function EventInfo({
           {eventName || "AB Wedding"}
         </h1>
         <div className="flex-end">
-          <Button
+          {isEditable && (<Button
             to="/workspace/event/${eventId}/edit"
             animated={false}
             variant="secondary"
           >
             <FaPenToSquare className="mr-2" />
             Edit
-          </Button>
+          </Button>)}
           <Button
             animated={false}
             variant="destructive"

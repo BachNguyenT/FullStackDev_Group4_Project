@@ -13,7 +13,7 @@ const variantStyles = {
   ghost: "bg-[#fff] hover:bg-accent hover:text-accent-foreground",
   link: "text-primary underline-offset-4 hover:underline",
   sidebar: "bg-[#fff] text-primary-foreground hover:bg-purple-100",
-  icon: "px-2 hover:bg-purple-100",
+  icon: "hover:bg-purple-100",
 };
 
 const sizeStyles = {

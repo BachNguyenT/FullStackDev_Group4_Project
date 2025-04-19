@@ -1,19 +1,17 @@
-import { useState } from "react";
 import { AttendeeInfoProps } from "@/types/Types";
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRemove } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import { FaUser } from "react-icons/fa6";
 
-function AttendeeInfo({
+function AdminAttendeeInfo({
   id,
-  name,
   imageUrl,
-  invitationDate,
-  replyDate,
+  name,
+  email,
+  noEvents,
   status,
-  isEdit = true,
   onDelete,
 }: AttendeeInfoProps) {
   const getStatusStyle = (status: string) => {
@@ -28,10 +26,9 @@ function AttendeeInfo({
         return "bg-gray-300 text-black";
     }
   };
-  const [isEditable, setIsEditable] = useState(isEdit);
 
   return (
-    <tr className="border-t  border-gray-300">
+    <tr className="border-t  border-gray-300 text-center">
       <td className="px-4 py-3">{id}</td>
       <td className="px-4 py-3 flex items-center gap-2">
         {imageUrl ? (
@@ -47,8 +44,8 @@ function AttendeeInfo({
         )}
         <span>{name}</span>
       </td>
-      <td className="px-4 py-3">{invitationDate}</td>
-      <td className="px-4 py-3">{replyDate}</td>
+      <td className="px-4 py-3">{email}</td>
+      <td className="px-4 py-3">{noEvents}</td>
       <td className="px-4 py-3">
         <span
           className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
@@ -58,14 +55,16 @@ function AttendeeInfo({
           {status}
         </span>
       </td>
-      {isEditable && (<td className="px-4 py-3">
-        <Button variant="destructive" className="hover:bg-red-500 hover:text-white" onClick={() => onDelete(`${id}`)}>
-          <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs" />
-          Remove
+      <td className="px-4 py-3">
+        <Button size="icon" variant="icon" className="hover:bg-purple-500 hover:text-white">
+          <FontAwesomeIcon icon={faEye} className="text-xs" />
         </Button>
-      </td>)}
+        <Button size ="icon" variant="icon" className="hover:bg-red-500 hover:text-white">
+          <FontAwesomeIcon icon={faTrash} className="text-xs" />
+        </Button>
+      </td>
     </tr>
   );
 }
 
-export default AttendeeInfo;
+export default AdminAttendeeInfo;
