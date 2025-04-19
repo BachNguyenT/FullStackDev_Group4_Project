@@ -15,6 +15,14 @@ type EventType = {
   maxAttendees: number;
 }
 
+type Event = {
+  id: string;
+  name: string;
+  HostID: string;
+  date: string;
+  attendees: number;
+  status: 'Accepted' | 'Declined' | 'Pending';
+};
 
 
 interface EventInfoProps {
@@ -24,17 +32,21 @@ interface EventInfoProps {
   visibility: string;
   attendeeCount : string;
   maxAttendeeCount : string;
+  isEdit: boolean;
 }
 
 interface AttendeeInfoProps {
   id: string;
   name: string;
   imageUrl?: string;
+  email: string;
+  noEvents: number;
   invitationDate: string;
   replyDate: string;
   onDelete: (attendeeId: string) => void;
+  isEdit: boolean;
   status: "Accepted" | "Declined" | "Pending";
 }
 
 
-export type { User, EventType,EventInfoProps ,AttendeeInfoProps};
+export type { User, EventType,EventInfoProps ,AttendeeInfoProps,Event};
