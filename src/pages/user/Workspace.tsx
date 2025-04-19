@@ -76,36 +76,52 @@ function Workspace() {
   }, []);
 
   return (
-      <LayoutContext.Provider value={{ sidebarOpen, toggleSidebar }}>
-        <div className="w-screen h-screen flex overflow-hidden">
-          <Sidebar />
-          <div className="flex flex-col flex-1 transition-all duration-300">
-            <Header avatarURL={avatarURL} />
-            <div className="overflow-y-auto h-[calc(100vh-4rem)] px-1 py-2 bg-gray-50">
-              <Routes>
-                {/* Dashboard of the workspace */}
-                <Route path="" element={<div>Name <Footer /> </div>} />
-                {/* Resolve invalid path */}
-                <Route path="*" element={<Navigate to="/not-found-page" />} />
-                {/* Show all events */}
-                <Route path="event" element={<Event sidebarOpen={sidebarOpen} />} />
-                {/* Dashboard of a specific event */}
-                <Route path="event/${eventId}" element={<EventDashboardHost />} />
+    <LayoutContext.Provider value={{ sidebarOpen, toggleSidebar }}>
+      <div className="w-screen h-screen flex overflow-hidden">
+        <Sidebar />
+        <div
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
+            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+          }`}
+        >
+          <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
+          <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] px-1 py-2  bg-gray-50">
+            <Routes>
+              {/* Dashboard of the workspace */}
+              <Route
+                path=""
+                element={
+                  <div>
+                    Name <Footer />{" "}
+                  </div>
+                }
+              />
+              {/* Resolve invalid path */}
+              <Route path="*" element={<Navigate to="/not-found-page" />} />
+              {/* Show all events */}
+              <Route
+                path="event"
+                element={<Event sidebarOpen={sidebarOpen} />}
+              />
+              {/* Dashboard of a specific event */}
+              <Route path="event/${eventId}" element={<EventDashboardHost />} />
 
-                {/* Create new event page */}
-                <Route path="create-event" element={<EventAdd />} />
+              {/* Create new event page */}
+              <Route path="create-event" element={<EventAdd />} />
 
-                <Route path="event/${eventId}/edit" element={<EventEdit />} />
-                <Route path="invitation" element={<Invitation />} />
-                <Route path="invitation/${invitation.id}" element={<InvitationDashboardAttendee />}/>
-                <Route path="account" element={<Account />} />
-              </Routes>
-              <div className="mt-auto ">
-              </div>
-            </div>
+              <Route path="event/${eventId}/edit" element={<EventEdit />} />
+              <Route path="invitation" element={<Invitation />} />
+              <Route
+                path="invitation/${invitation.id}"
+                element={<InvitationDashboardAttendee />}
+              />
+              <Route path="account" element={<Account />} />
+            </Routes>
+            <div className="mt-auto "></div>
           </div>
         </div>
-      </LayoutContext.Provider>
+      </div>
+    </LayoutContext.Provider>
   );
 }
 

@@ -55,7 +55,7 @@ function Sidebar() {
   return (
     <div
       className={`flex flex-col bg-white border-r border-gray-200 h-full ${
-        sidebarOpen ? "w-[300px]" : "[50px]"
+        sidebarOpen ? "w-full md:w-[300px]" : "w-0 md:w-[95px]"
       }`}
     >
       {/* Sidebar Header */}
