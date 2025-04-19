@@ -145,10 +145,11 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
         }`}
       >
         {isLoading ? <div>Loading...</div> : 
-        events.map((element, index) => {
+         (events.length > 0 ? events.map((element, index) => {
           let date = new Date(element.Date);
           return <EventCard key={index} eventId={element.ID} eventName={element.Name} createdOn={date.toLocaleDateString()} visibility={element.IsPrivate ? "Private" : "Public"} attendeeCount={element.AtendeeCount} maxAttendeeCount={maxAttendeeCount} />
-        })}
+          }) : <div >No events found.</div>)
+        }
       </div>
     </div>
   );
