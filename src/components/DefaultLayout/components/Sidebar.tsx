@@ -24,33 +24,34 @@ function Sidebar() {
   const [eventsOpen, setEventsOpen] = useState(false);
   const navigate = useNavigate();
 
-  function handleLogout() {
-    // Perform logout logic here, such as clearing user data or redirecting to the login page
-    let check: Boolean = true;
-
-    if (check) {
-      setLoading(true); // Show loading state
-      fetch("http://localhost:3000/logout", {
-        method: "POST",
+  async function handleLogout() {
+    setLoading(true); 
+    try {
+      let response = await fetch("http://localhost:3000/logout", {
+        method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
         credentials: "include",
       })
-        .then((response) => response.text())
-        .then((result) => {
-          if (result == "0x000") {
-            navigate("/login");
-          } else {
-            setLoading(false);
-          }
-        })
-        .catch(() => {
-          setLoading(false);
-        });
+      
+      if (response.status == 200 || response.status == 401) {
+        setLoading(false);
+        navigate("/login");
+        return;
+      } else if (response.status == 500) {
+        alert("Service temporarily unavailable. Please try again later.");
+        setLoading(false);
+        return;
+      }
+    }
+    catch {
+      alert("Service temporarily unavailable. Please try again later.");
+      setLoading(false);
+      return;
     }
   }
+
   return (
     <div
       className={`flex flex-col bg-white border-r border-gray-200 h-full ${

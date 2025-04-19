@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LayoutContext } from "@/context/LayoutContext";
 import { useRef } from "react";
@@ -12,19 +12,20 @@ import Account from "@/pages/user/Account";
 import EventDashboardHost from "@/pages/user/EventDashboardHost";
 import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
-import eventDummyImage from "@/assets/Pictures/event-image-placeholder.jpg";
 import EventAdd from "./EventAdd";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const avatarURLRef = useRef<string>(userDummyPFP);
+  const navigate = useNavigate();
 
   function toggleSidebar(): void {
     setSidebarOpen((prevState) => !prevState);
   }
 
-  async function fetchPFP () {
+  async function fetchPFP (abortSignal : AbortSignal) {
+    // Call API
     try {
       const response = await fetch("http://localhost:3000/get-user-pfp", {
         method: "GET",
@@ -32,18 +33,31 @@ function Workspace() {
           "Content-Type": "application/json",
           key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
         },
-        credentials: "include"
+        credentials: "include",
+        signal: abortSignal
       });
       
-      if (response.ok) {
-        const imageBlob = await response.blob();
-        const imageURL = URL.createObjectURL(imageBlob);
-        avatarURLRef.current = imageURL;
-        setAvatarURL(imageURL);
+      // Handle response
+      if(response.status == 200) {
+        const blob = await response.blob();
+        const objectURL = URL.createObjectURL(blob);
+        avatarURLRef.current = objectURL;
+        setAvatarURL(objectURL);
+        return;
+      }
+      else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+        return;
+      }
+      else {
+        alert("Service temporarily unavailable. Please try again later.");
         return;
       }
     }
+    // Handle API call error
     catch {
+      alert("Service temporarily unavailable. Please try again later.");
       return;
     }
   }
@@ -51,10 +65,12 @@ function Workspace() {
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchPFP();
+    fetchPFP(abortController.signal);
 
     return () => {
-      URL.revokeObjectURL(avatarURLRef.current); // Clean up the object URL when the component unmounts
+      if(avatarURLRef.current != userDummyPFP) {
+        URL.revokeObjectURL(avatarURLRef.current);
+      }
       abortController.abort();
     };
   }, []);
@@ -65,7 +81,7 @@ function Workspace() {
           <Sidebar />
           <div className="flex flex-col flex-1 transition-all duration-300">
             <Header avatarURL={avatarURL} />
-            <div className="overflow-y-auto h-[calc(100vh-4rem)] px-1 py-2  bg-gray-50">
+            <div className="overflow-y-auto h-[calc(100vh-4rem)] px-1 py-2 bg-gray-50">
               <Routes>
                 {/* Dashboard of the workspace */}
                 <Route path="" element={<div>Name <Footer /> </div>} />
@@ -78,9 +94,6 @@ function Workspace() {
 
                 {/* Create new event page */}
                 <Route path="create-event" element={<EventAdd />} />
-
-
-
 
                 <Route path="event/${eventId}/edit" element={<EventEdit />} />
                 <Route path="invitation" element={<Invitation />} />

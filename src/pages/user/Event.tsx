@@ -3,15 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/components/Button";
 import EventCard from "@/components/ui/components/EventCard";
 import Dropdown from "@/components/ui/components/Dropdown";
-
 import {
   faMagnifyingGlass,
-  faChevronDown,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import { Search } from "lucide-react";
 
-import eventDummyImage from "@/assets/Pictures/event-image-placeholder.jpg";
 
 function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
   // Visibility: 0 = Private, 1 = Public, 2 = All
@@ -23,7 +19,6 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
   const [sortDirection, setSortDirection] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
 
-  
 
   async function fetchEvents(abortSignal : AbortSignal | null) {
     setIsLoading(true);

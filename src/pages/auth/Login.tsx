@@ -14,12 +14,14 @@ function Login() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  function handleLogin() {
-    setLoading(true); // Show loading state
-    setError(""); // Clear previous errors
-    setUCheck(""); // Clear previous username errors
-    setPCheck(""); // Clear previous password errors
+  async function handleLogin() {
+    // Clear error messages
+    setLoading(true); 
+    setError(""); 
+    setUCheck(""); 
+    setPCheck(""); 
 
+    // Front-end validation
     let check: Boolean = true;
     if (username.length == 0) {
       setUCheck("Username is required");
@@ -32,67 +34,81 @@ function Login() {
     }
 
     if (check) {
-      fetch("http://localhost:3000/authenticate-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      })
-        .then((response) => response.text())
-        .then((result) => {
-          if (result == "0x000") {
-            navigate(LOGIN_SUCCESS_TARGET);
-          } else if (result == "0x001") {
-            setError("Invalid username or password.");
-            setLoading(false);
-          } else {
-            setError(
-              "Service temporarily unavailable. Please try again later."
-            );
-            setLoading(false);
-          }
-        })
-        .catch(() => {
-          setError("Unexpected error occurred. Please try again later.");
-          setLoading(false);
-          return;
+      // Call API if front end validation passed
+      try {
+        let authRequestResponse = await fetch("http://localhost:3000/authenticate-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          }),
         });
+        
+        // Handle response
+        if (authRequestResponse.status == 200) {
+          navigate(LOGIN_SUCCESS_TARGET);
+        }
+        else if (authRequestResponse.status == 401) {
+          setError("Invalid username or password.");
+              setLoading(false);
+        }
+        else {
+          setError("Service temporarily unavailable. Please try again later.");
+          setLoading(false);
+        }
+      }
+      catch {
+        // Handle API fetch error
+        setError("Service temporarily unavailable. Please try again later.");
+        setLoading(false);
+      }
     } else {
+      // Handle front-end validation error
       setLoading(false);
       return;
     }
   }
 
-  function checkSession() {
+  async function checkSession() {
     setLoading(true);
-    fetch("http://localhost:3000/verify-session", {
-      method: "GET",
-      credentials: "include", 
-      headers: {
-        "Content-Type": "application/json",
-        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-      },
-    })
-      .then((response) => response.text())
-      .then((checkResult) => {
-        if (checkResult === "0x000") {
+    
+    // Call API
+    try {
+      let checkRequestResponse = await fetch("http://localhost:3000/verify-session", {
+        method: "GET",
+        credentials: "include", 
+        headers: {
+          "Content-Type": "application/json",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        },
+      });
+
+      // Handle response
+      if (checkRequestResponse.status == 200) {
+        let resultCode = await checkRequestResponse.text();
+        if (resultCode === "0x000") {
           navigate(LOGIN_SUCCESS_TARGET);
+          return;
+        } else if (resultCode === "0x001") {
         } else {
           setLoading(false); 
+          return;
         }
-      })
-      .catch(() => {
-        setLoading(false); 
-      })
-      .finally(() => {
-        setLoading(false); 
-      });
+      } 
+      else {
+        setLoading(false);
+        return; 
+      }
+    } 
+    catch {
+      // Handle API fetch error
+      setLoading(false);
+      return;
+    } 
   }
 
   useEffect(() => {

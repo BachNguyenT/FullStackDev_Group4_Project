@@ -14,7 +14,6 @@ const Dropdown: React.FC<DropdownProps> = ({ items }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSort(event.target.value);
-    // now `sort` === the selected option's text
   };
 
   return (

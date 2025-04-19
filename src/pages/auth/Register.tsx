@@ -26,16 +26,15 @@ function Register() {
   const [usernameCheck, setUCheck] = useState<string>("");
   const [passwordCheck, setPCheck] = useState<string>("");
   const [confirmPasswordCheck, setCPCheck] = useState<string>("");
-  const [termsError, setTermsError] = useState<string>("");
-
-  // Error and loading states
-  const [generalError, setGeneralError] = useState<string>("");
+  const [termsCheck, setTermsCheck] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
+
+  // Navigation hook
   const navigate = useNavigate();
 
-  //preview avatar
-  const previewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  // Avatar
+  const previewImage = (file : File | undefined) => {
     if (file) {
       // Check file type
       const validTypes = ["image/png", "image/jpeg"];
@@ -51,9 +50,11 @@ function Register() {
         return;
       }
 
-      // Generate preview URL
+      // Generate and set preview URL
+      if(image !== userDummyPFP) {
+        URL.revokeObjectURL(imageRef.current);
+      }
       const previewURL = URL.createObjectURL(file);
-      console.log(previewURL);
       imageRef.current = previewURL;
       setImage(previewURL);
     }
@@ -69,7 +70,7 @@ function Register() {
 
   async function handleRegister() {
     setLoading(true);
-    setGeneralError("");
+    setErrorMessage("");
     setNameCheck("");
     setEmailCheck("");
     setPhoneCheck("");
@@ -77,7 +78,7 @@ function Register() {
     setUCheck("");
     setPCheck("");
     setCPCheck("");
-    setTermsError("");
+    setTermsCheck("");
 
     let check = true;
     if (fullName.length === 0) {
@@ -113,7 +114,7 @@ function Register() {
       check = false;
     }
     if (!isTermsAgreed) {
-      setTermsError("Please agree to the terms and conditions!");
+      setTermsCheck("Please agree to the terms and conditions!");
       check = false;
     }
 
@@ -172,7 +173,7 @@ function Register() {
           }
           else {
             console.log("2");
-            setGeneralError("An error occurred while registering. Please try again.");
+            setErrorMessage("An error occurred while registering. Please try again.");
             setLoading(false);
             return;
           }
@@ -180,7 +181,7 @@ function Register() {
       }
       catch (error) {
         console.log(error);
-        setGeneralError("An error occurred while registering. Please try again.");
+        setErrorMessage("An error occurred while registering. Please try again.");
         setLoading(false);
         return;
       }
@@ -210,7 +211,7 @@ function Register() {
                 <div className="flex flex-col items-center space-y-3">
                   <input
                     id="avatar"
-                    onChange={(e) => previewImage(e)}
+                    onChange={(e) => previewImage(e.target.files?.[0])}
                     type="file"
                     accept="image/*"
                     className="hidden"
@@ -229,7 +230,7 @@ function Register() {
                     Upload avatar
                   </label>
                   <p className="flex items-start text-xs text-slate-400">
-                    PNG or JPG, Below 2Mb
+                    PNG or JPEG, Below 5Mb
                   </p>
                 </div>
               </div>
@@ -404,8 +405,8 @@ function Register() {
                 </Button>
               </label>
             </div>
-            {termsError && (
-              <p className="text-red-500 text-center">{termsError}</p>
+            {termsCheck && (
+              <p className="text-red-500 text-center">{termsCheck}</p>
             )}
 
             {/* Submit Button */}
@@ -418,8 +419,8 @@ function Register() {
             </Button>
 
             {/* Display general error message */}
-            {generalError && (
-              <p className="text-red-500 text-center mt-2">{generalError}</p>
+            {errorMessage && (
+              <p className="text-red-500 text-center mt-2">{errorMessage}</p>
             )}
 
             <div className="text-center mt-4">
