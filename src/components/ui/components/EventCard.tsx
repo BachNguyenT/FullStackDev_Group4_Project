@@ -7,20 +7,55 @@ import {
   faCalendarAlt,
   faEye,
 } from "@fortawesome/free-regular-svg-icons";
+import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
+import { useEffect, useRef } from "react";
+import { useState } from "react";
 
-const EventCard = ({
-  eventId,
-  eventName,
-  imageURL,
-  createdOn,
-  eventType,
-  visibility,
-  dateTime,
-  duration,
-  status,
-  description,
-  venue,
-}: EventInfoProps) => {
+function EventCard ({ eventId, eventName, createdOn, visibility, attendeeCount, maxAttendeeCount }: EventInfoProps) {
+  const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
+  const imageURLRef = useRef<string>(eventImagePlaceholder);
+
+  async function fetchEventImage(abortSignal: AbortSignal) {
+    try {
+      const response = await fetch("http://localhost:3000/get-event-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        },
+        body: JSON.stringify({
+          eventID: eventId
+        }),
+        credentials: "include",
+        signal: abortSignal
+      });
+
+      if (response.ok) {
+        const imageBlob = await response.blob();
+        if(imageBlob.size > 0){
+          const imageURL = URL.createObjectURL(imageBlob);
+          imageURLRef.current = imageURL;
+          setImageURL(imageURL);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching event image:", error);
+    }
+  }
+
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    fetchEventImage(abortController.signal);
+
+    return () => {
+      if(imageURLRef.current !== eventImagePlaceholder) {
+        URL.revokeObjectURL(imageURLRef.current);
+      }
+      abortController.abort();
+    };
+  }, []);
+
   return (
     <Link
       to="/workspace/event/${eventId}/dashboard"
@@ -28,12 +63,12 @@ const EventCard = ({
     >
       <img
         className="w-full h-48 object-cover"
-        src="https://kbhgames.com/wp-content/uploads/2017/07/Bleach-Vs-Naruto-3.jpg"
+        src={imageURL}
         alt="Wedding Venue"
       />
       <div className="px-6 py-4">
         <h2 className="font-semibold text-lg text-gray-800 text-center mb-4">
-          {eventName || "Event Name"}
+          {eventName}
         </h2>
 
         <div className="text-sm text-gray-600 space-y-2">
@@ -44,14 +79,14 @@ const EventCard = ({
                 <FontAwesomeIcon icon={faIdCard} className="mr-2" />
                 Event ID:
               </span>
-              <span>{eventId  || "123"}   </span>
+              <span>{eventId}   </span>
             </div>
             <div className="flex flex-col text-right">
               <span className="font-medium flex items-center justify-end">
                 <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
                 Created on:
               </span>
-              <span> {createdOn ||" 01/01/2025"}</span>
+              <span> {createdOn}</span>
             </div>
           </div>
 
@@ -62,14 +97,14 @@ const EventCard = ({
                 <FontAwesomeIcon icon={faEye} className="mr-2" />
                 Visibility:
               </span>
-              <span>{ visibility ||"Private"}</span>
+              <span>{ visibility }</span>
             </div>
             <div className="flex flex-col text-right">
               <span className="font-medium flex items-center justify-end">
                 <FontAwesomeIcon icon={faIdCard} className="mr-2" />
                 No. Attendees:
               </span>
-              <span>20 out of 30</span>
+              <span>{attendeeCount} out of {maxAttendeeCount}</span>
             </div>
           </div>
         </div>

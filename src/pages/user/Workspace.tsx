@@ -2,7 +2,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LayoutContext } from "@/context/LayoutContext";
 import { useRef } from "react";
-import userDummyPFP from "@/assets/Icons/user-dummy.svg";
+import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
 import Sidebar from "@/components/DefaultLayout/components/Sidebar";
 import Header from "@/components/DefaultLayout/components/Header";
 import Footer from "@/components/DefaultLayout/components/Footer";
@@ -12,6 +12,8 @@ import Account from "@/pages/user/Account";
 import EventDashboardHost from "@/pages/user/EventDashboardHost";
 import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
+import eventDummyImage from "@/assets/Pictures/event-image-placeholder.jpg";
+import EventAdd from "./EventAdd";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -46,8 +48,6 @@ function Workspace() {
     }
   }
 
-
-
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -67,27 +67,27 @@ function Workspace() {
             <Header avatarURL={avatarURL} />
             <div className="overflow-y-auto h-[calc(100vh-4rem)] px-1 py-2  bg-gray-50">
               <Routes>
-                <Route path="" element={<div>Name</div>} />
+                {/* Dashboard of the workspace */}
+                <Route path="" element={<div>Name <Footer /> </div>} />
+                {/* Resolve invalid path */}
                 <Route path="*" element={<Navigate to="/not-found-page" />} />
-                <Route
-                  path="event"
-                  element={<Event sidebarOpen={sidebarOpen} />}
-                />
-                <Route
-                  path="event/${eventId}/dashboard"
-                  element={<EventDashboardHost />}
-                />
+                {/* Show all events */}
+                <Route path="event" element={<Event sidebarOpen={sidebarOpen} />} />
+                {/* Dashboard of a specific event */}
+                <Route path="event/${eventId}" element={<EventDashboardHost />} />
+
+                {/* Create new event page */}
+                <Route path="create-event" element={<EventAdd />} />
+
+
+
+
                 <Route path="event/${eventId}/edit" element={<EventEdit />} />
                 <Route path="invitation" element={<Invitation />} />
-                <Route
-                  path="invitation/${invitation.id}/dashboard"
-                  element={<InvitationDashboardAttendee />}
-                />
-
+                <Route path="invitation/${invitation.id}" element={<InvitationDashboardAttendee />}/>
                 <Route path="account" element={<Account />} />
               </Routes>
               <div className="mt-auto ">
-                <Footer />
               </div>
             </div>
           </div>
