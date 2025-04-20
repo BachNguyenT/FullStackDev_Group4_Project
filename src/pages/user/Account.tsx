@@ -74,6 +74,9 @@ function Account({ pfp }: { pfp: string }) {
     }
   }
 
+  function handleChangeAvatar() {
+    //
+  }
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -113,7 +116,7 @@ function Account({ pfp }: { pfp: string }) {
               accept="image/*"
               placeholder="Upload Avatar"
               className="hidden"
-              // onChange={handleChangeAvatar}
+              onChange={handleChangeAvatar}
             />
             <p className="mt-4 font-semibold">ID: {id} </p>
           </div>
