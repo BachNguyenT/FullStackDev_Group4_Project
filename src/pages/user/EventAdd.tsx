@@ -6,11 +6,7 @@ import Dropdown from "@/components/ui/components/Dropdown";
 import DurationInput from "@/components/ui/components/DurationInput";
 
 function EventAdd() {
-  //className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
-  // Visibility: 0: Private, 1: Public
-  // Event type: 0: Conference, 1: Workshop, 2: Webinar, 3: Meetup, 4: Other
   const eventVisibilityItems = [{ text: "Private" }, { text: "Public" }];
-
   const eventTypeItems = [
     { text: "Conference" },
     { text: "Workshop" },
@@ -19,7 +15,6 @@ function EventAdd() {
     { text: "Other" },
   ];
 
-  // Input fields
   const [image, setImage] = useState(eventImagePlaceholder);
   const imageRef = useRef<string>(eventImagePlaceholder);
   const [eventName, setEventName] = useState<string>("");
@@ -38,37 +33,101 @@ function EventAdd() {
     minute: 0,
     second: 0,
   });
-  
+
+  // Validation
+  const [eventNameCheck, setEventNameCheck] = useState<string>("");
+  const [eventDateTimeCheck, setEventDateTimeCheck] = useState<string>("");
+  const [eventVenueCheck, setEventVenueCheck] = useState<string>("");
+  const [eventDescriptionCheck, setEventDescriptionCheck] =
+    useState<string>("");
 
   function handleCreateEvent() {
-    // Handle event creation logic here
+    if (!eventName.trim()) {
+      setEventNameCheck("Event name is required.");
+      return;
+    }
+
+    if (!eventDateTime || isNaN(new Date(eventDateTime).getTime())) {
+      setEventDateTimeCheck("Please enter a valid date and time.");
+      return;
+    }
+
+    const eventDate = new Date(eventDateTime);
+    if (eventDate < new Date()) {
+      setEventDateTimeCheck("Event date cannot be in the past.");
+      return;
+    }
+
+    if (!eventVenue.trim()) {
+      setEventVenueCheck("Event venue is required.");
+      return;
+    }
+
+    if (eventDescription.trim().length < 10) {
+      setEventDescriptionCheck("Please provide a longer event description.");
+      return;
+    }
+
+    const durationInSec =
+      eventDuration.hour * 3600 +
+      eventDuration.minute * 60 +
+      eventDuration.second;
+    if (durationInSec <= 0) {
+      alert("Event duration must be greater than zero.");
+      return;
+    }
+
+    const reminderInSec =
+      eventReminder.hour * 3600 +
+      eventReminder.minute * 60 +
+      eventReminder.second;
+    if (reminderInSec <= 0) {
+      alert("Reminder time must be greater than zero.");
+      return;
+    }
+
     const eventDurationProcessed = `${eventDuration.hour}h ${eventDuration.minute}m ${eventDuration.second}s`;
-    const eventDateTimeProcessed = new Date(eventDateTime);
-    const eventReminderProcessed = new Date(eventDateTimeProcessed);
-    eventReminderProcessed.setHours(eventReminderProcessed.getHours() - eventReminder.hour);
-    eventReminderProcessed.setMinutes(eventReminderProcessed.getMinutes() - eventReminder.minute);
-    eventReminderProcessed.setSeconds(eventReminderProcessed.getSeconds() - eventReminder.second);
-    
-    
+    const eventReminderProcessed = new Date(eventDate);
+    eventReminderProcessed.setHours(
+      eventReminderProcessed.getHours() - eventReminder.hour
+    );
+    eventReminderProcessed.setMinutes(
+      eventReminderProcessed.getMinutes() - eventReminder.minute
+    );
+    eventReminderProcessed.setSeconds(
+      eventReminderProcessed.getSeconds() - eventReminder.second
+    );
+
+    // Here you'd proceed to handle the valid event (e.g. save to backend)
+    console.log({
+      eventName,
+      eventDateTime: eventDate.toISOString(),
+      eventVenue,
+      eventType,
+      eventDescription,
+      eventVisibility,
+      eventDuration: eventDurationProcessed,
+      eventReminder: eventReminderProcessed.toISOString(),
+      image,
+    });
+
+    alert("Event created successfully!");
   }
 
   function handleSetImage(file: File | undefined) {
     if (file) {
-      // Check file type
       const validTypes = ["image/png", "image/jpeg"];
       if (!validTypes.includes(file.type)) {
         alert("Invalid file type. Please upload a PNG or JPEG image.");
         return;
       }
 
-      // Check file size (5MB = 5 * 1024 * 1024 bytes)
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         alert("File size must be smaller than 5MB.");
         return;
       }
 
-      // Generate and set preview URL
       if (image !== eventImagePlaceholder) {
         URL.revokeObjectURL(imageRef.current);
       }
@@ -79,7 +138,6 @@ function EventAdd() {
   }
 
   useEffect(() => {
-
     return () => {
       if (imageRef.current !== eventImagePlaceholder) {
         URL.revokeObjectURL(imageRef.current);
@@ -95,22 +153,26 @@ function EventAdd() {
 
       <div className="flex justify-between items-center mb-4">
         <div>
-          {/* Event name input */}
           <div>
             <label htmlFor="name" className="block mb-2 font-light text-base">
               Event Name:
             </label>
             <input
               onChange={(e) => {
-                setEventName(e.target.value);
+                const val = e.target.value;
+                setEventName(val);
+                if (val.trim()) {
+                  setEventNameCheck("");
+                }
               }}
               id="name"
               placeholder="Event name..."
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
+
+            {eventNameCheck && <p className="text-red-500">{eventNameCheck}</p>}
           </div>
 
-          {/* Date and Time of the event input */}
           <div>
             <label htmlFor="date" className="block mb-2 font-light text-base">
               Date & Time:
@@ -118,30 +180,50 @@ function EventAdd() {
             <input
               id="date"
               onChange={(e) => {
-                setEventDateTime(e.target.value);
+                const val = e.target.value;
+                setEventDateTime(val);
+                const parsedDate = new Date(val);
+                if (
+                  val &&
+                  !isNaN(parsedDate.getTime()) &&
+                  parsedDate > new Date()
+                ) {
+                  setEventDateTimeCheck("");
+                }
               }}
               type="datetime-local"
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
+
+            {eventDateTimeCheck && (
+              <p className="text-red-500">{eventDateTimeCheck}</p>
+            )}
           </div>
-          
-          {/* Event venue input */}
+
           <div>
             <label htmlFor="venue" className="block mb-2 font-light text-base">
               Event Venue:
             </label>
             <input
               onChange={(e) => {
-                setEventVenue(e.target.value);
+                const val = e.target.value;
+                setEventVenue(val);
+                if (val.trim()) {
+                  setEventVenueCheck("");
+                }
               }}
               id="venue"
               placeholder="Event venue..."
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
+
+            {eventVenueCheck && (
+              <p className="text-red-500">{eventVenueCheck}</p>
+            )}
           </div>
         </div>
+
         <div>
-          {/* Event type input */}
           <div>
             <label className="block mb-2 font-light text-base">
               Event Type:
@@ -153,15 +235,16 @@ function EventAdd() {
             />
           </div>
 
-          {/* Event duration input */}
           <label>Event duration:</label>
-          <div><DurationInput valueSetter={setEventDuration} /></div>
+          <div>
+            <DurationInput valueSetter={setEventDuration} />
+          </div>
 
-          {/* Event reminder input */}
           <label>Reminder setting:</label>
-          <div><DurationInput valueSetter={setEventReminder} /></div>
+          <div>
+            <DurationInput valueSetter={setEventReminder} />
+          </div>
 
-          {/* Event image upload input */}
           <div>
             <label
               htmlFor="avatar"
@@ -178,6 +261,7 @@ function EventAdd() {
             />
           </div>
         </div>
+
         <div>
           <label
             htmlFor="visibility"
@@ -191,8 +275,8 @@ function EventAdd() {
             valueSetter={setEventVisibility}
           />
         </div>
+
         <div className="bg-gray-100 w-1/3 h-70 flex justify-center items-center">
-          {/* Example fixed height */}
           <img
             src={image}
             alt="Preview Image"
@@ -213,7 +297,11 @@ function EventAdd() {
           id="description"
           className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm resize-y min-h-[80px]"
         />
+        {eventDescriptionCheck && (
+          <p className="text-red-500">{eventDescriptionCheck}</p>
+        )}
       </div>
+
       <div className="flex justify-end mt-4">
         <Button to="/workspace/event" variant="secondary" className="mr-2">
           Cancel
@@ -229,4 +317,5 @@ function EventAdd() {
     </div>
   );
 }
+
 export default EventAdd;
