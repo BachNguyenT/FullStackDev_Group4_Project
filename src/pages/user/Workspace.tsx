@@ -113,7 +113,7 @@ function Workspace() {
                 path="invitation/${invitation.id}"
                 element={<InvitationDashboardAttendee />}
               />
-              <Route path="account" element={<Account />} />
+              <Route path="account" element={<Account pfp={avatarURL} />} />
             </Routes>
             <div className="mt-auto "></div>
           </div>
