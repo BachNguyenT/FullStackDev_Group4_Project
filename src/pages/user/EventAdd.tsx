@@ -98,7 +98,7 @@ function EventAdd() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           {/* Event name input */}
-          <div>
+          <div className="mb-4">
             <label htmlFor="name" className="block mb-2 font-light text-base">
               Event Name:
             </label>
@@ -108,12 +108,12 @@ function EventAdd() {
               }}
               id="name"
               placeholder="Event name..."
-              className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
+              className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
             />
           </div>
 
           {/* Date and Time of the event input */}
-          <div>
+          <div className="mb-4">
             <label htmlFor="date" className="block mb-2 font-light text-base">
               Date & Time:
             </label>
@@ -123,12 +123,12 @@ function EventAdd() {
                 setEventDateTime(e.target.value);
               }}
               type="datetime-local"
-              className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
+              className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
             />
           </div>
 
           {/* Event venue input */}
-          <div>
+          <div className="mb-4">
             <label htmlFor="venue" className="block mb-2 font-light text-base">
               Event Venue:
             </label>
@@ -138,7 +138,7 @@ function EventAdd() {
               }}
               id="venue"
               placeholder="Event venue..."
-              className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
+              className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
             />
           </div>
 
@@ -156,7 +156,7 @@ function EventAdd() {
         </div>
         <div>
           {/* Event type input */}
-          <div>
+          <div className="mb-4">
             <label className="block mb-2 font-light text-base">
               Event Type:
             </label>
@@ -168,15 +168,13 @@ function EventAdd() {
           </div>
 
           {/* Event duration input */}
-          <label>Event duration:</label>
           <div>
-            <DurationInput valueSetter={setEventDuration} />
+            <DurationInput label="Event Duration" valueSetter={setEventDuration} />
           </div>
 
           {/* Event reminder input */}
-          <label>Reminder setting:</label>
           <div>
-            <DurationInput valueSetter={setEventReminder} />
+            <DurationInput label="Reminder Setting" valueSetter={setEventReminder} />
           </div>
 
           {/* Event image upload input */}

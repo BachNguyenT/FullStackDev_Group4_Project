@@ -1,20 +1,23 @@
-import { useDebugValue, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-function DurationInput({ valueSetter }) {
+interface DurationInputProps {
+  label: string;
+  valueSetter: React.Dispatch<React.SetStateAction<{ hour: number; minute: number; second: number }>>;
+}
+
+const DurationInput: React.FC<DurationInputProps> = ({ label, valueSetter }) => {
   const [hour, setHour] = useState<number>(0);
   const [minute, setMinute] = useState<number>(0);
   const [second, setSecond] = useState<number>(0);
   const [isValidating, setIsValidating] = useState(false);
 
-  function validateNumber(value, min, max) {
+  function validateNumber(value: number, min?: number, max?: number): boolean {
     let res = true;
-    // Validate if the value is a whole number
     res = res && Number.isInteger(value);
-    // Validate if the value is within the specified range
-    if (min) {
+    if (min !== undefined) {
       res = res && value >= min;
     }
-    if (max) {
+    if (max !== undefined) {
       res = res && value <= max;
     }
     return res;
@@ -24,19 +27,17 @@ function DurationInput({ valueSetter }) {
     let hourCache = hour;
     let minuteCache = minute;
     let secondCache = second;
-    // Validate hour input
-    if (!validateNumber(hour, 0, undefined)) {
+
+    if (!validateNumber(hour, 0)) {
       console.log("Invalid hour input, resetting to 0");
       hourCache = 0;
     }
-    // Validate minute input
     if (!validateNumber(minute, 0, 59)) {
-      console.log("Invalid min input, resetting to 0");
+      console.log("Invalid minute input, resetting to 0");
       minuteCache = 0;
     }
-    // Validate second input
     if (!validateNumber(second, 0, 59)) {
-      console.log("Invalid sec input, resetting to 0");
+      console.log("Invalid second input, resetting to 0");
       secondCache = 0;
     }
 
@@ -56,59 +57,54 @@ function DurationInput({ valueSetter }) {
   }, [hour, minute, second]);
 
   return (
-    <div className="flex flex-row items-center justify-between gap-4 py-3">
-      {/* Hour input */}
-      <input
-        onChange={(e) => {
-          if (Number.isNaN(e.target.value)) {
-            setHour(0);
-          } else {
-            setHour(parseInt(e.target.value, 10));
-          }
-        }}
-        type="number"
-        min={0}
-        placeholder="Hour..."
-        className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
-        disabled={isValidating}
-        value={hour.toString()}
-      />
-      <div>:</div>
-      {/* Min input */}
-      <input
-        onChange={(e) => {
-          if (Number.isNaN(e.target.value)) {
-            setMinute(0);
-          } else {
-            setMinute(parseInt(e.target.value, 10));
-          }
-        }}
-        type="number"
-        min={0}
-        max={59}
-        placeholder="Minute..."
-        className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
-        disabled={isValidating}
-        value={minute.toString()}
-      />
-      <div>:</div>
-      {/* Second input */}
-      <input
-        onChange={(e) => {
-          if (Number.isNaN(e.target.value)) {
-            setSecond(0);
-          } else {
-            setSecond(parseInt(e.target.value, 10));
-          }
-        }}
-        type="number"
-        min={0}
-        max={59}
-        placeholder="Second..."
-        className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
-        disabled={isValidating}
-        value={second.toString()}
-      />
+    <div className="">
+      <label className="mb-2">{label}</label>
+      <div className="flex flex-row items-center justify-between gap-4 py-3">
+        <input
+          onChange={(e) => {
+            const value = parseInt(e.target.value, 10);
+            setHour(Number.isNaN(value) ? 0 : value);
+          }}
+          type="number"
+          min={0}
+          placeholder="Hour..."
+          className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
+          disabled={isValidating}
+          value={hour.toString()}
+        />
+        <div>:</div>
+        <input
+          onChange={(e) => {
+            const value = parseInt(e.target.value, 10);
+            setMinute(Number.isNaN(value) ? 0 : value);
+          }}
+          type="number"
+          min={0}
+          max={59}
+          placeholder="Minute..."
+          className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
+          disabled={isValidating}
+          value={minute.toString()}
+        />
+        <div>:</div>
+        {/* Second input */}
+        <input
+          onChange={(e) => {
+            if (Number.isNaN(e.target.value)) {
+              setSecond(0);
+            } else {
+              setSecond(parseInt(e.target.value, 10));
+            }
+          }}
+          type="number"
+          min={0}
+          max={59}
+          placeholder="Second..."
+          className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
+          disabled={isValidating}
+          value={second.toString()}
+        />
+      </div>
     </div>
   );
 }
