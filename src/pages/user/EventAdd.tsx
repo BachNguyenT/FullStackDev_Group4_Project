@@ -25,7 +25,9 @@ function EventAdd() {
   const [eventName, setEventName] = useState<string>("");
   const [eventDateTime, setEventDateTime] = useState<string>("");
   const [eventVenue, setEventVenue] = useState<string>("");
-  const [eventType, setEventType] = useState<string>("");
+  const [eventType, setEventType] = useState<number>(0);
+  const [eventDescription, setEventDescription] = useState<string>("");
+  const [eventVisibility, setEventVisibility] = useState<number>(0);
   const [eventDuration, setEventDuration] = useState({
     hour: 0,
     minute: 0,
@@ -36,24 +38,18 @@ function EventAdd() {
     minute: 0,
     second: 0,
   });
-  const [eventDescription, setEventDescription] = useState<string>("");
-  const [eventVisibility, setEventVisibility] = useState<number>(0);
+  
 
   function handleCreateEvent() {
     // Handle event creation logic here
     const eventDurationProcessed = `${eventDuration.hour}h ${eventDuration.minute}m ${eventDuration.second}s`;
-    const eventDateTime123 = new Date(eventDateTime);
-    console.log(eventDateTime123);
-    console.log("Event Created:", {
-      eventName,
-      eventDateTime,
-      eventVenue,
-      eventType,
-      eventDuration,
-      eventReminder,
-      eventDescription,
-      eventVisibility,
-    });
+    const eventDateTimeProcessed = new Date(eventDateTime);
+    const eventReminderProcessed = new Date(eventDateTimeProcessed);
+    eventReminderProcessed.setHours(eventReminderProcessed.getHours() - eventReminder.hour);
+    eventReminderProcessed.setMinutes(eventReminderProcessed.getMinutes() - eventReminder.minute);
+    eventReminderProcessed.setSeconds(eventReminderProcessed.getSeconds() - eventReminder.second);
+    
+    
   }
 
   function handleSetImage(file: File | undefined) {
@@ -83,6 +79,7 @@ function EventAdd() {
   }
 
   useEffect(() => {
+
     return () => {
       if (imageRef.current !== eventImagePlaceholder) {
         URL.revokeObjectURL(imageRef.current);
@@ -162,7 +159,7 @@ function EventAdd() {
 
           {/* Event reminder input */}
           <label>Reminder setting:</label>
-          <div><DurationInput valueSetter={setEventDuration} /></div>
+          <div><DurationInput valueSetter={setEventReminder} /></div>
 
           {/* Event image upload input */}
           <div>

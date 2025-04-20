@@ -56,7 +56,12 @@ function DurationInput ({ valueSetter }) {
             {/* Hour input */}
             <input
                 onChange={(e) => {
-                    setHour(parseInt(e.target.value, 10));
+                    if(Number.isNaN(e.target.value)) {
+                        setHour(0);
+                    }
+                    else {
+                        setHour(parseInt(e.target.value, 10));
+                    }
                 }}
                 type='number'
                 min={0}
@@ -69,7 +74,12 @@ function DurationInput ({ valueSetter }) {
             {/* Min input */}
             <input
                 onChange={(e) => {
-                    setMinute(parseInt(e.target.value, 10));
+                    if(Number.isNaN(e.target.value)) {
+                        setMinute(0);
+                    }
+                    else {
+                        setMinute(parseInt(e.target.value, 10));
+                    }
                 }}
                 type='number'
                 min={0}
@@ -83,7 +93,12 @@ function DurationInput ({ valueSetter }) {
             {/* Second input */}
             <input
                 onChange={(e) => {
-                    setSecond(parseInt(e.target.value, 10));
+                    if(Number.isNaN(e.target.value)) {
+                        setSecond(0);
+                    }
+                    else {
+                        setSecond(parseInt(e.target.value, 10));
+                    }
                 }}
                 type='number'
                 min={0}

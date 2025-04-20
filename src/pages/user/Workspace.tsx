@@ -13,6 +13,7 @@ import EventDashboardHost from "@/pages/user/EventDashboardHost";
 import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
 import EventAdd from "./EventAdd";
+import DashBoard from "./DashBoard";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -92,7 +93,7 @@ function Workspace() {
                 path=""
                 element={
                   <div>
-                    Name <Footer />{" "}
+                    Dashboard <Footer />{" "}
                   </div>
                 }
               />
