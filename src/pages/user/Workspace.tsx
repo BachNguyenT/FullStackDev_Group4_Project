@@ -107,7 +107,7 @@ function Workspace() {
               <Route path="event/${eventId}" element={<EventDashboardHost />} />
 
               {/* Create new event page */}
-              <Route path="create-event" element={<EventAdd />} />
+              <Route path="event/create-event" element={<EventAdd />} />
 
               <Route path="event/${eventId}/edit" element={<EventEdit />} />
               <Route path="invitation" element={<Invitation />} />

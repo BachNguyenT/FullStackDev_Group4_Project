@@ -94,6 +94,8 @@ function Login() {
           navigate(LOGIN_SUCCESS_TARGET);
           return;
         } else if (resultCode === "0x001") {
+          setLoading(false); 
+          return;
         } else {
           setLoading(false); 
           return;

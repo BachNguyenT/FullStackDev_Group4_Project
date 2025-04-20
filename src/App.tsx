@@ -6,6 +6,7 @@ import Register from "./pages/auth/Register";
 import About from "./pages/info/About";
 import NotFoundPage from "./pages/others/NotFoundPage";
 import Workspace from "./pages/user/Workspace";
+import SessionValidator from "./routes/SessionValidator";
 
 //import the components
 
@@ -24,7 +25,7 @@ function App() {
         <Route path="/not-found-page" element={<NotFoundPage returnTo="/workspace"/>} />
 
         {/* Workspace Routes */}
-        <Route path="/workspace/*" element={<Workspace />} />
+        <Route path="/workspace/*" element={<SessionValidator><Workspace /></SessionValidator>} />
 
         {/* Resolve invalid paths*/}
         <Route path="*" element={<Navigate to="/not-found-page" />} />

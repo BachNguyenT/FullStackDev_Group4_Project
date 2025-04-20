@@ -102,7 +102,7 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
 
         {/* Add new event */}
         <span>
-          <Button to="/workspace/create-event" className="mb-2" animated={false}>
+          <Button to="/workspace/event/create-event" className="mb-2" animated={false}>
             <FontAwesomeIcon icon={faPlus} className="ml-2" />
             Add New Event
           </Button>
@@ -146,6 +146,7 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
       >
         {isLoading ? <div>Loading...</div> : 
          (events.length > 0 ? events.map((element, index) => {
+          console.log(element.Date);
           let date = new Date(element.Date);
           return <EventCard key={index} eventId={element.ID} eventName={element.Name} createdOn={date.toLocaleDateString()} visibility={element.IsPrivate ? "Private" : "Public"} attendeeCount={element.AtendeeCount} maxAttendeeCount={maxAttendeeCount} />
           }) : <div >No events found.</div>)

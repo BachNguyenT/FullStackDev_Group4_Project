@@ -34,7 +34,7 @@ function Register() {
   const navigate = useNavigate();
 
   // Avatar
-  const previewImage = (file : File | undefined) => {
+  function handleSetImage (file : File | undefined) {
     if (file) {
       // Check file type
       const validTypes = ["image/png", "image/jpeg"];
@@ -211,7 +211,7 @@ function Register() {
                 <div className="flex flex-col items-center space-y-3">
                   <input
                     id="avatar"
-                    onChange={(e) => previewImage(e.target.files?.[0])}
+                    onChange={(e) => handleSetImage(e.target.files?.[0])}
                     type="file"
                     accept="image/*"
                     className="hidden"
