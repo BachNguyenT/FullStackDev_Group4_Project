@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/components/Button";
 import { useNavigate } from "react-router-dom";
 
-function NotFoundPage({ returnTo }: { returnTo : string}) {
+function NotFoundPage({ returnTo }: { returnTo: string }) {
   const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-purple-900 to-purple-400 font-sans text-center relative">

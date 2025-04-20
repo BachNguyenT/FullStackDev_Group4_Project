@@ -22,10 +22,20 @@ function App() {
         {/* Info pages */}
         <Route path="/terms" element={<About />} />
         <Route path="/about" element={<About />} />
-        <Route path="/not-found-page" element={<NotFoundPage returnTo="/workspace"/>} />
+        <Route
+          path="/not-found-page"
+          element={<NotFoundPage returnTo="/workspace" />}
+        />
 
         {/* Workspace Routes */}
-        <Route path="/workspace/*" element={<SessionValidator><Workspace /></SessionValidator>} />
+        <Route
+          path="/workspace/*"
+          element={
+            <SessionValidator>
+              <Workspace />
+            </SessionValidator>
+          }
+        />
 
         {/* Resolve invalid paths*/}
         <Route path="*" element={<Navigate to="/not-found-page" />} />

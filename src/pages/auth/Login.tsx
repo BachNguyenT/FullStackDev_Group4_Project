@@ -16,10 +16,10 @@ function Login() {
 
   async function handleLogin() {
     // Clear error messages
-    setLoading(true); 
-    setError(""); 
-    setUCheck(""); 
-    setPCheck(""); 
+    setLoading(true);
+    setError("");
+    setUCheck("");
+    setPCheck("");
 
     // Front-end validation
     let check: Boolean = true;
@@ -36,32 +36,32 @@ function Login() {
     if (check) {
       // Call API if front end validation passed
       try {
-        let authRequestResponse = await fetch("http://localhost:3000/authenticate-user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            username: username,
-            password: password,
-          }),
-        });
-        
+        let authRequestResponse = await fetch(
+          "http://localhost:3000/authenticate-user",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              username: username,
+              password: password,
+            }),
+          }
+        );
+
         // Handle response
         if (authRequestResponse.status == 200) {
           navigate(LOGIN_SUCCESS_TARGET);
-        }
-        else if (authRequestResponse.status == 401) {
+        } else if (authRequestResponse.status == 401) {
           setError("Invalid username or password.");
-              setLoading(false);
-        }
-        else {
+          setLoading(false);
+        } else {
           setError("Service temporarily unavailable. Please try again later.");
           setLoading(false);
         }
-      }
-      catch {
+      } catch {
         // Handle API fetch error
         setError("Service temporarily unavailable. Please try again later.");
         setLoading(false);
@@ -75,17 +75,20 @@ function Login() {
 
   async function checkSession() {
     setLoading(true);
-    
+
     // Call API
     try {
-      let checkRequestResponse = await fetch("http://localhost:3000/verify-session", {
-        method: "GET",
-        credentials: "include", 
-        headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-        },
-      });
+      let checkRequestResponse = await fetch(
+        "http://localhost:3000/verify-session",
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          },
+        }
+      );
 
       // Handle response
       if (checkRequestResponse.status == 200) {
@@ -94,23 +97,21 @@ function Login() {
           navigate(LOGIN_SUCCESS_TARGET);
           return;
         } else if (resultCode === "0x001") {
-          setLoading(false); 
+          setLoading(false);
           return;
         } else {
-          setLoading(false); 
+          setLoading(false);
           return;
         }
-      } 
-      else {
+      } else {
         setLoading(false);
-        return; 
+        return;
       }
-    } 
-    catch {
+    } catch {
       // Handle API fetch error
       setLoading(false);
       return;
-    } 
+    }
   }
 
   useEffect(() => {

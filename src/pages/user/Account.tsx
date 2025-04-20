@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/components/Button"
+import { Button } from "@/components/ui/components/Button";
 function Account() {
   const [id, setId] = useState<string>("JD123");
   const [name, setName] = useState<string>("Name");
@@ -9,7 +9,9 @@ function Account() {
   const [userName, setUserName] = useState<string>("Username");
   const [password, setPassword] = useState<string>("Password");
   const [newPassword, setNewPassword] = useState<string>("New Password");
-  const [avatar, setAvatar] = useState<string>("https://b.fssta.com/uploads/application/nba/headshots/1120.vresize.350.350.medium.27.png")
+  const [avatar, setAvatar] = useState<string>(
+    "https://b.fssta.com/uploads/application/nba/headshots/1120.vresize.350.350.medium.27.png"
+  );
 
   const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -17,7 +19,7 @@ function Account() {
       const previewURL = URL.createObjectURL(file);
       setAvatar(previewURL);
     }
-  }
+  };
 
   useEffect(() => {
     // clean up function to revoke the object URL
@@ -25,7 +27,7 @@ function Account() {
       if (typeof avatar === "string") {
         URL.revokeObjectURL(avatar);
       }
-    }
+    };
   }, [avatar]);
 
   return (
@@ -42,7 +44,12 @@ function Account() {
               alt="Avatar"
               className="w-40 h-40 rounded-full mb-4 border-2 border-gray-200 shadow-md hover:scale-105 transition-transform duration-200"
             />
-            <label htmlFor="avatar" className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white">Change Avatar</label>
+            <label
+              htmlFor="avatar"
+              className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white"
+            >
+              Change Avatar
+            </label>
             <input
               id="avatar"
               type="file"
@@ -59,7 +66,10 @@ function Account() {
               <div className="flex justify-between gap-6">
                 <div className="w-1/2">
                   <div>
-                    <label htmlFor="name" className="block mb-2 font-light text-base">
+                    <label
+                      htmlFor="name"
+                      className="block mb-2 font-light text-base"
+                    >
                       Full Name:
                     </label>
                     <input
@@ -72,7 +82,10 @@ function Account() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block mb-2 font-light text-base">
+                    <label
+                      htmlFor="phone"
+                      className="block mb-2 font-light text-base"
+                    >
                       Phone:
                     </label>
                     <input
@@ -86,7 +99,10 @@ function Account() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="userName" className="block mb-2 font-light text-base">
+                    <label
+                      htmlFor="userName"
+                      className="block mb-2 font-light text-base"
+                    >
                       UserName:
                     </label>
                     <input
@@ -101,7 +117,10 @@ function Account() {
                 </div>
                 <div className="w-1/2">
                   <div>
-                    <label htmlFor="email" className="block mb-2 font-light text-base">
+                    <label
+                      htmlFor="email"
+                      className="block mb-2 font-light text-base"
+                    >
                       Email:
                     </label>
                     <input
@@ -143,10 +162,12 @@ function Account() {
       </div>
       {/* Change password */}
       <div className="bg-white shadow-md rounded p-4 mb-4">
-
         <div className="flex justify-between">
           <div className="w-1/3">
-            <label htmlFor="currentPassword" className="block mb-2 font-light text-base">
+            <label
+              htmlFor="currentPassword"
+              className="block mb-2 font-light text-base"
+            >
               Current Password:
             </label>
             <input
@@ -159,7 +180,10 @@ function Account() {
             />
           </div>
           <div className="w-1/3">
-            <label htmlFor="newPassword" className="block mb-2 font-light text-base">
+            <label
+              htmlFor="newPassword"
+              className="block mb-2 font-light text-base"
+            >
               New Password:
             </label>
             <input
@@ -173,13 +197,15 @@ function Account() {
           </div>
         </div>
         <h3 className="text-base font-medium">Password Requirements:</h3>
-        <p className="text-sm text-gray-400 ml-6">At least 8 characters, 1 uppercase letter, 1 lowercase letter and 1 special character</p>
+        <p className="text-sm text-gray-400 ml-6">
+          At least 8 characters, 1 uppercase letter, 1 lowercase letter and 1
+          special character
+        </p>
         <div className="flex justify-end mt-4">
           <Button>Change Password</Button>
         </div>
       </div>
     </div>
-
   );
 }
 export default Account;

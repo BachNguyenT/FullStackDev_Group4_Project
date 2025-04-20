@@ -34,7 +34,7 @@ function Register() {
   const navigate = useNavigate();
 
   // Avatar
-  function handleSetImage (file : File | undefined) {
+  function handleSetImage(file: File | undefined) {
     if (file) {
       // Check file type
       const validTypes = ["image/png", "image/jpeg"];
@@ -51,22 +51,22 @@ function Register() {
       }
 
       // Generate and set preview URL
-      if(image !== userDummyPFP) {
+      if (image !== userDummyPFP) {
         URL.revokeObjectURL(imageRef.current);
       }
       const previewURL = URL.createObjectURL(file);
       imageRef.current = previewURL;
       setImage(previewURL);
     }
-  };
+  }
 
   useEffect(() => {
     return () => {
-      if(imageRef.current !== userDummyPFP) {
+      if (imageRef.current !== userDummyPFP) {
         URL.revokeObjectURL(imageRef.current);
       }
-    }
-  },[]);
+    };
+  }, []);
 
   async function handleRegister() {
     setLoading(true);
@@ -123,65 +123,68 @@ function Register() {
         const getImage = await fetch(image);
         const imageBlob = await getImage.blob();
         const imageArrayBuffer = await imageBlob.arrayBuffer();
-        const imageByteArray =  new Uint8Array(imageArrayBuffer);
+        const imageByteArray = new Uint8Array(imageArrayBuffer);
         const imageHexString = Array.from(imageByteArray)
-          .map((byte) => byte.toString(16).padStart(2, "0")) 
+          .map((byte) => byte.toString(16).padStart(2, "0"))
           .join("");
 
-        const registerResult = await fetch("http://localhost:3000/register-user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            Name: fullName,
-            PhoneNumber: phone,
-            Email: email,
-            Birthday: birthday,
-            Username: username,
-            Password: password,
-            Pfp: (image == userDummyPFP) ? "" : "\\x" + imageHexString,
-          }),
-        });
+        const registerResult = await fetch(
+          "http://localhost:3000/register-user",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              Name: fullName,
+              PhoneNumber: phone,
+              Email: email,
+              Birthday: birthday,
+              Username: username,
+              Password: password,
+              Pfp: image == userDummyPFP ? "" : "\\x" + imageHexString,
+            }),
+          }
+        );
 
-        if(registerResult.ok) {
+        if (registerResult.ok) {
           alert("Registration successful!");
           navigate("/login");
-        }
-        else {
-          if(registerResult.status === 400) {
+        } else {
+          if (registerResult.status === 400) {
             const verificationResult = await registerResult.json();
-            if(verificationResult[1] === "0x002") {
-              setPhoneCheck("Phone number already exists!");  
-            }
-            else  {
-              setPhoneCheck("Invalid phone number!");  
-            }
-
-            if(verificationResult[2] === "0x002") {
-              setEmailCheck("Email already exists!");  
+            if (verificationResult[1] === "0x002") {
+              setPhoneCheck("Phone number already exists!");
+            } else {
+              setPhoneCheck("Invalid phone number!");
             }
 
-            if(verificationResult[3] === "0x002") {
-              setUCheck("Username already exists!");  
+            if (verificationResult[2] === "0x002") {
+              setEmailCheck("Email already exists!");
+            }
+
+            if (verificationResult[3] === "0x002") {
+              setUCheck("Username already exists!");
             }
 
             setLoading(false);
             return;
-          }
-          else {
+          } else {
             console.log("2");
-            setErrorMessage("An error occurred while registering. Please try again.");
+            setErrorMessage(
+              "An error occurred while registering. Please try again."
+            );
             setLoading(false);
             return;
           }
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.log(error);
-        setErrorMessage("An error occurred while registering. Please try again.");
+        setErrorMessage(
+          "An error occurred while registering. Please try again."
+        );
         setLoading(false);
         return;
       }

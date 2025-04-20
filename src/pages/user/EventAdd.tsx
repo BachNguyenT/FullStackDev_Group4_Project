@@ -38,18 +38,21 @@ function EventAdd() {
     minute: 0,
     second: 0,
   });
-  
 
   function handleCreateEvent() {
     // Handle event creation logic here
     const eventDurationProcessed = `${eventDuration.hour}h ${eventDuration.minute}m ${eventDuration.second}s`;
     const eventDateTimeProcessed = new Date(eventDateTime);
     const eventReminderProcessed = new Date(eventDateTimeProcessed);
-    eventReminderProcessed.setHours(eventReminderProcessed.getHours() - eventReminder.hour);
-    eventReminderProcessed.setMinutes(eventReminderProcessed.getMinutes() - eventReminder.minute);
-    eventReminderProcessed.setSeconds(eventReminderProcessed.getSeconds() - eventReminder.second);
-    
-    
+    eventReminderProcessed.setHours(
+      eventReminderProcessed.getHours() - eventReminder.hour
+    );
+    eventReminderProcessed.setMinutes(
+      eventReminderProcessed.getMinutes() - eventReminder.minute
+    );
+    eventReminderProcessed.setSeconds(
+      eventReminderProcessed.getSeconds() - eventReminder.second
+    );
   }
 
   function handleSetImage(file: File | undefined) {
@@ -79,7 +82,6 @@ function EventAdd() {
   }
 
   useEffect(() => {
-
     return () => {
       if (imageRef.current !== eventImagePlaceholder) {
         URL.revokeObjectURL(imageRef.current);
@@ -88,12 +90,12 @@ function EventAdd() {
   }, []);
 
   return (
-    <div>
+    <div className="p-4">
       <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
         Add Event
       </h1>
 
-      <div className="flex justify-between items-center mb-4">
+      <div className="grid grid-cols-2 gap-4">
         <div>
           {/* Event name input */}
           <div>
@@ -124,7 +126,7 @@ function EventAdd() {
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
           </div>
-          
+
           {/* Event venue input */}
           <div>
             <label htmlFor="venue" className="block mb-2 font-light text-base">
@@ -139,6 +141,18 @@ function EventAdd() {
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
           </div>
+
+          <label
+            htmlFor="visibility"
+            className="block mb-2 font-light text-base"
+          >
+            Event Visibility:
+          </label>
+          <Dropdown
+            placeholder="Event visibility:"
+            items={eventVisibilityItems}
+            valueSetter={setEventVisibility}
+          />
         </div>
         <div>
           {/* Event type input */}
@@ -155,13 +169,46 @@ function EventAdd() {
 
           {/* Event duration input */}
           <label>Event duration:</label>
-          <div><DurationInput valueSetter={setEventDuration} /></div>
+          <div>
+            <DurationInput valueSetter={setEventDuration} />
+          </div>
 
           {/* Event reminder input */}
           <label>Reminder setting:</label>
-          <div><DurationInput valueSetter={setEventReminder} /></div>
+          <div>
+            <DurationInput valueSetter={setEventReminder} />
+          </div>
 
           {/* Event image upload input */}
+          <div>
+            <label
+              htmlFor="avatar"
+              className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white"
+            >
+              Upload image event
+            </label>
+          </div>
+          <div>
+            {/* Reminder time input */}
+            <label
+              htmlFor="Reminder"
+              className="block mb-2 font-light text-base"
+            >
+              Reminder:
+            </label>
+            <input
+              onChange={(e) => {
+                setDuration(parseInt(e.target.value));
+              }}
+              id="Reminder"
+              placeholder="Second..."
+              type="number"
+              min={0}
+              max={59}
+              className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
+            />
+            <div>Sec(s)</div>
+          </div>
           <div>
             <label
               htmlFor="avatar"
@@ -177,19 +224,6 @@ function EventAdd() {
               className="hidden"
             />
           </div>
-        </div>
-        <div>
-          <label
-            htmlFor="visibility"
-            className="block mb-2 font-light text-base"
-          >
-            Event Visibility:
-          </label>
-          <Dropdown
-            placeholder="Event visibility:"
-            items={eventVisibilityItems}
-            valueSetter={setEventVisibility}
-          />
         </div>
         <div className="bg-gray-100 w-1/3 h-70 flex justify-center items-center">
           {/* Example fixed height */}

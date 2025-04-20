@@ -25,16 +25,16 @@ function Sidebar() {
   const navigate = useNavigate();
 
   async function handleLogout() {
-    setLoading(true); 
+    setLoading(true);
     try {
       let response = await fetch("http://localhost:3000/logout", {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         credentials: "include",
-      })
-      
+      });
+
       if (response.status == 200 || response.status == 401) {
         setLoading(false);
         navigate("/login");
@@ -44,8 +44,7 @@ function Sidebar() {
         setLoading(false);
         return;
       }
-    }
-    catch {
+    } catch {
       alert("Service temporarily unavailable. Please try again later.");
       setLoading(false);
       return;

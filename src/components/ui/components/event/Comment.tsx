@@ -12,7 +12,9 @@ function Comment() {
           className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover mr-3"
         />
         <div>
-          <h4 className="font-semibold text-gray-800 text-base">Lebron James</h4>
+          <h4 className="font-semibold text-gray-800 text-base">
+            Lebron James
+          </h4>
           <div className="flex items-center text-xs text-gray-400 mb-1">
             <FontAwesomeIcon icon={faCalendar} className="mr-1" />
             <span>27/02/2023</span>
