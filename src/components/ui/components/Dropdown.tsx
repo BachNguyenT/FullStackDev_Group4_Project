@@ -1,8 +1,6 @@
 import React from "react";
 
-
-function Dropdown ({ placeholder, items, valueSetter }) {
-
+function Dropdown({ placeholder, items, valueSetter }) {
   const handleChange = (selectedItem) => {
     valueSetter(selectedItem);
   };
@@ -29,6 +27,6 @@ function Dropdown ({ placeholder, items, valueSetter }) {
       </select>
     </div>
   );
-};
+}
 
 export default Dropdown;

@@ -58,12 +58,18 @@ function AttendeeInfo({
           {status}
         </span>
       </td>
-      {isEditable && (<td className="px-4 py-3">
-        <Button variant="destructive" className="hover:bg-red-500 hover:text-white" onClick={() => onDelete(`${id}`)}>
-          <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs" />
-          Remove
-        </Button>
-      </td>)}
+      {isEditable && (
+        <td className="px-4 py-3">
+          <Button
+            variant="destructive"
+            className="hover:bg-red-500 hover:text-white"
+            onClick={() => onDelete(`${id}`)}
+          >
+            <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs" />
+            Remove
+          </Button>
+        </td>
+      )}
     </tr>
   );
 }

@@ -1,5 +1,5 @@
 //import the internal files
-import {useState} from "react";
+import { useState } from "react";
 import { EventInfoProps } from "@/types/Types";
 import { Button } from "@/components/ui/components/Button";
 import { Card, CardContent, CardTitle } from "@/components/ui/components/Card";
@@ -41,14 +41,16 @@ function EventInfo({
           {eventName || "AB Wedding"}
         </h1>
         <div className="flex-end">
-          {isEditable && (<Button
-            to="/workspace/event/${eventId}/edit"
-            animated={false}
-            variant="secondary"
-          >
-            <FaPenToSquare className="mr-2" />
-            Edit
-          </Button>)}
+          {isEditable && (
+            <Button
+              to="/workspace/event/${eventId}/edit"
+              animated={false}
+              variant="secondary"
+            >
+              <FaPenToSquare className="mr-2" />
+              Edit
+            </Button>
+          )}
           <Button
             animated={false}
             variant="destructive"

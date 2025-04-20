@@ -56,10 +56,18 @@ function AdminAttendeeInfo({
         </span>
       </td>
       <td className="px-4 py-3">
-        <Button size="icon" variant="icon" className="hover:bg-purple-500 hover:text-white">
+        <Button
+          size="icon"
+          variant="icon"
+          className="hover:bg-purple-500 hover:text-white"
+        >
           <FontAwesomeIcon icon={faEye} className="text-xs" />
         </Button>
-        <Button size ="icon" variant="icon" className="hover:bg-red-500 hover:text-white">
+        <Button
+          size="icon"
+          variant="icon"
+          className="hover:bg-red-500 hover:text-white"
+        >
           <FontAwesomeIcon icon={faTrash} className="text-xs" />
         </Button>
       </td>

@@ -25,7 +25,7 @@ function Workspace() {
     setSidebarOpen((prevState) => !prevState);
   }
 
-  async function fetchPFP (abortSignal : AbortSignal) {
+  async function fetchPFP(abortSignal: AbortSignal) {
     // Call API
     try {
       const response = await fetch("http://localhost:3000/get-user-pfp", {
@@ -35,29 +35,26 @@ function Workspace() {
           key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
         },
         credentials: "include",
-        signal: abortSignal
+        signal: abortSignal,
       });
-      
+
       // Handle response
-      if(response.status == 200) {
+      if (response.status == 200) {
         const blob = await response.blob();
         const objectURL = URL.createObjectURL(blob);
         avatarURLRef.current = objectURL;
         setAvatarURL(objectURL);
         return;
-      }
-      else if (response.status == 401) {
+      } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
         return;
-      }
-      else {
+      } else {
         alert("Service temporarily unavailable. Please try again later.");
         return;
       }
-    }
-    // Handle API call error
-    catch {
+    } catch {
+      // Handle API call error
       alert("Service temporarily unavailable. Please try again later.");
       return;
     }
@@ -69,7 +66,7 @@ function Workspace() {
     fetchPFP(abortController.signal);
 
     return () => {
-      if(avatarURLRef.current != userDummyPFP) {
+      if (avatarURLRef.current != userDummyPFP) {
         URL.revokeObjectURL(avatarURLRef.current);
       }
       abortController.abort();
@@ -108,7 +105,7 @@ function Workspace() {
               <Route path="event/${eventId}" element={<EventDashboardHost />} />
 
               {/* Create new event page */}
-              <Route path="event/create-event" element={<EventAdd />} />
+              <Route path="event/create" element={<EventAdd />} />
 
               <Route path="event/${eventId}/edit" element={<EventEdit />} />
               <Route path="invitation" element={<Invitation />} />

@@ -4,20 +4,16 @@ import { Button } from "@/components/ui/components/Button";
 import EventCard from "@/components/ui/components/EventCard";
 import Dropdown from "@/components/ui/components/Dropdown";
 import { useNavigate } from "react-router-dom";
-import {
-  faMagnifyingGlass,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 
-
-function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
+function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Visibility: 0 = All, 1 = Private, 2 = Public
   // SortDirection: 0 = Default, 1 = Most recent, 2 = Oldest
   // Status: 0 = All, 1 = Completed, 2 = Ongoing
   const sortItems = [
     { text: "Default" },
-    { text: "Most Recent" }, 
-    { text: "Oldest" }
+    { text: "Most Recent" },
+    { text: "Oldest" },
   ];
   const statusItems = [
     { text: "All" },
@@ -39,24 +35,27 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  async function fetchEvents(abortSignal : AbortSignal | null) {
+  async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
       const searchParams = new URLSearchParams({
         name: eventNameSearch,
         status: eventStatusSearch.toString(),
         visibility: eventVisibilitySearch.toString(),
-        order: sortDirection.toString()
+        order: sortDirection.toString(),
       });
 
-      const response = await fetch(`http://localhost:3000/query-organizing-events?${searchParams.toString()}`,{
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal
-      });
+      const response = await fetch(
+        `http://localhost:3000/query-organizing-events?${searchParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
 
       if (response.status == 200) {
         const data = await response.json();
@@ -64,18 +63,15 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
         setEvents(data.events);
         setIsLoading(false);
         return;
-      }
-      else if (response.status == 401) {
+      } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
         return;
-      }
-      else {
+      } else {
         alert("Service temporarily unavailable. Please try again later.");
         setIsLoading(false);
         return;
       }
-
     } catch {
       alert("Service temporarily unavailable. Please try again later.");
       setIsLoading(false);
@@ -92,7 +88,6 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
       abortController.abort(); // Clean up the fetch request on component unmount
     };
   }, []);
-  
 
   return (
     <div className="p-4 sm:p-6 md:p-4">
@@ -102,7 +97,11 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
 
         {/* Add new event */}
         <span>
-          <Button to="/workspace/event/create-event" className="mb-2" animated={false}>
+          <Button
+            to="/workspace/event/create"
+            className="mb-2"
+            animated={false}
+          >
             <FontAwesomeIcon icon={faPlus} className="ml-2" />
             Add New Event
           </Button>
@@ -122,9 +121,21 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
             />
           </div>
 
-          <Dropdown placeholder="Order events by:" items={sortItems} valueSetter={setSortDirection}></Dropdown>
-          <Dropdown placeholder="Event status:" items={statusItems} valueSetter={setEventStatusSearch}></Dropdown>
-          <Dropdown placeholder="Event visibility:" items={visibilityItems} valueSetter={setEventVisibilitySearch}></Dropdown>
+          <Dropdown
+            placeholder="Order events by:"
+            items={sortItems}
+            valueSetter={setSortDirection}
+          ></Dropdown>
+          <Dropdown
+            placeholder="Event status:"
+            items={statusItems}
+            valueSetter={setEventStatusSearch}
+          ></Dropdown>
+          <Dropdown
+            placeholder="Event visibility:"
+            items={visibilityItems}
+            valueSetter={setEventVisibilitySearch}
+          ></Dropdown>
           <Button
             animated={false}
             variant="ghost"
@@ -144,13 +155,27 @@ function Event({ sidebarOpen } : { sidebarOpen : boolean }) {
             : "sm:grid-cols-1 lg:grid-cols-4"
         }`}
       >
-        {isLoading ? <div>Loading...</div> : 
-         (events.length > 0 ? events.map((element, index) => {
-          console.log(element.Date);
-          let date = new Date(element.Date);
-          return <EventCard key={index} eventId={element.ID} eventName={element.Name} createdOn={date.toLocaleDateString()} visibility={element.IsPrivate ? "Private" : "Public"} attendeeCount={element.AtendeeCount} maxAttendeeCount={maxAttendeeCount} />
-          }) : <div >No events found.</div>)
-        }
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : events.length > 0 ? (
+          events.map((element, index) => {
+            console.log(element.Date);
+            let date = new Date(element.Date);
+            return (
+              <EventCard
+                key={index}
+                eventId={element.ID}
+                eventName={element.Name}
+                createdOn={date.toLocaleDateString()}
+                visibility={element.IsPrivate ? "Private" : "Public"}
+                attendeeCount={element.AtendeeCount}
+                maxAttendeeCount={maxAttendeeCount}
+              />
+            );
+          })
+        ) : (
+          <div>No events found.</div>
+        )}
       </div>
     </div>
   );

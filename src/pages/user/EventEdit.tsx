@@ -32,9 +32,7 @@ function EventEdit() {
   }, [image]);
   return (
     <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
-      <h1 className="text-2xl font-semibold mb-4">
-        Edit Event
-      </h1>
+      <h1 className="text-2xl font-semibold mb-4">Edit Event</h1>
       <div className="flex justify-between items-center mb-4">
         <div>
           <div>

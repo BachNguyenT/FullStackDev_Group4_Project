@@ -11,7 +11,14 @@ import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 
-function EventCard ({ eventId, eventName, createdOn, visibility, attendeeCount, maxAttendeeCount }: EventInfoProps) {
+function EventCard({
+  eventId,
+  eventName,
+  createdOn,
+  visibility,
+  attendeeCount,
+  maxAttendeeCount,
+}: EventInfoProps) {
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
   const imageURLRef = useRef<string>(eventImagePlaceholder);
 
@@ -24,15 +31,15 @@ function EventCard ({ eventId, eventName, createdOn, visibility, attendeeCount, 
           key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
         },
         body: JSON.stringify({
-          eventID: eventId
+          eventID: eventId,
         }),
         credentials: "include",
-        signal: abortSignal
+        signal: abortSignal,
       });
 
       if (response.ok) {
         const imageBlob = await response.blob();
-        if(imageBlob.size > 0){
+        if (imageBlob.size > 0) {
           const imageURL = URL.createObjectURL(imageBlob);
           imageURLRef.current = imageURL;
           setImageURL(imageURL);
@@ -49,7 +56,7 @@ function EventCard ({ eventId, eventName, createdOn, visibility, attendeeCount, 
     fetchEventImage(abortController.signal);
 
     return () => {
-      if(imageURLRef.current !== eventImagePlaceholder) {
+      if (imageURLRef.current !== eventImagePlaceholder) {
         URL.revokeObjectURL(imageURLRef.current);
       }
       abortController.abort();
@@ -79,7 +86,7 @@ function EventCard ({ eventId, eventName, createdOn, visibility, attendeeCount, 
                 <FontAwesomeIcon icon={faIdCard} className="mr-2" />
                 Event ID:
               </span>
-              <span>{eventId}   </span>
+              <span>{eventId} </span>
             </div>
             <div className="flex flex-col text-right">
               <span className="font-medium flex items-center justify-end">
@@ -97,20 +104,22 @@ function EventCard ({ eventId, eventName, createdOn, visibility, attendeeCount, 
                 <FontAwesomeIcon icon={faEye} className="mr-2" />
                 Visibility:
               </span>
-              <span>{ visibility }</span>
+              <span>{visibility}</span>
             </div>
             <div className="flex flex-col text-right">
               <span className="font-medium flex items-center justify-end">
                 <FontAwesomeIcon icon={faIdCard} className="mr-2" />
                 No. Attendees:
               </span>
-              <span>{attendeeCount} out of {maxAttendeeCount}</span>
+              <span>
+                {attendeeCount} out of {maxAttendeeCount}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </Link>
   );
-};
+}
 
 export default EventCard;
