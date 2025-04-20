@@ -33,7 +33,6 @@ function Register() {
   // Navigation hook
   const navigate = useNavigate();
 
-  // Avatar
   function handleSetImage(file: File | undefined) {
     if (file) {
       // Check file type
