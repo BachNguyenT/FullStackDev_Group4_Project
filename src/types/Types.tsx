@@ -1,4 +1,3 @@
-
 type User = {
   id: string;
   username: string;
@@ -10,10 +9,10 @@ type EventType = {
   id: string;
   name: string;
   date: string;
-  visibility: 'Public' | 'Private';
+  visibility: "Public" | "Private";
   attendees: number;
   maxAttendees: number;
-}
+};
 
 type Event = {
   id: string;
@@ -21,17 +20,16 @@ type Event = {
   HostID: string;
   date: string;
   attendees: number;
-  status: 'Accepted' | 'Declined' | 'Pending';
+  status: "Accepted" | "Declined" | "Pending";
 };
-
 
 interface EventInfoProps {
   eventId: string;
   eventName: string;
   createdOn: string;
   visibility: string;
-  attendeeCount : string;
-  maxAttendeeCount : string;
+  attendeeCount: string;
+  maxAttendeeCount: string;
   isEdit: boolean;
 }
 
@@ -48,5 +46,4 @@ interface AttendeeInfoProps {
   status: "Accepted" | "Declined" | "Pending";
 }
 
-
-export type { User, EventType,EventInfoProps ,AttendeeInfoProps,Event};
+export type { User, EventType, EventInfoProps, AttendeeInfoProps, Event };

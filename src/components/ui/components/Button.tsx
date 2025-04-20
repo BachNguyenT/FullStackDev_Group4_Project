@@ -3,7 +3,8 @@ import { Link } from "react-router-dom"; // <- Import Link
 import { cn } from "@/lib/utils";
 
 const variantStyles = {
-  default: "bg-[#fff] text-primary-foreground shadow hover:bg-purple-600 hover:text-white",
+  default:
+    "bg-[#fff] text-primary-foreground shadow hover:bg-purple-600 hover:text-white",
   destructive:
     "bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/80 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm active:bg-destructive/95 transition-all duration-200 ease-in-out border border-destructive/20 rounded-md",
   outline:

@@ -1,4 +1,4 @@
-import AttendeeInfo  from "./AttendeeInfo";
+import AttendeeInfo from "./AttendeeInfo";
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -88,7 +88,11 @@ function AttendeeList({ onDelete }: { onDelete: (id: string) => void }) {
           </thead>
           <tbody>
             {attendeeData.map((attendee) => (
-              <AttendeeInfo key={attendee.id} {...attendee} onDelete={onDelete}  />
+              <AttendeeInfo
+                key={attendee.id}
+                {...attendee}
+                onDelete={onDelete}
+              />
             ))}
           </tbody>
         </table>

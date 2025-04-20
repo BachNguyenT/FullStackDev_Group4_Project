@@ -9,19 +9,18 @@ interface ConfirmModalProps {
   onCancel: () => void;
 }
 
-function ConfirmModal({ title, message, onConfirm, onCancel }: ConfirmModalProps) {
-
-
+function ConfirmModal({
+  title,
+  message,
+  onConfirm,
+  onCancel,
+}: ConfirmModalProps) {
   const handlePropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
   return (
-    <div
-      className="fixed inset-0 backdrop-blur-md z-50"
-      onClick={onCancel}
-    >
-
+    <div className="fixed inset-0 backdrop-blur-md z-50" onClick={onCancel}>
       <div
         className="flex flex-col items-center justify-center bg-white rounded-xl shadow-xl w-full max-w-md p-6 mx-auto mt-20"
         onClick={handlePropagation}
@@ -30,12 +29,8 @@ function ConfirmModal({ title, message, onConfirm, onCancel }: ConfirmModalProps
           <div className="flex items-center justify-center text-5xl text-purple-500 mb-4">
             <FontAwesomeIcon icon={faTrash} />
           </div>
-          <h2 className="text-2xl font-semibold">
-            {title}
-          </h2>
-          <p className="text-base text-gray-600 mt-2 text-center">
-            {message}
-          </p>
+          <h2 className="text-2xl font-semibold">{title}</h2>
+          <p className="text-base text-gray-600 mt-2 text-center">{message}</p>
         </div>
         <div className="flex justify-center mt-2">
           <Button variant="secondary" className="mr-2" onClick={onCancel}>
@@ -50,7 +45,6 @@ function ConfirmModal({ title, message, onConfirm, onCancel }: ConfirmModalProps
           </Button>
         </div>
       </div>
-
     </div>
   );
 }

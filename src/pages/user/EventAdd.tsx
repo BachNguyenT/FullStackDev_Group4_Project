@@ -146,12 +146,12 @@ function EventAdd() {
   }, []);
 
   return (
-    <div>
+    <div className="p-4">
       <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
         Add Event
       </h1>
 
-      <div className="flex justify-between items-center mb-4">
+      <div className="grid grid-cols-2 gap-4">
         <div>
           <div>
             <label htmlFor="name" className="block mb-2 font-light text-base">
@@ -221,6 +221,18 @@ function EventAdd() {
               <p className="text-red-500">{eventVenueCheck}</p>
             )}
           </div>
+
+          <label
+            htmlFor="visibility"
+            className="block mb-2 font-light text-base"
+          >
+            Event Visibility:
+          </label>
+          <Dropdown
+            placeholder="Event visibility:"
+            items={eventVisibilityItems}
+            valueSetter={setEventVisibility}
+          />
         </div>
 
         <div>
@@ -239,12 +251,48 @@ function EventAdd() {
           <div>
             <DurationInput valueSetter={setEventDuration} />
           </div>
+          <div>
+            <DurationInput valueSetter={setEventDuration} />
+          </div>
 
           <label>Reminder setting:</label>
           <div>
             <DurationInput valueSetter={setEventReminder} />
           </div>
+          <div>
+            <DurationInput valueSetter={setEventReminder} />
+          </div>
 
+          {/* Event image upload input */}
+          <div>
+            <label
+              htmlFor="avatar"
+              className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white"
+            >
+              Upload image event
+            </label>
+          </div>
+          <div>
+            {/* Reminder time input */}
+            <label
+              htmlFor="Reminder"
+              className="block mb-2 font-light text-base"
+            >
+              Reminder:
+            </label>
+            <input
+              onChange={(e) => {
+                setDuration(parseInt(e.target.value));
+              }}
+              id="Reminder"
+              placeholder="Second..."
+              type="number"
+              min={0}
+              max={59}
+              className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
+            />
+            <div>Sec(s)</div>
+          </div>
           <div>
             <label
               htmlFor="avatar"
