@@ -14,7 +14,7 @@ function Account({ pfp }: { pfp: string }) {
   const [newPassword, setNewPassword] = useState<string>('');
   const [avatar, setAvatar] = useState<string>(pfp);
   const imageURLRef = useRef<string>(pfp);
-  
+
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ function Account({ pfp }: { pfp: string }) {
         const rawDate = new Date(data.Birthday);
         const formattedDate = rawDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
         setBirthday(formattedDate);
-        
+
         setUserName(data.Username);
       } else if (response.status === 401) {
         alert("Session expired. Please log in again.");
@@ -115,7 +115,7 @@ function Account({ pfp }: { pfp: string }) {
   }
 
   const handleChangePassword = () => {
-    
+
   }
 
 
