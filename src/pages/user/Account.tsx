@@ -62,7 +62,7 @@ function Account({ pfp }: { pfp: string }) {
     console.log("Fetching user information...");
     try {
       const response = await fetch(
-        "http://localhost:3000/get-user-infomation",
+        "http://localhost:3000/get-user-information",
         {
           method: "GET",
           headers: {
