@@ -42,7 +42,7 @@ function Account({ pfp }: { pfp: string }) {
   async function handleDisplayUserInformation() {
     try {
       const response = await fetch(
-        "http://localhost:3000/get-user-infomation",
+        "http://localhost:3000/get-user-information",
         {
           method: "GET",
           headers: {
