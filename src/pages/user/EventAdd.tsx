@@ -95,7 +95,7 @@ function EventAdd() {
         Add Event
       </h1>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-12">
         <div>
           {/* Event name input */}
           <div className="mb-4">
@@ -169,23 +169,21 @@ function EventAdd() {
 
           {/* Event duration input */}
           <div>
-            <DurationInput label="Event Duration" valueSetter={setEventDuration} />
+            <DurationInput
+              label="Event Duration"
+              valueSetter={setEventDuration}
+            />
           </div>
 
           {/* Event reminder input */}
           <div>
-            <DurationInput label="Reminder Setting" valueSetter={setEventReminder} />
+            <DurationInput
+              label="Reminder Setting"
+              valueSetter={setEventReminder}
+            />
           </div>
 
           {/* Event image upload input */}
-          <div>
-            <label
-              htmlFor="avatar"
-              className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white"
-            >
-              Upload image event
-            </label>
-          </div>
           <div>
             {/* Reminder time input */}
             <label
@@ -205,12 +203,13 @@ function EventAdd() {
               max={59}
               className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
             />
-            <div>Sec(s)</div>
           </div>
-          <div>
+        </div>
+        <div>
+          <div className="mb-4">
             <label
               htmlFor="avatar"
-              className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white"
+              className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white  cursor-pointer"
             >
               Upload image event
             </label>
@@ -222,14 +221,14 @@ function EventAdd() {
               className="hidden"
             />
           </div>
-        </div>
-        <div className="bg-gray-100 w-1/3 h-70 flex justify-center items-center">
-          {/* Example fixed height */}
-          <img
-            src={image}
-            alt="Preview Image"
-            className="h-full w-full object-cover text-center rounded-md"
-          />
+          <div className="bg-gray-100 w-1/3 h-70 flex justify-center items-center mb-4">
+            {/* Example fixed height */}
+            <img
+              src={image}
+              alt="Preview Image"
+              className="h-full w-full object-cover text-center rounded-md"
+            />
+          </div>
         </div>
       </div>
 
@@ -247,13 +246,13 @@ function EventAdd() {
         />
       </div>
       <div className="flex justify-end mt-4">
-        <Button to="/workspace/event" variant="secondary" className="mr-2">
+        <Button to="/workspace/event" variant="secondary" className="mr-2 min-w-8">
           Cancel
         </Button>
         <Button
           onClick={handleCreateEvent}
           animated={false}
-          className="ml-2 bg-purple-500 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+          className="ml-2 bg-purple-500 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 min-w-18"
         >
           Add
         </Button>
