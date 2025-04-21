@@ -90,7 +90,7 @@ function Workspace() {
                 path=""
                 element={
                   <div>
-                    Dashboard <Footer />{" "}
+                    <DashBoard sidebarOpen={sidebarOpen}/> <Footer />{" "}
                   </div>
                 }
               />
