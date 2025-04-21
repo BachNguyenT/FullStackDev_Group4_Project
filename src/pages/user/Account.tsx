@@ -2,17 +2,36 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/components/Button";
 
 function Account({ pfp }: { pfp: string }) {
-  const [id, setId] = useState<string>();
-  const [name, setName] = useState<string>();
-  const [phone, setPhone] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [birthday, setBirthday] = useState<string>();
-  const [userName, setUserName] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  console.log("when the component is mounted");
+  const [id, setId] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [birthday, setBirthday] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
+  const [currentPassword, setCurrentPassword] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
   const [avatar, setAvatar] = useState<string>(pfp);
   const imageURLRef = useRef<string>(pfp);
+  
+  const [isEditing, setIsEditing] = useState(false);
 
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    fetchAvatar(abortController.signal);
+    handleDisplayUserInformation(); // Call the function here to fetch user data
+
+    return () => {
+      if (imageURLRef.current !== pfp) {
+        URL.revokeObjectURL(imageURLRef.current);
+      }
+      abortController.abort();
+    };
+  }, []);
   async function fetchAvatar(abortSignal: AbortSignal) {
+    console.log("Fetching avatar...");
     try {
       const response = await fetch("http://localhost:3000/get-user-pfp", {
         method: "GET",
@@ -40,6 +59,7 @@ function Account({ pfp }: { pfp: string }) {
   }
 
   async function handleDisplayUserInformation() {
+    console.log("Fetching user information...");
     try {
       const response = await fetch(
         "http://localhost:3000/get-user-information",
@@ -58,10 +78,11 @@ function Account({ pfp }: { pfp: string }) {
         setName(data.Name);
         setPhone(data.PhoneNumber);
         setEmail(data.Email);
+        setCurrentPassword(data.Password);
         const rawDate = new Date(data.Birthday);
         const formattedDate = rawDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
         setBirthday(formattedDate);
-
+        
         setUserName(data.Username);
       } else if (response.status === 401) {
         alert("Session expired. Please log in again.");
@@ -74,22 +95,30 @@ function Account({ pfp }: { pfp: string }) {
     }
   }
 
-  function handleChangeAvatar() {
-    //
+  const handleSave = () => {
+
   }
-  useEffect(() => {
-    const abortController = new AbortController();
 
-    fetchAvatar(abortController.signal);
-    handleDisplayUserInformation(); // Call the function here to fetch user data
+  const handleCancel = () => {
+    setIsEditing(false);
+    // Reset the state variables to their original values
+    handleDisplayUserInformation();
+  }
 
-    return () => {
-      if (imageURLRef.current !== pfp) {
-        URL.revokeObjectURL(imageURLRef.current);
-      }
-      abortController.abort();
-    };
-  }, []);
+  const handleChangeAvatar = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const objectURL = URL.createObjectURL(file);
+      imageURLRef.current = objectURL;
+      setAvatar(objectURL);
+    }
+  }
+
+  const handleChangePassword = () => {
+    
+  }
+
+
 
   return (
     <div className="p-4 sm:p-6 md:p-4">
@@ -103,7 +132,7 @@ function Account({ pfp }: { pfp: string }) {
             <img
               src={avatar}
               alt="Avatar"
-              className="w-40 h-40 rounded-full mb-4 border-2 border-gray-200 shadow-md hover:scale-105 transition-transform duration-200"
+              className="w-40 h-40 rounded-full mb-4 border-2 border-gray-200 shadow-md object-cover hover:scale-105 transition-transform duration-200"
             />
             <label
               htmlFor="avatar"
@@ -117,7 +146,7 @@ function Account({ pfp }: { pfp: string }) {
               accept="image/*"
               placeholder="Upload Avatar"
               className="hidden"
-              onChange={handleChangeAvatar}
+              onChange={(e) => handleChangeAvatar(e)}
             />
             <p className="mt-4 font-semibold">ID: {id} </p>
           </div>
@@ -134,7 +163,7 @@ function Account({ pfp }: { pfp: string }) {
                       Full Name:
                     </label>
                     <input
-                      readOnly
+                      readOnly={!isEditing}
                       onChange={(e) => setName(e.target.value)}
                       id="name"
                       value={name}
@@ -149,7 +178,7 @@ function Account({ pfp }: { pfp: string }) {
                       Phone:
                     </label>
                     <input
-                      readOnly
+                      readOnly={!isEditing}
                       onChange={(e) => setPhone(e.target.value)}
                       type="tel"
                       id="phone"
@@ -165,7 +194,7 @@ function Account({ pfp }: { pfp: string }) {
                       Username:
                     </label>
                     <input
-                      readOnly
+                      readOnly={!isEditing}
                       onChange={(e) => setUserName(e.target.value)}
                       id="userName"
                       value={userName}
@@ -182,7 +211,7 @@ function Account({ pfp }: { pfp: string }) {
                       Email:
                     </label>
                     <input
-                      readOnly
+                      readOnly={!isEditing}
                       onChange={(e) => setEmail(e.target.value)}
                       type="email"
                       id="email"
@@ -192,16 +221,16 @@ function Account({ pfp }: { pfp: string }) {
                   </div>
                   <div>
                     <label
-                      htmlFor="email"
+                      htmlFor="birthday"
                       className="block mb-2 font-light text-base"
                     >
                       Birthday:
                     </label>
                     <input
-                      readOnly
+                      readOnly={!isEditing}
                       onChange={(e) => setBirthday(e.target.value)}
-                      type="email"
-                      id="email"
+                      id="birthday"
+                      type="birthday"
                       value={birthday}
                       className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
                     />
@@ -209,7 +238,17 @@ function Account({ pfp }: { pfp: string }) {
                 </div>
               </div>
               <div className="flex justify-end">
-                <Button>Edit Information</Button>
+                {!isEditing && (<Button
+                  onClick={() => setIsEditing(!isEditing)}
+                >
+                  Edit Information
+                </Button>)}
+                {isEditing && (
+                  <div className="flex gap-2">
+                    <Button onClick={handleCancel}>Cancel</Button>
+                    <Button onClick={handleSave} >Save</Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -242,8 +281,8 @@ function Account({ pfp }: { pfp: string }) {
             <input
               id="newPassword"
               className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
-              // onChange={(e) => setNewPassword(e.target.value)}
-              // value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              value={newPassword}
             />
           </div>
         </div>
@@ -253,7 +292,7 @@ function Account({ pfp }: { pfp: string }) {
           special character
         </p>
         <div className="flex justify-end mt-4">
-          <Button>Change Password</Button>
+          <Button onClick={handleChangePassword}>Change Password</Button>
         </div>
       </div>
     </div>
