@@ -96,9 +96,10 @@ function Account({ pfp }: { pfp: string }) {
       {/* Title */}
       <h2 className="text-xl sm:text-2xl font-semibold mb-4">My Account</h2>
       <div className="mb-4 gap-4">
-        <div className="flex">
-          {/* Avatar Section */}
-          <div className="rounded w-60 bg-white shadow-md flex flex-col justify-center items-center mr-4">
+        {/* Account Information */}
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Avatar */}
+          <div className="rounded py-4 w-sm md:w-60 bg-white shadow-md flex flex-col justify-center items-center mr-4">
             <img
               src={avatar}
               alt="Avatar"
@@ -120,12 +121,11 @@ function Account({ pfp }: { pfp: string }) {
             />
             <p className="mt-4 font-semibold">ID: {id} </p>
           </div>
-
-          {/* Account Info */}
-          <div className="flex rounded bg-white shadow-md flex-1">
-            <div className="w-full p-4">
-              <div className="flex justify-between gap-6">
-                <div className="w-1/2">
+          {/* Text Information */}
+          <div className="flex rounded bg-white shadow-md w-sm md:w-full">
+            <div className="p-4 w-full">
+              <div className="flex flex-col md:flex-row justify-between gap-6">
+                <div className="w-full md:w-1/2">
                   <div>
                     <label
                       htmlFor="name"
@@ -173,8 +173,7 @@ function Account({ pfp }: { pfp: string }) {
                     />
                   </div>
                 </div>
-
-                <div className="w-1/2">
+                <div className="w-full md:w-1/2">
                   <div>
                     <label
                       htmlFor="email"
@@ -216,11 +215,10 @@ function Account({ pfp }: { pfp: string }) {
           </div>
         </div>
       </div>
-
-      {/* Password Section */}
-      <div className="bg-white shadow-md rounded p-4 mb-4">
-        <div className="flex justify-between">
-          <div className="w-1/3">
+      {/* Change password */}
+      <div className="bg-white shadow-md rounded p-4 mb-4 w-sm md:w-full">
+        <div className="flex flex-col sm:flex-row gap-4 justify-between">
+          <div className="w-full sm:w-1/2">
             <label
               htmlFor="currentPassword"
               className="block mb-2 font-light text-base"
@@ -234,7 +232,7 @@ function Account({ pfp }: { pfp: string }) {
               className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
           </div>
-          <div className="w-1/3">
+          <div className="w-full sm:w-1/2">
             <label
               htmlFor="newPassword"
               className="block mb-2 font-light text-base"

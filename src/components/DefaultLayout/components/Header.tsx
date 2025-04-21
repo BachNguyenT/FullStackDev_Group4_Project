@@ -54,7 +54,7 @@ function Header({
           variant="ghost"
           onClick={() => navigate("/workspace/account")}
         >
-          <div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold ">
+          <div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold overflow-hidden">
             <img src={avatarURL} />
           </div>
         </Button>
