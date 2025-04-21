@@ -90,10 +90,11 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   }, []);
 
   return (
-    <div className="sm:p-6 md:p-4">
+    
+    <div className="p-4 sm:p-6 md:p-4 overflow-x">
       <div className="flex items-center justify-between mb-4">
         {/* Title */}
-        <h2 className="text-2xl sm:text-2xl font-semibold mb-4">My Events</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">My Events</h2>
 
         {/* Add new event */}
         <span>
@@ -111,7 +112,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
       {/* Search, Filter & Sort Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
         {/* Left: Search & Filter */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-sm md:w-full lg:w-auto">
           <div className="h-[36px] items-center border border-gray-300 rounded-md p-1 bg-white shadow-sm focus-within:border-gray-600">
             <input
               onChange={(e) => setEventNameSearch(e.target.value)}
