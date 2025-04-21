@@ -83,7 +83,7 @@ function Workspace() {
           }`}
         >
           <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
-          <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] px-1 py-2  bg-gray-50">
+          <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] px-1 py-2  bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the workspace */}
               <Route
@@ -113,7 +113,7 @@ function Workspace() {
                 path="invitation/${invitation.id}"
                 element={<InvitationDashboardAttendee />}
               />
-              <Route path="account" element={<Account />} />
+              <Route path="account" element={<Account pfp={avatarURL} />} />
             </Routes>
             <div className="mt-auto "></div>
           </div>

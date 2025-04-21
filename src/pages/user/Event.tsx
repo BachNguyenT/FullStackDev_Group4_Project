@@ -90,10 +90,11 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 md:p-4">
+    
+    <div className="p-4 sm:p-6 md:p-4 overflow-x">
       <div className="flex items-center justify-between mb-4">
         {/* Title */}
-        <h2 className="text-2xl sm:text-2xl font-semibold mb-4">My Events</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">My Events</h2>
 
         {/* Add new event */}
         <span>
@@ -111,7 +112,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
       {/* Search, Filter & Sort Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
         {/* Left: Search & Filter */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-sm md:w-full lg:w-auto">
           <div className="h-[36px] items-center border border-gray-300 rounded-md p-1 bg-white shadow-sm focus-within:border-gray-600">
             <input
               onChange={(e) => setEventNameSearch(e.target.value)}
@@ -125,17 +126,17 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
             placeholder="Order events by:"
             items={sortItems}
             valueSetter={setSortDirection}
-          ></Dropdown>
+          />
           <Dropdown
             placeholder="Event status:"
             items={statusItems}
             valueSetter={setEventStatusSearch}
-          ></Dropdown>
+          />
           <Dropdown
             placeholder="Event visibility:"
             items={visibilityItems}
             valueSetter={setEventVisibilitySearch}
-          ></Dropdown>
+          />
           <Button
             animated={false}
             variant="ghost"
@@ -149,28 +150,32 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
 
       {/* Event Cards Grid */}
       <div
-        className={`ml-10 mr-2 grid gap-x-[0px] gap-y-[24px] transition-all duration-300 ${
-          sidebarOpen
-            ? "sm:grid-cols-1 lg:grid-cols-3"
-            : "sm:grid-cols-1 lg:grid-cols-4"
+        className={`mx-2 mr-2 grid gap-y-16 gap-x-8 justify-center items-center transition-all duration-300 ${
+          events.length === 1
+        ? "sm:grid-cols-1"
+        : events.length === 2
+        ? "sm:grid-cols-2"
+        : "sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         }`}
       >
         {isLoading ? (
           <div>Loading...</div>
         ) : events.length > 0 ? (
           events.map((element, index) => {
-            let date = new Date(element.Date);
-            return (
-              <EventCard
-                key={index}
-                eventId={element.ID}
-                eventName={element.Name}
-                createdOn={date.toLocaleDateString()}
-                visibility={element.IsPrivate ? "Private" : "Public"}
-                attendeeCount={element.AtendeeCount}
-                maxAttendeeCount={maxAttendeeCount}
-              />
-            );
+        console.log(element.Date);
+        let date = new Date(element.Date);
+        return (
+          <EventCard
+        key={index}
+        eventId={element.ID}
+        eventName={element.Name}
+        createdOn={date.toLocaleDateString()}
+        visibility={element.IsPrivate ? "Private" : "Public"}
+        attendeeCount={element.AtendeeCount}
+        maxAttendeeCount={maxAttendeeCount}
+        className="w-full sm:w-[300px] md:w-[280px] lg:w-[260px] xl:w-[240px] rounded-xl overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+          />
+        );
           })
         ) : (
           <div>No events found.</div>

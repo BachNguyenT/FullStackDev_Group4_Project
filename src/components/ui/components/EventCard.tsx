@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom";
 import { EventInfoProps } from "@/types/Types";
 //import components and libraries
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faIdCard,
-  faCalendarAlt,
-  faEye,
-} from "@fortawesome/free-regular-svg-icons";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
+import Calender from "@/assets/Icons/calendar.svg";
+import User from "@/assets/Icons/user-octagon.svg";
+import ID from "@/assets/Icons/card.svg";
+import Visibility from "@/assets/Icons/eye2.svg";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
+import { Button } from "./Button";
 
 function EventCard({
   eventId,
@@ -66,57 +65,58 @@ function EventCard({
   return (
     <Link
       to="/workspace/event/${eventId}/dashboard"
-      className="w-[300px] rounded-xl overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+      className="p-[10px] min-w-[250px] max-w-[350px] rounded-sm overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
     >
-      <img
-        className="w-full h-48 object-cover"
-        src={imageURL}
-        alt="Wedding Venue"
-      />
-      <div className="px-6 py-4">
-        <h2 className="font-semibold text-lg text-gray-800 text-center mb-4">
+      <div className="relative">
+        <img
+          className="w-full h-48 object-cover rounded-sm"
+          src={imageURL}
+          alt="Wedding Venue"
+        />
+        <div className="absolute top-0 left-0 bg-white mt-[10px] ml-[10px] flex flex-col items-center rounded-sm font-semibold px-2 py-1">
+          <span className="text-gray-800 h-5">01</span>
+          <span className="text-purple-500 text-xs">JAN</span>
+        </div>
+      </div>
+      <div className="py-[10px]">
+        <span className="bg-purple-300 text-xs px-2 py-1 rounded-sm text-gray-800">
+          Wedding
+        </span>
+        <h2 className="font-semibold text-lg text-gray-800 my-1">
           {eventName}
         </h2>
-
-        <div className="text-sm text-gray-600 space-y-2">
-          {/* First Row: Event ID and Created on */}
-          <div className="flex justify-between space-x-4">
-            <div className="flex flex-col">
-              <span className="font-medium flex items-center">
-                <FontAwesomeIcon icon={faIdCard} className="mr-2" />
-                Event ID:
-              </span>
-              <span>{eventId} </span>
-            </div>
-            <div className="flex flex-col text-right">
-              <span className="font-medium flex items-center justify-end">
-                <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
-                Created on:
-              </span>
-              <span> {createdOn}</span>
-            </div>
+        <div className="flex flex-col text-sm gap-1">
+          <div className="flex flex-row items-center gap-1">
+            <img className="h-[18px]" src={ID} />
+            <span>{eventId} </span>
           </div>
-
-          {/* Second Row: Visibility and No. Attendees */}
-          <div className="flex justify-between space-x-4">
-            <div className="flex flex-col">
-              <span className="font-medium flex items-center">
-                <FontAwesomeIcon icon={faEye} className="mr-2" />
-                Visibility:
-              </span>
-              <span>{visibility}</span>
-            </div>
-            <div className="flex flex-col text-right">
-              <span className="font-medium flex items-center justify-end">
-                <FontAwesomeIcon icon={faIdCard} className="mr-2" />
-                No. Attendees:
-              </span>
-              <span>
-                {attendeeCount} out of {maxAttendeeCount}
-              </span>
-            </div>
+          <div className="flex flex-row items-center gap-1">
+            <span className="font-medium flex items-center justify-end">
+              <img className="h-[18px]" src={Calender} />
+            </span>
+            <span> {createdOn}</span>
+          </div>
+          <div className="flex flex-row items-center gap-1">
+            <span className="font-medium flex items-center">
+              <img className="h-[18px]" src={Visibility} />
+            </span>
+            <span>{visibility}</span>
+          </div>
+          <div className="flex flex-row items-center gap-1">
+            <span className="font-medium flex items-center justify-end">
+              <img className="h-[18px]" src={User} />
+            </span>
+            <span>
+              {attendeeCount} / {maxAttendeeCount} going
+            </span>
           </div>
         </div>
+      </div>
+      <div className="flex flex-row text-right gap-2">
+        <Button className="w-full h-[30px] rounded-sm">Edit</Button>
+        <Button variant="secondary" className="w-full h-[30px] rounded-sm">
+          View details
+        </Button>
       </div>
     </Link>
   );
