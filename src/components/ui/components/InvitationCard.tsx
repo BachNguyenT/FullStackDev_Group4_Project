@@ -85,7 +85,7 @@ function InvitationCard() {
         {/* Buttons */}
         <div className="flex justify-between items-center  pt-4">
           <Button
-            to="/workspace/invitation/${invitation.id}/dashboard"
+            to={`/workspace/invitation/"asdfasd"`}
             variant="outline"
             animated={false}
             className="hover:bg-purple-500 hover:text-white"

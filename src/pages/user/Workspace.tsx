@@ -102,16 +102,14 @@ function Workspace() {
                 element={<Event sidebarOpen={sidebarOpen} />}
               />
               {/* Dashboard of a specific event */}
-              <Route path="event/${eventId}" element={<EventDashboardHost />} />
+              <Route path="event/:eventId" element={<EventDashboardHost />} />
 
               {/* Create new event page */}
               <Route path="event/create" element={<EventAdd />} />
 
-              <Route path="event/${eventId}/edit" element={<EventEdit />} />
+              <Route path="event/:eventId/edit" element={<EventEdit />} />
               <Route path="invitation" element={<Invitation />} />
-              <Route
-                path="invitation/${invitation.id}"
-                element={<InvitationDashboardAttendee />}
+              <Route path="invitation/:ivitationId" element={<InvitationDashboardAttendee />}
               />
               <Route path="account" element={<Account pfp={avatarURL} />} />
             </Routes>
