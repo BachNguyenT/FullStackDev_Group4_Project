@@ -80,16 +80,17 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
         ))}
         </div>
         {/* Add Comment Section */}
-        <div className="flex items-center mt-8 rounded-full border border-gray-200 px-4 py-2 shadow-sm w-full bg-white">
-          <span className="text-gray-400 mr-2">Aa</span>
+        <div className="flex items-center mt-8 rounded-full border border-gray-200 px-4 py-2 shadow-sm w-full bg-white focus-within:border-gray-600">
+          <label htmlFor="comment" className="text-gray-400 mr-2">Aa</label>
           <input
+            id="comment"
             value={message}
             onChange={(e) => {setMessage(e.target.value); if (e.target.value.length > 0) {setDisableSend(false);} else {setDisableSend(true);}}}
             type="text"
             placeholder="Write reply..."
             className="flex-1 outline-none text-sm text-gray-600 placeholder-gray-400 bg-transparent"
           />
-          <Button variant="secondary" onClick={() => handleSendMessage(message, (new Date()).toISOString())} disabled={disableSend}>
+          <Button variant="ghost" onClick={() => handleSendMessage(message, (new Date()).toISOString())} disabled={disableSend} >
             <FontAwesomeIcon 
               icon={faCommentDots}
               className="text-gray-400 ml-2"

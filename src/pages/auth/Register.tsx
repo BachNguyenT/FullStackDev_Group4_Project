@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import LogoText from "@/assets/Icons/plan-event-text.svg";
 import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 function Register() {
   // State variables for form inputs
@@ -33,23 +35,141 @@ function Register() {
   // Navigation hook
   const navigate = useNavigate();
 
+  // Validate input fields
+  const validateFullName = (value: string) => {
+    if (value.length === 0) return "Full name is required";
+    if (!/^[a-zA-Z\s]{2,}$/.test(value)) return "Invalid name format";
+    return "";
+  };
+
+  const validateEmail = (value: string) => {
+    if (value.length === 0) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email format";
+    return "";
+  };
+
+  const validatePhone = (value: string) => {
+    if (value.length === 0) return "Phone number is required";
+    if (!/^\+?\d{10,}$/.test(value)) return "Invalid phone number format";
+    return "";
+  };
+
+  const validateBirthday = (value: string) => {
+    if (value.length === 0) return "Birthday is required";
+    const today = new Date();
+    const birthDate = new Date(value);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    if (age < 13) return "You must be at least 13 years old";
+    return "";
+  };
+
+  const validateUsername = (value: string) => {
+    if (value.length === 0) return "Username is required";
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(value))
+      return "Username must be 3-20 characters, letters, numbers, or underscores";
+    return "";
+  };
+
+  const validatePassword = (value: string) => {
+    if (value.length === 0) return "Password is required";
+    if (value.length < 8) return "Password must be at least 8 characters";
+    return "";
+  };
+
+  const validateConfirmPassword = (value: string) => {
+    if (value.length === 0) return "Confirm Password is required";
+    if (value !== password) return "Passwords do not match";
+    return "";
+  };
+
+  const validateTerms = (value: boolean) => {
+    if (!value) return "Please agree to the terms and conditions";
+    return "";
+  };
+
+  // Input change handlers
+  const handleFullNameChange = (value: string) => {
+    setFullName(value);
+    setNameCheck("");
+  };
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    setEmailCheck("");
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setPhone(value);
+    setPhoneCheck("");
+  };
+
+  const handleBirthdayChange = (value: string) => {
+    setBirthday(value);
+    setBirthdayCheck("");
+  };
+
+  const handleUsernameChange = (value: string) => {
+    setUsername(value);
+    setUCheck("");
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPCheck("");
+  };
+
+  const handleConfirmPasswordChange = (value: string) => {
+    setConfirmPassword(value);
+    setCPCheck("");
+  };
+
+  // Blur handlers
+  const handleFullNameBlur = () => {
+    setNameCheck(validateFullName(fullName));
+  };
+
+  const handleEmailBlur = () => {
+    setEmailCheck(validateEmail(email));
+  };
+
+  const handlePhoneBlur = () => {
+    setPhoneCheck(validatePhone(phone));
+  };
+
+  const handleBirthdayBlur = () => {
+    setBirthdayCheck(validateBirthday(birthday));
+  };
+
+  const handleUsernameBlur = () => {
+    setUCheck(validateUsername(username));
+  };
+
+  const handlePasswordBlur = () => {
+    setPCheck(validatePassword(password));
+  };
+
+  const handleConfirmPasswordBlur = () => {
+    setCPCheck(validateConfirmPassword(confirmPassword));
+  };
+
+  const handleTermsBlur = () => {
+    setTermsCheck(validateTerms(isTermsAgreed));
+  };
+
   function handleSetImage(file: File | undefined) {
     if (file) {
-      // Check file type
       const validTypes = ["image/png", "image/jpeg"];
       if (!validTypes.includes(file.type)) {
-        alert("Invalid file type. Please upload a PNG or JPEG image.");
+        setErrorMessage("Invalid file type. Please upload a PNG or JPEG image.");
         return;
       }
 
-      // Check file size (5MB = 5 * 1024 * 1024 bytes)
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        alert("File size must be smaller than 5MB.");
+        setErrorMessage("File size must be smaller than 5MB.");
         return;
       }
 
-      // Generate and set preview URL
       if (image !== userDummyPFP) {
         URL.revokeObjectURL(imageRef.current);
       }
@@ -79,125 +199,110 @@ function Register() {
     setCPCheck("");
     setTermsCheck("");
 
-    let check = true;
-    if (fullName.length === 0) {
-      setNameCheck("Full name is required!");
-      check = false;
-    }
-    if (email.length === 0) {
-      setEmailCheck("Email is required!");
-      check = false;
-    }
-    if (phone.length === 0) {
-      setPhoneCheck("Phone number is required!");
-      check = false;
-    }
-    if (birthday.length === 0) {
-      setBirthdayCheck("Birthday is required!");
-      check = false;
-    }
-    if (username.length === 0) {
-      setUCheck("Username is required!");
-      check = false;
-    }
-    if (password.length === 0) {
-      setPCheck("Password is required!");
-      check = false;
-    }
-    if (confirmPassword.length === 0) {
-      setCPCheck("Confirm Password is required!");
-      check = false;
-    }
-    if (password !== confirmPassword) {
-      setPCheck("Passwords do not match!");
-      check = false;
-    }
-    if (!isTermsAgreed) {
-      setTermsCheck("Please agree to the terms and conditions!");
-      check = false;
-    }
+    // Front-end validation
+    const fullNameError = validateFullName(fullName);
+    const emailError = validateEmail(email);
+    const phoneError = validatePhone(phone);
+    const birthdayError = validateBirthday(birthday);
+    const usernameError = validateUsername(username);
+    const passwordError = validatePassword(password);
+    const confirmPasswordError = validateConfirmPassword(confirmPassword);
+    const termsError = validateTerms(isTermsAgreed);
 
-    if (check) {
-      try {
-        const getImage = await fetch(image);
-        const imageBlob = await getImage.blob();
-        const imageArrayBuffer = await imageBlob.arrayBuffer();
-        const imageByteArray = new Uint8Array(imageArrayBuffer);
-        const imageHexString = Array.from(imageByteArray)
-          .map((byte) => byte.toString(16).padStart(2, "0"))
-          .join("");
-
-        const registerResult = await fetch(
-          "http://localhost:3000/register-user",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              Name: fullName,
-              PhoneNumber: phone,
-              Email: email,
-              Birthday: birthday,
-              Username: username,
-              Password: password,
-              Pfp: image == userDummyPFP ? "" : "\\x" + imageHexString,
-            }),
-          }
-        );
-
-        if (registerResult.ok) {
-          alert("Registration successful!");
-          navigate("/login");
-        } else {
-          if (registerResult.status === 400) {
-            const verificationResult = await registerResult.json();
-            if (verificationResult[1] === "0x002") {
-              setPhoneCheck("Phone number already exists!");
-            } else {
-              setPhoneCheck("Invalid phone number!");
-            }
-
-            if (verificationResult[2] === "0x002") {
-              setEmailCheck("Email already exists!");
-            }
-
-            if (verificationResult[3] === "0x002") {
-              setUCheck("Username already exists!");
-            }
-
-            setLoading(false);
-            return;
-          } else {
-            console.log("2");
-            setErrorMessage(
-              "An error occurred while registering. Please try again."
-            );
-            setLoading(false);
-            return;
-          }
-        }
-      } catch (error) {
-        console.log(error);
-        setErrorMessage(
-          "An error occurred while registering. Please try again."
-        );
-        setLoading(false);
-        return;
-      }
-    } else {
+    if (
+      fullNameError ||
+      emailError ||
+      phoneError ||
+      birthdayError ||
+      usernameError ||
+      passwordError ||
+      confirmPasswordError ||
+      termsError
+    ) {
+      setNameCheck(fullNameError);
+      setEmailCheck(emailError);
+      setPhoneCheck(phoneError);
+      setBirthdayCheck(birthdayError);
+      setUCheck(usernameError);
+      setPCheck(passwordError);
+      setCPCheck(confirmPasswordError);
+      setTermsCheck(termsError);
       setLoading(false);
       return;
+    }
+
+    try {
+      const getImage = await fetch(image);
+      const imageBlob = await getImage.blob();
+      const imageArrayBuffer = await imageBlob.arrayBuffer();
+      const imageByteArray = new Uint8Array(imageArrayBuffer);
+      const imageHexString = Array.from(imageByteArray)
+        .map((byte) => byte.toString(16).padStart(2, "0"))
+        .join("");
+
+      const registerResult = await fetch(
+        "http://localhost:3000/register-user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            Name: fullName,
+            PhoneNumber: phone,
+            Email: email,
+            Birthday: birthday,
+            Username: username,
+            Password: password,
+            Pfp: image == userDummyPFP ? "" : "\\x" + imageHexString,
+          }),
+        }
+      );
+
+      if (registerResult.ok) {
+        alert("Registration successful!");
+        navigate("/login");
+      } else {
+        if (registerResult.status === 422) {
+          const verificationResult = await registerResult.json();
+          // verificationResult is an array: [phoneStatus, emailStatus, usernameStatus]
+          // 0x001 means field is taken, 0x002 means field is available
+          if (verificationResult[0] === "0x001") {
+            setPhoneCheck("Phone number already exists!");
+          }
+          if (verificationResult[1] === "0x001") {
+            setEmailCheck("Email already exists!");
+          }
+          if (verificationResult[2] === "0x001") {
+            setUCheck("Username already exists!");
+          }
+          // If no specific field errors, show generic error
+          if (
+            verificationResult[0] !== "0x001" &&
+            verificationResult[1] !== "0x001" &&
+            verificationResult[2] !== "0x001"
+          ) {
+            setErrorMessage("An error occurred while registering. Please try again.");
+          }
+        } else {
+          setErrorMessage("An error occurred while registering. Please try again.");
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Service temporarily unavailable. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 to-purple-400 p-4">
-      <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-10 flex flex-col md:flex-row items-center">
+      <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-10 flex flex-col items-center">
         <div className="w-full px-4">
-          <img src={LogoText} alt="Logo" className="w-full h-10" />
+          <img src={LogoText} alt="Logo" className="w-full h-10 mx-auto" />
           <h2 className="text-xl text-center text-gray-600 my-8">Register</h2>
 
           <form
@@ -208,31 +313,31 @@ function Register() {
             }}
           >
             <div className="grid grid-cols-1 gap-4">
-              {/* image */}
+              {/* Image Upload */}
               <div className="flex flex-col">
                 <div className="flex flex-col items-center space-y-3">
                   <input
                     id="avatar"
                     onChange={(e) => handleSetImage(e.target.files?.[0])}
                     type="file"
-                    accept="image/*"
+                    accept="image/png,image/jpeg"
                     className="hidden"
                   />
-                  <div className="shrink-full">
+                  <div className="shrink-0">
                     <img
-                      src={typeof image === "string" ? image : AvatarIcon}
+                      src={image}
                       alt="Preview Image"
-                      className="h-[150px] w-[150px] rounded-full object-cover text-center border border-gray-300"
+                      className="h-[150px] w-[150px] rounded-full object-cover border border-gray-300"
                     />
                   </div>
                   <label
                     htmlFor="avatar"
-                    className="h-[43px] rounded-md border border-gray-300 px-4 py-[11px] text-sm font-semibold hover:bg-purple-600 hover:text-white"
+                    className="h-[43px] rounded-md border border-gray-300 px-4 py-[11px] text-sm font-semibold hover:bg-purple-600 hover:text-white cursor-pointer"
                   >
                     Upload avatar
                   </label>
-                  <p className="flex items-start text-xs text-slate-400">
-                    PNG or JPEG, Below 5Mb
+                  <p className="text-xs text-slate-400">
+                    PNG or JPEG, Below 5MB
                   </p>
                 </div>
               </div>
@@ -251,11 +356,23 @@ function Register() {
                   placeholder="Enter your full name..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  onChange={(e) => handleFullNameChange(e.target.value)}
+                  onBlur={handleFullNameBlur}
+                  aria-invalid={!!fullNameCheck}
+                  aria-describedby={fullNameCheck ? "fullName-error" : undefined}
                   disabled={isLoading}
                 />
                 {fullNameCheck && (
-                  <p className="text-red-500">{fullNameCheck}</p>
+                  <p
+                    id="fullName-error"
+                    className="mt-1 text-sm text-red-600 flex items-center animate-fade-in"
+                  >
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="mr-2 text-red-600"
+                    />
+                    {fullNameCheck}
+                  </p>
                 )}
               </div>
 
@@ -272,11 +389,25 @@ function Register() {
                   type="email"
                   placeholder="Enter email..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                  onChange={(e) => setEmail(e.target.value)}
                   value={email}
+                  onChange={(e) => handleEmailChange(e.target.value)}
+                  onBlur={handleEmailBlur}
+                  aria-invalid={!!emailCheck}
+                  aria-describedby={emailCheck ? "email-error" : undefined}
                   disabled={isLoading}
                 />
-                {emailCheck && <p className="text-red-500">{emailCheck}</p>}
+                {emailCheck && (
+                  <p
+                    id="email-error"
+                    className="mt-1 text-sm text-red-600 flex items-center animate-fade-in"
+                  >
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="mr-2 text-red-600"
+                    />
+                    {emailCheck}
+                  </p>
+                )}
               </div>
 
               {/* Phone Number */}
@@ -289,14 +420,28 @@ function Register() {
                 </label>
                 <input
                   id="phone"
-                  type="text"
+                  type="tel"
                   placeholder="Enter phone number..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                  onChange={(e) => setPhone(e.target.value)}
                   value={phone}
+                  onChange={(e) => handlePhoneChange(e.target.value)}
+                  onBlur={handlePhoneBlur}
+                  aria-invalid={!!phoneCheck}
+                  aria-describedby={phoneCheck ? "phone-error" : undefined}
                   disabled={isLoading}
                 />
-                {phoneCheck && <p className="text-red-500">{phoneCheck}</p>}
+                {phoneCheck && (
+                  <p
+                    id="phone-error"
+                    className="mt-1 text-sm text-red-600 flex items-center animate-fade-in"
+                  >
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="mr-2 text-red-600"
+                    />
+                    {phoneCheck}
+                  </p>
+                )}
               </div>
 
               {/* Birthday */}
@@ -311,12 +456,25 @@ function Register() {
                   id="birthday"
                   type="date"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                  onChange={(e) => setBirthday(e.target.value)}
                   value={birthday}
+                  onChange={(e) => handleBirthdayChange(e.target.value)}
+                  onBlur={handleBirthdayBlur}
+                  aria-invalid={!!birthdayCheck}
+                  aria-describedby={birthdayCheck ? "birthday-error" : undefined}
+                  max={new Date().toISOString().split("T")[0]}
                   disabled={isLoading}
                 />
                 {birthdayCheck && (
-                  <p className="text-red-500">{birthdayCheck}</p>
+                  <p
+                    id="birthday-error"
+                    className="mt-1 text-sm text-red-600 flex items-center animate-fade-in"
+                  >
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="mr-2 text-red-600"
+                    />
+                    {birthdayCheck}
+                  </p>
                 )}
               </div>
 
@@ -333,12 +491,24 @@ function Register() {
                   type="text"
                   placeholder="Enter your username..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                  onChange={(e) => setUsername(e.target.value)}
                   value={username}
+                  onChange={(e) => handleUsernameChange(e.target.value)}
+                  onBlur={handleUsernameBlur}
+                  aria-invalid={!!usernameCheck}
+                  aria-describedby={usernameCheck ? "username-error" : undefined}
                   disabled={isLoading}
                 />
                 {usernameCheck && (
-                  <p className="text-red-500">{usernameCheck}</p>
+                  <p
+                    id="username-error"
+                    className="mt-1 text-sm text-red-600 flex items-center animate-fade-in"
+                  >
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="mr-2 text-red-600"
+                    />
+                    {usernameCheck}
+                  </p>
                 )}
               </div>
 
@@ -355,14 +525,27 @@ function Register() {
                   type="password"
                   placeholder="Enter your password..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                  onChange={(e) => setPassword(e.target.value)}
                   value={password}
+                  onChange={(e) => handlePasswordChange(e.target.value)}
+                  onBlur={handlePasswordBlur}
+                  aria-invalid={!!passwordCheck}
+                  aria-describedby={passwordCheck ? "password-error" : undefined}
                   disabled={isLoading}
                 />
                 {passwordCheck && (
-                  <p className="text-red-500">{passwordCheck}</p>
+                  <p
+                    id="password-error"
+                    className="mt-1 text-sm text-red-600 flex items-center animate-fade-in"
+                  >
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="mr-2 text-red-600"
+                    />
+                    {passwordCheck}
+                  </p>
                 )}
               </div>
+
               {/* Confirm Password */}
               <div className="flex flex-col">
                 <label
@@ -376,12 +559,26 @@ function Register() {
                   type="password"
                   placeholder="Re-enter your password..."
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-                  onChange={(e) => setConfirmPassword(e.target.value)}
                   value={confirmPassword}
+                  onChange={(e) => handleConfirmPasswordChange(e.target.value)}
+                  onBlur={handleConfirmPasswordBlur}
+                  aria-invalid={!!confirmPasswordCheck}
+                  aria-describedby={
+                    confirmPasswordCheck ? "confirmPassword-error" : undefined
+                  }
                   disabled={isLoading}
                 />
                 {confirmPasswordCheck && (
-                  <p className="text-red-500">{confirmPasswordCheck}</p>
+                  <p
+                    id="confirmPassword-error"
+                    className="mt-1 text-sm text-red-600 flex items-center animate-fade-in"
+                  >
+                    <FontAwesomeIcon
+                      icon={faExclamationTriangle}
+                      className="mr-2 text-red-600"
+                    />
+                    {confirmPasswordCheck}
+                  </p>
                 )}
               </div>
             </div>
@@ -394,21 +591,31 @@ function Register() {
                 className="accent-purple-500 w-4 h-4"
                 checked={isTermsAgreed}
                 onChange={(e) => setIsTermsAgreed(e.target.checked)}
+                onBlur={handleTermsBlur}
                 disabled={isLoading}
               />
               <label htmlFor="terms" className="text-sm text-gray-700">
-                I agree to all the
+                I agree to the
                 <Button
                   to="/terms"
                   variant="link"
-                  className="text-purple-600 underline"
+                  className="text-purple-600 underline mx-1"
                 >
-                  Private Policies
+                  Terms and Conditions
                 </Button>
               </label>
             </div>
             {termsCheck && (
-              <p className="text-red-500 text-center">{termsCheck}</p>
+              <p
+                id="terms-error"
+                className="text-sm text-red-600 text-center flex items-center justify-center animate-fade-in"
+              >
+                <FontAwesomeIcon
+                  icon={faExclamationTriangle}
+                  className="mr-2 text-red-600"
+                />
+                {termsCheck}
+              </p>
             )}
 
             {/* Submit Button */}
@@ -422,17 +629,26 @@ function Register() {
 
             {/* Display general error message */}
             {errorMessage && (
-              <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+              <p
+                id="general-error"
+                className="text-sm text-red-600 text-center flex items-center justify-center animate-fade-in"
+              >
+                <FontAwesomeIcon
+                  icon={faExclamationTriangle}
+                  className="mr-2 text-red-600"
+                />
+                {errorMessage}
+              </p>
             )}
 
             <div className="text-center mt-4">
               <Button
-                to="/login"
+                onClick={() => navigate("/login")}
                 size="lg"
                 variant="link"
                 className="text-purple-500 hover:text-purple-600"
               >
-                Back to Login
+                Already have an account? Login
               </Button>
             </div>
           </form>
