@@ -65,7 +65,7 @@ function EventCard({
 
   return (
     <div
-      className="p-[10px] min-w-[250px] max-w-[350px] rounded-md overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+      className="p-[10px] min-w-[250px] max-w-[320px] rounded-md overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
     >
       <div className="relative">
         <img
