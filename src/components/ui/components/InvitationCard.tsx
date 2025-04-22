@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 import Host from "@/assets/Icons/user-1.svg";
 import Calender from "@/assets/Icons/calendar.svg";
@@ -72,13 +73,15 @@ function InvitationCard() {
             variant="secondary"
             className="hover:bg-green-500 hover:text-white w-full"
           >
-            ✓ Accept
+            <FontAwesomeIcon icon={faCheck} />
+            Accept
           </Button>
           <Button
             variant="destructive"
             className="hover:bg-red-500 hover:text-white w-full"
           >
-            ✕ Decline
+            <FontAwesomeIcon icon={faTimes} />
+            Decline
           </Button>
           <Button
             to={`/workspace/invitation/"asdfasd"`}
@@ -86,6 +89,7 @@ function InvitationCard() {
             animated={false}
             className="hover:bg-purple-500 hover:text-white w-full"
           >
+            <FontAwesomeIcon icon={faEye} />
             More Details
           </Button>
         </div>

@@ -1,10 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
 import Notification from "@/assets/Icons/notification.svg";
 
 import { Button } from "@/components/ui/components/Button";
 import { useLayoutContext } from "@/context/LayoutContext";
-import { useAvatarContext } from "@/context/AvatarContext";
 import { useNavigate } from "react-router-dom";
 
 function Header({

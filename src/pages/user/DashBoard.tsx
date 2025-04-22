@@ -83,9 +83,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
     useEvent(invitations, sidebarOpen);
 
   return (
-    <div>
-      <h1>Home</h1>
-      <p>Welcome to the user home page!</p>
+    <div className="p-4 sm:p-6 md:p-4 overflow-x">
       <h2 className="text-2xl font-semibold mb-4">Dashboard</h2>
 
       <div className="w-full h-60">Display Graph </div>
@@ -127,7 +125,8 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
                 key={index}
                 eventId={element.ID}
                 eventName={element.Name}
-                createdOn={date.toLocaleDateString()}
+                createdOn={date.toLocaleString("en-UK", { hour12: true, dateStyle: "long", timeStyle: "short" })}
+                eventType={element.Type}
                 visibility={element.IsPrivate ? "Private" : "Public"}
                 attendeeCount={element.AtendeeCount}
                 maxAttendeeCount={maxAttendeeCount}
@@ -161,7 +160,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
       </div>
 
       {/* Invitations List */}
-      <div>
+      <div className="flex flex-col items-center">
         {displayedInvitations.map((_, index) => (
           <InvitationCard key={index} />
         ))}
