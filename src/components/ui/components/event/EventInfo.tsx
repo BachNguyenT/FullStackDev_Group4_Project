@@ -63,9 +63,7 @@ function EventInfo({
       </div>
       <div className="flex">
         <img
-          src={
-            "https://i2-prod.mirror.co.uk/incoming/article30239516.ece/ALTERNATES/s1200d/0_Barca.jpg"
-          }
+          src={imageURL}
           alt="Event"
           className="w-140 object-cover rounded-bl-lg rounded-tl-lg shadow-md"
         />

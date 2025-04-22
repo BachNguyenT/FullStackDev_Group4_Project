@@ -20,6 +20,7 @@ function EventAdd() {
     { text: "Other" },
   ];
 
+  const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState(eventImagePlaceholder);
   const imageRef = useRef<string>(eventImagePlaceholder);
   const [eventName, setEventName] = useState<string>("");
@@ -49,6 +50,7 @@ function EventAdd() {
   const [eventDurationCheck, setEventDurationCheck] = useState<string>("");
 
   async function handleCreateEvent() {
+    setIsLoading(true);
     setEventNameCheck("");
     setEventDateTimeCheck("");
     setEventVenueCheck("");
@@ -57,28 +59,28 @@ function EventAdd() {
     let isValid = true;
 
     if (!eventName.trim()) {
-      setEventNameCheck("Event name is required.");
+      setEventNameCheck("*Event name is required.");
       isValid = false;
     }
 
     if (!eventDateTime || isNaN(new Date(eventDateTime).getTime())) {
-      setEventDateTimeCheck("Please enter a valid date and time.");
+      setEventDateTimeCheck("*Please enter a valid date and time.");
       isValid = false;
     }
 
     const eventDate = new Date(eventDateTime);
     if (eventDate < new Date()) {
-      setEventDateTimeCheck("Event date cannot be in the past.");
+      setEventDateTimeCheck("*Event date cannot be in the past.");
       isValid = false;
     }
 
     if (!eventVenue.trim()) {
-      setEventVenueCheck("Event venue is required.");
+      setEventVenueCheck("*Event venue is required.");
       isValid = false;
     }
 
     if (eventDescription.trim().length < 10) {
-      setEventDescriptionCheck("Please provide a longer event description.");
+      setEventDescriptionCheck("*Please provide a longer event description.");
       isValid = false;
     }
 
@@ -87,7 +89,7 @@ function EventAdd() {
       eventDuration.minute * 60 +
       eventDuration.second;
     if (durationInSec <= 0) {
-      setEventDurationCheck("Event duration must be greater than zero.");
+      setEventDurationCheck("*Event duration must be greater than zero.");
       isValid = false;
     }
 
@@ -136,17 +138,16 @@ function EventAdd() {
       if (response.status == 200) {
         alert("Event created successfully.");
         navigate("/workspace/event");
-        return;
       } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
-        return;
       } else {
         alert("Service temporarily unavailable. Please try again later.");
-        return;
       }
     }
-    else { return; }
+
+    setIsLoading(false);
+    return;
   }
 
   function handleSetImage(file: File | undefined) {
@@ -206,7 +207,7 @@ function EventAdd() {
               className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
             />
 
-            {eventNameCheck && <p className="text-red-500">{eventNameCheck}</p>}
+            {eventNameCheck && <p className="text-red-500 italic">{eventNameCheck}</p>}
           </div>
 
           {/* Date and Time of the event input */}
@@ -233,7 +234,7 @@ function EventAdd() {
             />
 
             {eventDateTimeCheck && (
-              <p className="text-red-500">{eventDateTimeCheck}</p>
+              <p className="text-red-500 italic">{eventDateTimeCheck}</p>
             )}
           </div>
 
@@ -256,7 +257,7 @@ function EventAdd() {
             />
 
             {eventVenueCheck && (
-              <p className="text-red-500">{eventVenueCheck}</p>
+              <p className="text-red-500 italic">{eventVenueCheck}</p>
             )}
           </div>
 
@@ -294,7 +295,7 @@ function EventAdd() {
             />
           </div>
           {eventDurationCheck && (
-            <p className="text-red-500">{eventDurationCheck}</p>
+            <p className="text-red-500 italic">{eventDurationCheck}</p>
           )}
 
           {/* Event reminder input */}
@@ -304,30 +305,9 @@ function EventAdd() {
               valueSetter={setEventReminder}
             />
           </div>
-
-          {/* Event image upload input */}
-          <div>
-            {/* Reminder time input */}
-            <label
-              htmlFor="Reminder"
-              className="block mb-2 font-light text-base"
-            >
-              Reminder:
-            </label>
-            <input
-              onChange={(e) => {
-                setDuration(parseInt(e.target.value));
-              }}
-              id="Reminder"
-              placeholder="Second..."
-              type="number"
-              min={0}
-              max={59}
-              className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full  font-light text-sm"
-            />
-          </div>
         </div>
         <div>
+          {/* Event image upload input */}
           <div className="mb-4">
             <label
               htmlFor="avatar"
@@ -343,8 +323,7 @@ function EventAdd() {
               className="hidden"
             />
           </div>
-          <div className="bg-gray-100 w-1/3 h-70 flex justify-center items-center mb-4">
-            {/* Example fixed height */}
+          <div className="bg-gray-100 w-1/2 h-70 flex justify-center items-center mb-4">
             <img
               src={image}
               alt="Preview Image"
@@ -367,20 +346,21 @@ function EventAdd() {
           className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm resize-y min-h-[80px]"
         />
         {eventDescriptionCheck && (
-          <p className="text-red-500">{eventDescriptionCheck}</p>
+          <p className="text-red-500 italic">{eventDescriptionCheck}</p>
         )}
       </div>
 
       <div className="flex justify-end mt-4">
-        <Button to="/workspace/event" variant="secondary" className="mr-2 min-w-8">
+        <Button to="/workspace/event" variant="secondary" className="mr-2 min-w-8"  disabled={isLoading}>        
           Cancel
         </Button>
         <Button
+          disabled={isLoading}
           onClick={handleCreateEvent}
           animated={false}
           className="ml-2 bg-purple-500 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 min-w-18"
         >
-          Add
+          {isLoading ? "Loading..." : "Add"}
         </Button>
       </div>
     </div>

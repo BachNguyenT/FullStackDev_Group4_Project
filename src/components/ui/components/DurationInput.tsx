@@ -59,7 +59,7 @@ const DurationInput: React.FC<DurationInputProps> = ({ label, valueSetter }) => 
   return (
     <div className="">
       <label className="mb-2">{label}</label>
-      <div className="flex flex-row items-center justify-between gap-4 py-3">
+      <div className="flex flex-row items-center justify-between gap-4 mb-8">
         <input
           onChange={(e) => {
             const value = parseInt(e.target.value, 10);
