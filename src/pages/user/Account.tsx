@@ -238,7 +238,7 @@ function Account({ pfp }: { pfp: string }) {
         } else if (response.status === 400) {
           return response.text().then((text) => {
             if (text === "0x001") {
-              alert("Please fill in both current password and new password.");
+              alert("Invalid current password");
             } else {
               alert("Invalid request. Please try again.");
             }
