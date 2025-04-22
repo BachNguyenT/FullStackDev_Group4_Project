@@ -1,19 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/components/Button";
+import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
 
 function Account({ pfp }: { pfp: string }) {
   console.log("when the component is mounted");
-  const [id, setId] = useState<string>('');
-  const [name, setName] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [birthday, setBirthday] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
-  const [currentPassword, setCurrentPassword] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [newPassword, setNewPassword] = useState<string>('');
+  const [id, setId] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>(pfp);
   const imageURLRef = useRef<string>(pfp);
+  const [newAvatar, setNewAvatar] = useState<string>(userDummyPFP);
+  const newImageURLRef = useRef<string>(userDummyPFP);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -30,6 +33,7 @@ function Account({ pfp }: { pfp: string }) {
       abortController.abort();
     };
   }, []);
+
   async function fetchAvatar(abortSignal: AbortSignal) {
     console.log("Fetching avatar...");
     try {
@@ -78,7 +82,6 @@ function Account({ pfp }: { pfp: string }) {
         setName(data.Name);
         setPhone(data.PhoneNumber);
         setEmail(data.Email);
-        setCurrentPassword(data.Password);
         const rawDate = new Date(data.Birthday);
         const formattedDate = rawDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
         setBirthday(formattedDate);
@@ -96,29 +99,171 @@ function Account({ pfp }: { pfp: string }) {
   }
 
   const handleSave = () => {
+    const updatedUser = {
+      Name: name,
+      PhoneNumber: phone,
+      Email: email,
+      Birthday: birthday,
+      Username: userName,
+    };
 
-  }
+    fetch("http://localhost:3000/update-user-information", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+      },
+      credentials: "include",
+      body: JSON.stringify(updatedUser),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          alert("User information updated successfully.");
+          setIsEditing(false);
+          handleDisplayUserInformation(); // Refresh the user information after saving
+        } else if (response.status === 401) {
+          alert("Session expired. Please log in again.");
+        } else {
+          alert("Service temporarily unavailable. Please try again later.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating user information:", error);
+        alert("Service temporarily unavailable. Please try again later.");
+      });
+  };
 
   const handleCancel = () => {
     setIsEditing(false);
     // Reset the state variables to their original values
     handleDisplayUserInformation();
-  }
+  };
 
-  const handleChangeAvatar = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const objectURL = URL.createObjectURL(file);
-      imageURLRef.current = objectURL;
-      setAvatar(objectURL);
+  const handleChangeAvatar = (file: File | undefined) => {
+    if (!file) return;
+
+    const validTypes = ["image/png", "image/jpeg"];
+    if (!validTypes.includes(file.type)) {
+      alert("Invalid file type. Please upload a PNG or JPEG image.");
+      return;
     }
-  }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("File size must be smaller than 5MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = (reader.result as string).split(",")[1]; // Remove the data prefix
+
+      // Optional: Show preview
+      if (newAvatar !== userDummyPFP) {
+        URL.revokeObjectURL(newImageURLRef.current);
+      }
+      const previewURL = URL.createObjectURL(file);
+      newImageURLRef.current = previewURL;
+      setNewAvatar(previewURL);
+
+      // Send the Base64 string to backend
+      fetch("http://localhost:3000/update-user-pfp", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        },
+        credentials: "include",
+        body: JSON.stringify({ Pfp: base64String }),
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            alert("Avatar updated successfully.");
+            setAvatar(previewURL); // Set the new avatar in state
+          } else if (res.status === 401) {
+            alert("Session expired. Please log in again.");
+          } else {
+            alert("Service temporarily unavailable. Please try again later.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating avatar:", error);
+          alert("Service temporarily unavailable. Please try again later.");
+        });
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   const handleChangePassword = () => {
+    if (!password || !newPassword) {
+      alert("Please fill in both current password and new password.");
+      return;
+    }
 
-  }
+    if (password === newPassword) {
+      alert("New password cannot be the same as current password.");
+      return;
+    }
 
+    const passwordData = {
+      CurrentPassword: password,
+      NewPassword: newPassword,
+    };
 
+    fetch("http://localhost:3000/update-user-password", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+      },
+      credentials: "include",
+      body: JSON.stringify(passwordData),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.text().then((text) => {
+            if (text === "0x000") {
+              alert("Password changed successfully.");
+              setPassword("");
+              setNewPassword("");
+            } else if (text === "0x001") {
+              alert("Session expired. Please log in again.");
+            } else if (text === "0x002") {
+              alert("Invalid session. Please log in again.");
+            } else {
+              alert("Service temporarily unavailable. Please try again later.");
+            }
+          });
+        } else if (response.status === 400) {
+          return response.text().then((text) => {
+            if (text === "0x001") {
+              alert("Please fill in both current password and new password.");
+            } else {
+              alert("Invalid request. Please try again.");
+            }
+          });
+        } else if (response.status === 401) {
+          return response.text().then((text) => {
+            if (text === "0x004") {
+              alert("Current password is incorrect.");
+            } else if (text === "Ux003") {
+              alert("Session expired. Please log in again.");
+            } else {
+              alert("Unauthorized request. Please log in again.");
+            }
+          });
+        } else if (response.status === 404) {
+          alert("User not found.");
+        } else {
+          alert("Service temporarily unavailable. Please try again later.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error changing password:", error);
+        alert("Service temporarily unavailable. Please try again later.");
+      });
+  };
 
   return (
     <div className="p-4 sm:p-6 md:p-4">
@@ -146,8 +291,14 @@ function Account({ pfp }: { pfp: string }) {
               accept="image/*"
               placeholder="Upload Avatar"
               className="hidden"
-              onChange={(e) => handleChangeAvatar(e)}
+              onChange={(e) => {
+                const file = e.target.files?.[0]; // Get the first file from the file input
+                if (file) {
+                  handleChangeAvatar(file); // Pass the file to the handler
+                }
+              }}
             />
+
             <p className="mt-4 font-semibold">ID: {id} </p>
           </div>
           {/* Text Information */}
@@ -238,15 +389,15 @@ function Account({ pfp }: { pfp: string }) {
                 </div>
               </div>
               <div className="flex justify-end">
-                {!isEditing && (<Button
-                  onClick={() => setIsEditing(!isEditing)}
-                >
-                  Edit Information
-                </Button>)}
+                {!isEditing && (
+                  <Button onClick={() => setIsEditing(!isEditing)}>
+                    Edit Information
+                  </Button>
+                )}
                 {isEditing && (
                   <div className="flex gap-2">
                     <Button onClick={handleCancel}>Cancel</Button>
-                    <Button onClick={handleSave} >Save</Button>
+                    <Button onClick={handleSave}>Save</Button>
                   </div>
                 )}
               </div>
@@ -268,6 +419,7 @@ function Account({ pfp }: { pfp: string }) {
               onChange={(e) => setPassword(e.target.value)}
               id="currentPassword"
               value={password}
+              type="password" // Keep as password type for security
               className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
           </div>
@@ -280,6 +432,7 @@ function Account({ pfp }: { pfp: string }) {
             </label>
             <input
               id="newPassword"
+              type="password" // Keep as password type for security
               className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
               onChange={(e) => setNewPassword(e.target.value)}
               value={newPassword}
