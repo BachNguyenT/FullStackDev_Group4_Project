@@ -62,7 +62,7 @@ function Invitation() {
       </div>
 
       {/* Invitations List */}
-      <div>
+      <div className="flex flex-col items-center">
         {invitations.map((_, index) => (
           <InvitationCard key={index} />
         ))}
