@@ -439,6 +439,11 @@ function Account({ pfp }: { pfp: string }) {
             />
           </div>
         </div>
+        <h3 className="text-base font-medium">Password Requirements:</h3>
+        <p className="text-sm text-gray-400 ml-6">
+          At least 8 characters, 1 uppercase letter, 1 lowercase letter and 1
+          special character
+        </p>
         <div className="flex justify-end mt-4">
           <Button onClick={handleChangePassword}>Change Password</Button>
         </div>
