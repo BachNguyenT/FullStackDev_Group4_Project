@@ -33,6 +33,7 @@ function Account({ pfp }: { pfp: string }) {
       abortController.abort();
     };
   }, []);
+
   async function fetchAvatar(abortSignal: AbortSignal) {
     console.log("Fetching avatar...");
     try {
@@ -81,7 +82,6 @@ function Account({ pfp }: { pfp: string }) {
         setName(data.Name);
         setPhone(data.PhoneNumber);
         setEmail(data.Email);
-        setCurrentPassword(data.Password);
         const rawDate = new Date(data.Birthday);
         const formattedDate = rawDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
         setBirthday(formattedDate);
@@ -195,7 +195,75 @@ function Account({ pfp }: { pfp: string }) {
     reader.readAsDataURL(file);
   };
 
-  const handleChangePassword = () => {};
+  const handleChangePassword = () => {
+    if (!password || !newPassword) {
+      alert("Please fill in both current password and new password.");
+      return;
+    }
+
+    if (password === newPassword) {
+      alert("New password cannot be the same as current password.");
+      return;
+    }
+
+    const passwordData = {
+      CurrentPassword: password,
+      NewPassword: newPassword,
+    };
+
+    fetch("http://localhost:3000/update-user-password", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+      },
+      credentials: "include",
+      body: JSON.stringify(passwordData),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.text().then((text) => {
+            if (text === "0x000") {
+              alert("Password changed successfully.");
+              setPassword("");
+              setNewPassword("");
+            } else if (text === "0x001") {
+              alert("Session expired. Please log in again.");
+            } else if (text === "0x002") {
+              alert("Invalid session. Please log in again.");
+            } else {
+              alert("Service temporarily unavailable. Please try again later.");
+            }
+          });
+        } else if (response.status === 400) {
+          return response.text().then((text) => {
+            if (text === "0x001") {
+              alert("Please fill in both current password and new password.");
+            } else {
+              alert("Invalid request. Please try again.");
+            }
+          });
+        } else if (response.status === 401) {
+          return response.text().then((text) => {
+            if (text === "0x004") {
+              alert("Current password is incorrect.");
+            } else if (text === "Ux003") {
+              alert("Session expired. Please log in again.");
+            } else {
+              alert("Unauthorized request. Please log in again.");
+            }
+          });
+        } else if (response.status === 404) {
+          alert("User not found.");
+        } else {
+          alert("Service temporarily unavailable. Please try again later.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error changing password:", error);
+        alert("Service temporarily unavailable. Please try again later.");
+      });
+  };
 
   return (
     <div className="p-4 sm:p-6 md:p-4">
@@ -351,6 +419,7 @@ function Account({ pfp }: { pfp: string }) {
               onChange={(e) => setPassword(e.target.value)}
               id="currentPassword"
               value={password}
+              type="password" // Keep as password type for security
               className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
             />
           </div>
@@ -363,17 +432,13 @@ function Account({ pfp }: { pfp: string }) {
             </label>
             <input
               id="newPassword"
+              type="password" // Keep as password type for security
               className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
               onChange={(e) => setNewPassword(e.target.value)}
               value={newPassword}
             />
           </div>
         </div>
-        <h3 className="text-base font-medium">Password Requirements:</h3>
-        <p className="text-sm text-gray-400 ml-6">
-          At least 8 characters, 1 uppercase letter, 1 lowercase letter and 1
-          special character
-        </p>
         <div className="flex justify-end mt-4">
           <Button onClick={handleChangePassword}>Change Password</Button>
         </div>
