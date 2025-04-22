@@ -132,6 +132,7 @@ function EventAdd() {
           EventVisibility: eventVisibility,
           EventType: eventType,
           Evp: image == eventImagePlaceholder ? "" : imageHexString,
+          EventDescription: eventDescription
         }),
       });
 
