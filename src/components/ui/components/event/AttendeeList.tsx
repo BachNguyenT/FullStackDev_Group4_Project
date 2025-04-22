@@ -27,7 +27,7 @@ const attendeeData = [
     invitationDate: "19/03/2026",
     replyDate: "20/03/2026",
     status: "Pending",
-  },
+  }
 ];
 
 function AttendeeList({ onDelete }: { onDelete: (id: string) => void }) {
@@ -74,16 +74,16 @@ function AttendeeList({ onDelete }: { onDelete: (id: string) => void }) {
       </div>
 
       {/* Table */}
-      <div className="overflow-auto border border-gray-300 rounded-md">
+      <div className="border border-gray-300 rounded-md h-100 overflow-y-auto">
         <table className="min-w-full text-sm">
-          <thead className="bg-muted text-muted-foreground text-left">
+          <thead className="bg-muted text-muted-foreground text-left sticky top-0" style={{ backgroundColor: "#F9FAFB" }}>
             <tr>
-              <th className="py-3 px-4 font-medium">User ID</th>
-              <th className="py-3 px-4 font-medium">Name</th>
-              <th className="py-3 px-4 font-medium">Invitation date</th>
-              <th className="py-3 px-4 font-medium">Reply Date</th>
-              <th className="py-3 px-4 font-medium">RSVP Status</th>
-              <th className="py-3 px-4 font-medium">Actions</th>
+              <th className="py-3 px-4 font-medium ">User ID</th>
+              <th className="py-3 px-4 font-medium ">Name</th>
+              <th className="py-3 px-4 font-medium ">Invitation date</th>
+              <th className="py-3 px-4 font-medium ">Reply Date</th>
+              <th className="py-3 px-4 font-medium ">RSVP Status</th>
+              <th className="py-3 px-4 font-medium ">Actions</th>
             </tr>
           </thead>
           <tbody>
