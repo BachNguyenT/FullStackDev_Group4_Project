@@ -10,7 +10,7 @@ import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.png";
+import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg"; 
 
 function EventDashboardHost() {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -19,21 +19,22 @@ function EventDashboardHost() {
     item: string;
   } | null>(null);
 
+
   const { eventId } = useParams();
-  const [imageURL, setImageURL] = useState<string>("");
-  const imageURLRef = useRef<string>("");
+  const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
+  const imageURLRef = useRef<string>(eventImagePlaceholder);
   const [eventInfo, setEventInfo] = useState({
-    eventName: "",
-    eventID: "",
-    eventDateTime: "",
-    eventDuration: "",
-    eventType: "",
-    eventStatus: "",
-    eventVisibility: "",
-    eventDescription: "",
-    eventVenue: ""
+    eventName: "Loading...",
+    eventID: "Loading...",
+    eventDateTime: "Loading...",
+    eventDuration: "Loading...",
+    eventType: "Loading...",
+    eventStatus: "Loading...",
+    eventVisibility: "Loading...",
+    eventDescription: "Loading...",
+    eventVenue: "Loading...",
+    isOrganizer: false
   });
-  const [isOrganizer, setIsOrganizer] = useState(false);
   const navigate = useNavigate();
 
   async function fetchEventImage(abortSignal: AbortSignal | null) {
@@ -52,36 +53,36 @@ function EventDashboardHost() {
       });
 
       if (response.status == 200) {
-        const imageBlob = await response.blob();
-        if (imageBlob.size > 0) {
-          const imageURL = URL.createObjectURL(imageBlob);
-          imageURLRef.current = imageURL;
-          setImageURL(imageURL);
-        }
-        return 1;
-      }
-      else if (response.status == 401) {
+        const blob = await response.blob();
+        const objectURL = URL.createObjectURL(blob);
+        imageURLRef.current = objectURL;
+        setImageURL(objectURL);
+      } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
-        return 0;
-      }
-      else {
+      } else if (response.status == 404) {
+        navigate("/not-found-page");
+      } else {
         alert("Service temporarily unavailable. Please try again later.");
-        return 0;
+        navigate("/workspace/event");
       }
     } catch (error) {
-      alert("Service temporarily unavailable. Please try again later.");
-      return 0;
+      if(error.name == "AbortError") {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+      else {
+        console.log(error);
+      }
     }
   }
 
-  async function verifyEvent(abortSignal: AbortSignal | null) {
+  async function fetchEventInfo(abortSignal: AbortSignal | null) {
     try {
       const queryParams = new URLSearchParams({
         id: eventId || ""
       });
 
-      const response = await fetch(`http://localhost:3000/verify-event?${queryParams.toString()}`, {
+      const response = await fetch(`http://localhost:3000/get-event-info?${queryParams.toString()}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json"
@@ -91,33 +92,35 @@ function EventDashboardHost() {
       });
 
       if (response.status == 200) {
-        return 1;
+        const data = await response.json();
+        setEventInfo({
+          eventName: data.eventName,
+          eventID: data.eventID,
+          eventDateTime: (new Date(data.eventDateTime)).toLocaleString("en-UK", {hour12: true, dateStyle: "long", timeStyle: "short"}),
+          eventDuration: data.eventDuration,
+          eventType: data.eventType,
+          eventStatus: data.eventStatus,
+          eventVisibility: data.eventVisibility,
+          eventDescription: data.eventDescription,
+          eventVenue: data.eventVenue,
+          isOrganizer: data.isOrganizer
+        });
       } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
-        return 0;
       } else if (response.status == 404) {
         navigate("/not-found-page");
-        return 0;
       } else {
         alert("Service temporarily unavailable. Please try again later.");
-        return 0;
+        navigate("/workspace/event");
       }
     }
-    catch {
-      alert("Service temporarily unavailable. Please try again later.");
-      return 0;
-    }
-  }
-
-  async function fetchEventInfo(abortSignal: AbortSignal | null) {
-    try {
-
-    }
     catch (error) {
-      if(error.name != "AbortError") {
+      if(error.name == "AbortError") {
         alert("Service temporarily unavailable. Please try again later.");
-        return 0;
+      }
+      else {
+        console.log(error);
       }
     }
   };
@@ -125,21 +128,12 @@ function EventDashboardHost() {
   useEffect(() => {
     const abortController = new AbortController();
 
-    verifyEvent(abortController.signal)
-    .then((verificationResult) => {
-      if(verificationResult == 1) {
+    const fetchData = async () => {
+      fetchEventImage(abortController.signal);
+      await fetchEventInfo(abortController.signal);
+    };
 
-        fetchEventImage(abortController.signal)
-        .then((fetchResult) => {
-          if(fetchResult == 0) {
-            abortController.abort();
-          }
-        });
-
-
-
-      }
-    });
+    fetchData();
 
     return () => {
       abortController.abort(); // Clean up the fetch request on component unmount
@@ -147,14 +141,6 @@ function EventDashboardHost() {
   }, []);
   
 
-  const handleDeleteEvent = (item) => {
-    setDeleteTarget({ type: "event", item });
-    setDeleteModalOpen(true);
-  };
-  const handleDeleteAttendee = (item) => {
-    setDeleteTarget({ type: "attendee", item });
-    setDeleteModalOpen(true);
-  };
 
   const handleDelete = () => {
     // Handle the delete action here
@@ -169,8 +155,20 @@ function EventDashboardHost() {
   };
   return (
     <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
-      <EventInfo imageURL={imageURL} onDelete={handleDeleteEvent} />
-      <AttendeeList onDelete={handleDeleteAttendee} />
+      <EventInfo 
+      imageURL={imageURL}
+      eventId={eventInfo.eventID}
+      eventName={eventInfo.eventName}
+      eventType={eventInfo.eventType}
+      visibility={eventInfo.eventVisibility}
+      dateTime={eventInfo.eventDateTime}
+      duration={eventInfo.eventDuration}
+      status={eventInfo.eventStatus}
+      description={eventInfo.eventDescription}
+      venue={eventInfo.eventVenue}
+      isOrganizer={eventInfo.isOrganizer}
+      />
+      <AttendeeList />
       <DiscussionBoard />
 
       {/* Delete modal for event and attendee */}
