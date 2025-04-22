@@ -14,6 +14,7 @@ function EventCard({
   eventId,
   eventName,
   createdOn,
+  eventType,
   visibility,
   attendeeCount,
   maxAttendeeCount,
@@ -64,11 +65,11 @@ function EventCard({
 
   return (
     <div
-      className="p-[10px] min-w-[250px] max-w-[350px] rounded-sm overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+      className="p-[10px] min-w-[250px] max-w-[350px] rounded-md overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
     >
       <div className="relative">
         <img
-          className="w-full h-48 object-cover rounded-sm"
+          className="w-full h-48 object-cover rounded-md"
           src={imageURL}
           alt="Wedding Venue"
         />
@@ -79,7 +80,7 @@ function EventCard({
       </div>
       <div className="py-[10px]">
         <span className="bg-purple-300 text-xs px-2 py-1 rounded-sm text-gray-800">
-          Wedding
+          {eventType}
         </span>
         <h2 className="font-semibold text-lg text-gray-800 my-1">
           {eventName}
