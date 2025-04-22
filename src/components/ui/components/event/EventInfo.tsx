@@ -22,7 +22,6 @@ function EventInfo({
   eventId,
   eventName,
   imageURL,
-  createdOn,
   eventType,
   visibility,
   dateTime,
@@ -30,10 +29,13 @@ function EventInfo({
   status,
   description,
   venue,
-  onDelete,
-  isEdit = true,
+  isOrganizer,
 }: EventInfoProps) {
-  const [isEditable, setIsEditable] = useState(isEdit);
+
+  function handleDelete() {
+
+  }
+
   return (
     <>
       <div className="flex justify-between items-start">
@@ -41,31 +43,31 @@ function EventInfo({
           {eventName || "AB Wedding"}
         </h1>
         <div className="flex-end">
-          {isEditable && (
-            <Button
-              to="/workspace/event/${eventId}/edit"
-              animated={false}
-              variant="secondary"
-            >
-              <FaPenToSquare className="mr-2" />
-              Edit
-            </Button>
-          )}
-          <Button
-            animated={false}
-            variant="destructive"
-            className="bg-red-500 text-white ml-4"
-            onClick={() => onDelete(`${eventId}`)}
-          >
-            <FaTrashCan />
-          </Button>
+          {isOrganizer ? (
+            <div>
+              <Button
+                to="/workspace/event/${eventId}/edit"
+                animated={false}
+                variant="secondary"
+              >
+                <FaPenToSquare className="mr-2" />
+                Edit
+              </Button>
+              <Button
+                animated={false}
+                variant="destructive"
+                className="bg-red-500 text-white ml-4"
+                onClick={handleDelete}
+              >
+                <FaTrashCan />
+              </Button>
+            </div>
+          ) : <></>}
         </div>
       </div>
       <div className="flex">
         <img
-          src={
-            "https://i2-prod.mirror.co.uk/incoming/article30239516.ece/ALTERNATES/s1200d/0_Barca.jpg"
-          }
+          src={imageURL}
           alt="Event"
           className="w-140 object-cover rounded-bl-lg rounded-tl-lg shadow-md"
         />
@@ -96,11 +98,6 @@ function EventInfo({
                 />
               </div>
               <div className="grid gap-8">
-                <InfoItem
-                  icon={<FaRegCalendar />}
-                  label="Created on"
-                  value={createdOn}
-                />
                 <InfoItem
                   icon={<FaRegClock />}
                   label="Duration"

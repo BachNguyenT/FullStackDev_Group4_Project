@@ -27,6 +27,7 @@ interface EventInfoProps {
   eventId: string;
   eventName: string;
   createdOn: string;
+  eventType: string;
   visibility: string;
   attendeeCount: string;
   maxAttendeeCount: string;

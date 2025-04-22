@@ -14,6 +14,7 @@ import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
 import EventAdd from "./EventAdd";
 import DashBoard from "./DashBoard";
+import SessionValidator from "@/routes/SessionValidator";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -78,23 +79,17 @@ function Workspace() {
       <div className="w-screen h-screen flex overflow-hidden">
         <Sidebar />
         <div
-          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
-            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
-          }`}
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+            }`}
         >
           <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
           <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] px-1 py-2  bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the workspace */}
-              <Route
-                path=""
-                element={
-                  <div>
-                    Dashboard <Footer />{" "}
-                  </div>
-                }
-              />
-              {/* Resolve invalid path */}
+              <Route path="" element={<div>
+                <DashBoard sidebarOpen={sidebarOpen} /> <Footer />{" "}
+              </div>} />
+                {/* Resolve invalid path */}
               <Route path="*" element={<Navigate to="/not-found-page" />} />
               {/* Show all events */}
               <Route
@@ -102,15 +97,15 @@ function Workspace() {
                 element={<Event sidebarOpen={sidebarOpen} />}
               />
               {/* Dashboard of a specific event */}
-              <Route path="event/${eventId}" element={<EventDashboardHost />} />
+              <Route path="event/:eventId" element={<SessionValidator><EventDashboardHost /></SessionValidator>} />
 
               {/* Create new event page */}
-              <Route path="event/create" element={<EventAdd />} />
+              <Route path="event/create" element={<SessionValidator><EventAdd /></SessionValidator>} />
 
-              <Route path="event/${eventId}/edit" element={<EventEdit />} />
+              <Route path="event/:eventId/edit" element={<EventEdit />} />
               <Route path="invitation" element={<Invitation />} />
               <Route
-                path="invitation/${invitation.id}"
+                path="invitation/:ivitationId"
                 element={<InvitationDashboardAttendee />}
               />
               <Route path="account" element={<Account pfp={avatarURL} />} />

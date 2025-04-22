@@ -178,7 +178,7 @@ function Login() {
 
           <Button
             onClick={() => navigate("/register")}
-            className="border border-purple-500 text-purple-500 py-2 rounded-full"
+            className="border border-purple-500 text-white py-2 rounded-full"
             disabled={isLoading}
           >
             Register

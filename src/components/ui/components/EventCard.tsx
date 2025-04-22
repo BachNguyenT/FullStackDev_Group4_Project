@@ -14,6 +14,7 @@ function EventCard({
   eventId,
   eventName,
   createdOn,
+  eventType,
   visibility,
   attendeeCount,
   maxAttendeeCount,
@@ -23,15 +24,15 @@ function EventCard({
 
   async function fetchEventImage(abortSignal: AbortSignal) {
     try {
-      const response = await fetch("http://localhost:3000/get-event-image", {
-        method: "POST",
+      const queryParams = new URLSearchParams({
+        id: eventId || ""
+      });
+
+      const response = await fetch(`http://localhost:3000/get-event-image?${queryParams.toString()}`, {
+        method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          eventID: eventId,
-        }),
         credentials: "include",
         signal: abortSignal,
       });
@@ -63,13 +64,12 @@ function EventCard({
   }, []);
 
   return (
-    <Link
-      to="/workspace/event/${eventId}/dashboard"
-      className="p-[10px] min-w-[250px] max-w-[350px] rounded-sm overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+    <div
+      className="p-[10px] min-w-[250px] max-w-[320px] rounded-md overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
     >
       <div className="relative">
         <img
-          className="w-full h-48 object-cover rounded-sm"
+          className="w-full h-48 object-cover rounded-md"
           src={imageURL}
           alt="Wedding Venue"
         />
@@ -80,7 +80,7 @@ function EventCard({
       </div>
       <div className="py-[10px]">
         <span className="bg-purple-300 text-xs px-2 py-1 rounded-sm text-gray-800">
-          Wedding
+          {eventType}
         </span>
         <h2 className="font-semibold text-lg text-gray-800 my-1">
           {eventName}
@@ -114,11 +114,11 @@ function EventCard({
       </div>
       <div className="flex flex-row text-right gap-2">
         <Button className="w-full h-[30px] rounded-sm">Edit</Button>
-        <Button variant="secondary" className="w-full h-[30px] rounded-sm">
+        <Button to={`/workspace/event/${eventId}`} variant="secondary" className="w-full h-[30px] rounded-sm">
           View details
         </Button>
       </div>
-    </Link>
+    </div>
   );
 }
 
