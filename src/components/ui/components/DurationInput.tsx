@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 
 interface DurationInputProps {
   label: string;
+  required: boolean,
   valueSetter: React.Dispatch<React.SetStateAction<{ hour: number; minute: number; second: number }>>;
 }
 
-const DurationInput: React.FC<DurationInputProps> = ({ label, valueSetter }) => {
+const DurationInput: React.FC<DurationInputProps> = ({ label, required, valueSetter }) => {
   const [hour, setHour] = useState<number>(0);
   const [minute, setMinute] = useState<number>(0);
   const [second, setSecond] = useState<number>(0);
@@ -58,8 +59,11 @@ const DurationInput: React.FC<DurationInputProps> = ({ label, valueSetter }) => 
 
   return (
     <div className="">
-      <label className="mb-2">{label}</label>
-      <div className="flex flex-row items-center justify-between gap-4 mb-8">
+      <label className="mb-2">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+      <div className="flex flex-row items-center justify-between gap-4 py-3">
         <input
           onChange={(e) => {
             const value = parseInt(e.target.value, 10);

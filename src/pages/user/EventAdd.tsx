@@ -6,11 +6,8 @@ import Dropdown from "@/components/ui/components/Dropdown";
 import DurationInput from "@/components/ui/components/DurationInput";
 import { useNavigate } from "react-router-dom";
 
-function EventAdd() {
-  const eventVisibilityItems = [
-    { text: "Private" }, 
-    { text: "Public" }
-  ];
+const EventForm = () => {
+  const eventVisibilityItems = [{ text: "Private" }, { text: "Public" }];
   const eventTypeItems = [
     { text: "Conference" },
     { text: "Workshop" },
@@ -46,7 +43,8 @@ function EventAdd() {
   const [eventNameCheck, setEventNameCheck] = useState<string>("");
   const [eventDateTimeCheck, setEventDateTimeCheck] = useState<string>("");
   const [eventVenueCheck, setEventVenueCheck] = useState<string>("");
-  const [eventDescriptionCheck, setEventDescriptionCheck] = useState<string>("");
+  const [eventDescriptionCheck, setEventDescriptionCheck] =
+    useState<string>("");
   const [eventDurationCheck, setEventDurationCheck] = useState<string>("");
 
   async function handleCreateEvent() {
@@ -145,6 +143,8 @@ function EventAdd() {
       } else {
         alert("Service temporarily unavailable. Please try again later.");
       }
+    } else {
+      return;
     }
 
     setIsLoading(false);
@@ -193,7 +193,7 @@ function EventAdd() {
           {/* Event name input */}
           <div className="mb-4">
             <label htmlFor="name" className="block mb-2 font-light text-base">
-              Event Name:
+              Event Name:<span className="text-red-500 ml-1">*</span>
             </label>
             <input
               onChange={(e) => {
@@ -214,7 +214,7 @@ function EventAdd() {
           {/* Date and Time of the event input */}
           <div className="mb-4">
             <label htmlFor="date" className="block mb-2 font-light text-base">
-              Date & Time:
+              Date & Time:<span className="text-red-500 ml-1">*</span>
             </label>
             <input
               id="date"
@@ -242,7 +242,7 @@ function EventAdd() {
           {/* Event venue input */}
           <div className="mb-4">
             <label htmlFor="venue" className="block mb-2 font-light text-base">
-              Event Venue:
+              Event Venue:<span className="text-red-500 ml-1">*</span>
             </label>
             <input
               onChange={(e) => {
@@ -291,7 +291,8 @@ function EventAdd() {
           {/* Event duration input */}
           <div>
             <DurationInput
-              label="Event Duration"
+              label="Event Duration:"
+              required={true}
               valueSetter={setEventDuration}
             />
           </div>
@@ -302,7 +303,8 @@ function EventAdd() {
           {/* Event reminder input */}
           <div>
             <DurationInput
-              label="Reminder Setting"
+              label="Reminder Setting:"
+              required={false}
               valueSetter={setEventReminder}
             />
           </div>
@@ -368,4 +370,4 @@ function EventAdd() {
   );
 }
 
-export default EventAdd;
+export default EventForm;
