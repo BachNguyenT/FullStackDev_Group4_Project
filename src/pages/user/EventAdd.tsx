@@ -143,8 +143,6 @@ const EventForm = () => {
       } else {
         alert("Service temporarily unavailable. Please try again later.");
       }
-    } else {
-      return;
     }
 
     setIsLoading(false);
