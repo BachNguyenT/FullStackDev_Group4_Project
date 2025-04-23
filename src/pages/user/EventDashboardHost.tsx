@@ -263,7 +263,7 @@ function EventDashboardHost() {
         venue={eventInfo.eventVenue}
         isOrganizer={eventInfo.isOrganizer}
       />
-      <AttendeeList attendeeList={attendeeList} refreshHandler={fetchEventAttendeeList}/>
+      <AttendeeList attendeeList={attendeeList} refreshHandler={fetchEventAttendeeList} eventID={eventId}/>
       <DiscussionBoard
         chatLog={chatLog}
         eventID={eventInfo.eventID}

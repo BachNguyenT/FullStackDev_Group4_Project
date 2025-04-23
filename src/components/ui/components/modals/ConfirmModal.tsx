@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 interface ConfirmModalProps {
   title: string;
@@ -15,6 +16,7 @@ function ConfirmModal({
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const handlePropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
@@ -33,15 +35,16 @@ function ConfirmModal({
           <p className="text-base text-gray-600 mt-2 text-center">{message}</p>
         </div>
         <div className="flex justify-center mt-2">
-          <Button variant="secondary" className="mr-2" onClick={onCancel}>
+          <Button variant="secondary" className="mr-2" onClick={onCancel} disabled={isLoading}>
             Close
           </Button>
           <Button
             animated={false}
             className="ml-2 bg-purple-500 text-white hover:bg-purple-700 hover:scale-105  focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-            onClick={onConfirm}
+            onClick={async () => { setIsLoading(true); await onConfirm(); setIsLoading(false); }}
+            disabled={isLoading}
           >
-            Delete
+            {isLoading ? "Loading..." : "Confirm"}
           </Button>
         </div>
       </div>

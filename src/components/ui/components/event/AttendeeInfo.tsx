@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 import avatarPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
-function AttendeeInfo({ id, name, status, invitationDate }: AttendeeInfoProps) {
+function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler }) {
   const [avatarURL, setAvatarURL] = useState<string>(avatarPlaceholder);
   const avatarURLRef = useRef<string>(avatarPlaceholder);
 
@@ -81,7 +81,7 @@ function AttendeeInfo({ id, name, status, invitationDate }: AttendeeInfoProps) {
     fetchPFP(abortController.signal);
 
     return () => {
-      if (avatarURL.current != userDummyPFP) {
+      if (avatarURL.current != avatarPlaceholder) {
         URL.revokeObjectURL(avatarURL.current);
       }
       abortController.abort();
@@ -120,8 +120,9 @@ function AttendeeInfo({ id, name, status, invitationDate }: AttendeeInfoProps) {
         <Button
           variant="destructive"
           className="hover:bg-red-500 hover:text-white"
+          onClick={() => {onDeleteHandler(id, name);}}
         >
-          <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs" />
+          <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs"/>
           Remove
         </Button>
       </td>
