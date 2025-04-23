@@ -80,9 +80,8 @@ function EventInfo({
           className="w-full h-100 object-cover rounded-lg shadow-md"
         />
         <h1 className="text-2xl font-semibold mb-4 mt-8 ">Event Information</h1>
-        <Card className="flex-1">
+        <Card >
           {/* Add the button edit */}
-
           <CardContent className="grid gap-4 p-6 text-sm">
             {/* Top info grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -125,22 +124,18 @@ function EventInfo({
                 />
               </div>
             </div>
-            {/* Add the outline */}
 
-            {/* Image */}
-            {/* Description + Venue */}
-            <div className="grid gap-4">
-              <InfoItem
-                icon={<FaGitAlt />}
-                label="Description"
-                value={description}
-              />
-              <InfoItem
-                icon={<FaRegMap />}
-                label="Venue"
-                value={venue}
-              />
-            </div>
+            <InfoItem
+              icon={<FaGitAlt />}
+              label="Description"
+              value={description}
+            />
+            <InfoItem
+              icon={<FaRegMap />}
+              label="Venue"
+              value={venue}
+            />
+
           </CardContent>
         </Card>
       </div>
