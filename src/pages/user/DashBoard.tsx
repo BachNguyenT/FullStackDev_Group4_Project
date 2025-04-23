@@ -17,10 +17,10 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const [hostedEvents, setHostedEvents] = useState<{ label: string; value: number }[]>([]);
   const [joinedEvents, setJoinedEvents] = useState<{ label: string; value: number }[]>([]);
-  const [invitationsData, setInvitationsData] = useState<{ value: number }[]>([]);
+  const [invitationsData, setInvitationsData] = useState<{ label: string; value: number }[]>([]);
   const navigate = useNavigate();
 
-  // Fetch organizing events (already in your code)
+  // Fetch organizing events
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
@@ -68,7 +68,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Fetch hosted events stats
   async function fetchHostedEventsStats(abortSignal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-hosted-events-stats`, {
+      const response = await fetch(`http://localhost:3000/get-hosted-events-stats-graph`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Fetch joined events stats
   async function fetchJoinedEventsStats(abortSignal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-joined-events-stats`, {
+      const response = await fetch(`http://localhost:3000/get-joined-events-stats-graph`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +114,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Fetch invitations stats
   async function fetchInvitationsStats(abortSignal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-invitations-stats`, {
+      const response = await fetch(`http://localhost:3000/get-invitations-stats-graph`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -144,7 +144,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
     fetchInvitationsStats(abortController.signal);
 
     return () => {
-      abortController.abort(); // Clean up fetch requests on component unmount
+      abortController.abort();
     };
   }, []);
 
@@ -162,34 +162,35 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   const totalJoined = joinedEvents.reduce((sum, item) => sum + item.value, 0);
   const totalInvitations = invitationsData.reduce((sum, item) => sum + item.value, 0);
 
-  // Maximum value for scaling the bars (set to 10 as per the design)
-  const maxValue = 10;
-
   // Component to render a single graph
-  const Graph = ({ title, data }: { title: string; data: { label: string; value: number }[] }) => {
+  const Graph = ({ title, data, total }: { title: string; data: { label: string; value: number }[]; total: number }) => {
     return (
       <div className="bg-white p-4 rounded-lg shadow">
         <h4 className="text-sm font-semibold mb-2">{title}</h4>
         <div className="space-y-2">
           {data.length > 0 ? (
-            data.map((item, index) => (
-              <div key={index} className="flex items-center">
-                {/* Label */}
-                <span className="w-24 text-sm">{item.label}</span>
-                {/* Bar */}
-                <div className="flex-1 h-6 bg-gray-200 rounded">
-                  <div
-                    className="h-full bg-purple-400 rounded"
-                    style={{
-                      width: `${(item.value / maxValue) * 100}%`,
-                      transition: "width 0.3s ease-in-out",
-                    }}
-                  ></div>
+            data.map((item, index) => {
+              // Calculate the percentage for each item
+              const percentage = total > 0 ? (item.value / total) * 100 : 0;
+              return (
+                <div key={index} className="flex items-center">
+                  {/* Label */}
+                  <span className="w-24 text-sm">{item.label}</span>
+                  {/* Bar */}
+                  <div className="flex-1 h-6 bg-gray-200 rounded">
+                    <div
+                      className="h-full bg-purple-400 rounded"
+                      style={{
+                        width: `${percentage}%`,
+                        transition: "width 0.3s ease-in-out",
+                      }}
+                    ></div>
+                  </div>
+                  {/* Percentage Value */}
+                  <span className="ml-2 text-sm">{percentage.toFixed(1)}%</span>
                 </div>
-                {/* Value */}
-                <span className="ml-2 text-sm">{item.value}</span>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div>Loading...</div>
           )}
@@ -208,21 +209,21 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
         <Graph
           title={`TOTAL HOSTED EVENTS: ${totalHosted}`}
           data={hostedEvents}
+          total={totalHosted}
         />
 
         {/* Total Joined Events */}
         <Graph
           title={`TOTAL JOINED EVENTS: ${totalJoined}`}
           data={joinedEvents}
+          total={totalJoined}
         />
 
         {/* Total Invitations */}
         <Graph
           title={`TOTAL INVITATIONS: ${totalInvitations}`}
-          data={invitationsData.map((item, index) => ({
-            label: `Invitation ${index + 1}`,
-            value: item.value,
-          }))}
+          data={invitationsData}
+          total={totalInvitations}
         />
       </div>
 
