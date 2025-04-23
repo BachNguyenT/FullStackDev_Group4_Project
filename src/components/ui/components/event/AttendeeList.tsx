@@ -71,24 +71,24 @@ function AttendeeList({ attendeeList, eventID, refreshHandler }) {
                 className="absolute left-3 top-2.5 text-gray-500 text-base"
               />
             </div>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              disabled={isLoading}
+              onClick={async () => {
+                setIsLoading(true);
+                await refreshHandler(null);
+                setIsLoading(false);
+              }}
+            >
+              Refresh
+            </Button>
           </div>
 
           {/* Right: Add Attendee & Refresh */}
           <Button animated={false} variant="default" disabled={isLoading}>
             <FontAwesomeIcon icon={faPlus} className="ml-1 text-xs" />
             Add Attendee
-          </Button>
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            disabled={isLoading}
-            onClick={async () => {
-              setIsLoading(true);
-              await refreshHandler(null);
-              setIsLoading(false);
-            }}
-          >
-            Refresh
           </Button>
         </div>
 
