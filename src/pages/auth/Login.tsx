@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/components/Button";
 import LoginImage from "@/assets/Pictures/LoginImage.png";
-const LOGIN_SUCCESS_TARGET = "/workspace"; // Define the target URL for successful login
+const LOGIN_SUCCESS_TARGET = "/workspace"; // Define the target URL for successful login\
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+
 
 function Login() {
   const [username, setUsername] = useState<string>("");
@@ -14,6 +18,36 @@ function Login() {
   const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  // Validate input fields
+  const validateUsername = (value: string) => {
+    if (value.length === 0) return "Username is required";
+    return "";
+  };
+  const validatePassword = (value: string): string => {
+    if (value.length === 0) return "Password is required";
+    return "";
+  };
+
+  const handleUsernameChange = (value: string) => {
+    setUsername(value);
+    if (value.length > 0) {
+      setUCheck("");
+    }
+  }
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    if (value.length > 0) {
+      setPCheck("");
+    }
+  };
+  // Handle blur events for validation
+  const handleUsernameBlur = () => {
+    setUCheck(validateUsername(username));
+  };
+
+  const handlePasswordBlur = () => {
+    setPCheck(validatePassword(password));
+  };
   async function handleLogin() {
     // Clear error messages
     setLoading(true);
@@ -22,54 +56,47 @@ function Login() {
     setPCheck("");
 
     // Front-end validation
-    let check: Boolean = true;
-    if (username.length == 0) {
-      setUCheck("Username is required");
-      check = false;
+    const usernameError = validateUsername(username);
+    const passwordError = validatePassword(password);
+
+    if (usernameError || passwordError) {
+      setUCheck(usernameError);
+      setPCheck(passwordError);
+      setLoading(false);
+      return;
     }
 
-    if (password.length == 0) {
-      setPCheck("Password is required");
-      check = false;
-    }
-
-    if (check) {
-      // Call API if front end validation passed
-      try {
-        let authRequestResponse = await fetch(
-          "http://localhost:3000/authenticate-user",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              username: username,
-              password: password,
-            }),
-          }
-        );
-
-        // Handle response
-        if (authRequestResponse.status == 200) {
-          navigate(LOGIN_SUCCESS_TARGET);
-        } else if (authRequestResponse.status == 401) {
-          setError("Invalid username or password.");
-          setLoading(false);
-        } else {
-          setError("Service temporarily unavailable. Please try again later.");
-          setLoading(false);
+    // Call API if front end validation passed
+    try {
+      const authRequestResponse = await fetch(
+        "http://localhost:3000/authenticate-user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          }),
         }
-      } catch {
-        // Handle API fetch error
+      );
+
+      // Handle response
+      if (authRequestResponse.status == 200) {
+        navigate(LOGIN_SUCCESS_TARGET);
+      } else if (authRequestResponse.status == 401) {
+        setError("Invalid username or password.");
+        setLoading(false);
+      } else {
         setError("Service temporarily unavailable. Please try again later.");
         setLoading(false);
       }
-    } else {
-      // Handle front-end validation error
+    } catch {
+      // Handle API fetch error
+      setError("Service temporarily unavailable. Please try again later.");
       setLoading(false);
-      return;
     }
   }
 
@@ -78,7 +105,7 @@ function Login() {
 
     // Call API
     try {
-      let checkRequestResponse = await fetch(
+      const checkRequestResponse = await fetch(
         "http://localhost:3000/verify-session",
         {
           method: "GET",
@@ -92,7 +119,7 @@ function Login() {
 
       // Handle response
       if (checkRequestResponse.status == 200) {
-        let resultCode = await checkRequestResponse.text();
+        const resultCode = await checkRequestResponse.text();
         if (resultCode === "0x000") {
           navigate(LOGIN_SUCCESS_TARGET);
           return;
@@ -133,29 +160,60 @@ function Login() {
             Plan<span className="font-semibold text-purple-600">Evnt</span>
           </h1>
           <p className="text-purple-600 mt-4 mb-6 text-lg font-medium">Login</p>
+
           <input
             type="text"
             placeholder="Enter Username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="mb-4 p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            onChange={(e) => handleUsernameChange(e.target.value)}
+            onBlur={handleUsernameBlur}
+            className={`mb-2 p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 ${usernameCheck ? "ring-2 ring-red-400" : ""
+              }`}
             aria-label="Username"
+            aria-invalid={!!usernameCheck}
+            aria-describedby={usernameCheck ? "username-error" : undefined}
             disabled={isLoading}
           />
-
-          {usernameCheck && <p>{usernameCheck}</p>}
+          {usernameCheck && (
+            <p
+              id="username-error"
+              className="ml-4 mb-2 text-sm text-red-600 flex items-center animate-fade-in"
+              aria-live="polite"
+            >
+              <FontAwesomeIcon
+                icon={faExclamationTriangle}
+                className="mr-2 text-red-600"
+              />
+              {usernameCheck}
+            </p>
+          )}
 
           <input
             type="password"
             placeholder="Enter Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            onChange={(e) => handlePasswordChange(e.target.value)}
+            onBlur={handlePasswordBlur}
+            className={`mb-2 p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 ${passwordCheck ? "ring-2 ring-red-400" : ""
+              }`}
             aria-label="Password"
+            aria-invalid={!!passwordCheck}
+            aria-describedby={passwordCheck ? "password-error" : undefined}
             disabled={isLoading}
           />
-
-          {passwordCheck && <p>{passwordCheck}</p>}
+          {passwordCheck && (
+            <p
+              id="password-error"
+              className="ml-4 mb-2 text-sm text-red-600 flex items-center animate-fade-in"
+              aria-live="polite"
+            >
+              <FontAwesomeIcon
+                icon={faExclamationTriangle}
+                className="mr-2 text-red-600"
+              />
+              {passwordCheck}
+            </p>
+          )}
 
           <Button
             variant="link"
@@ -167,14 +225,25 @@ function Login() {
           </Button>
 
           <Button
-            onClick={() => handleLogin()}
-            className="bg-purple-500 text-white py-2 rounded-full mb-4 hover:bg-purple-600 transition"
+            onClick={handleLogin}
+            className="bg-purple-500 text-white py-2 rounded-full mb-2 hover:bg-purple-600 transition"
             disabled={isLoading}
           >
             {isLoading ? "Loading..." : "Login"}
           </Button>
 
-          {error && <p>{error}</p>}
+          {error && (
+            <p
+              className="text-sm text-red-600 flex items-center animate-fade-in mb-2"
+              aria-live="polite"
+            >
+              <FontAwesomeIcon
+                icon={faExclamationTriangle}
+                className="mr-2 text-red-600"
+              />
+              {error}
+            </p>
+          )}
 
           <Button
             onClick={() => navigate("/register")}

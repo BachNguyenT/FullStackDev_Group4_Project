@@ -3,42 +3,99 @@ import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
-  faChevronDown,
   faCommentDots,
 } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useRef } from "react";
 
-function DiscussionBoard() {
+function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
+  const chatLogRef = useRef<HTMLDivElement>(null);
+  const [message, setMessage] = useState<string>("");
+  const [disableSend, setDisableSend] = useState<boolean>(true);
+  const navigate = useNavigate();
+
+  async function handleSendMessage(message : string, timestamp : string) {
+    setDisableSend(true);
+    try {
+      const response = await fetch("http://localhost:3000/send-message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: message,
+          eventID: eventID,
+          timestamp: timestamp,
+        }),
+        credentials: "include",
+      });
+
+      if (response.status == 200) {
+        setMessage("");
+        refreshHandler(null);
+      } else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    }
+    catch {
+      alert("Service temporarily unavailable. Please try again later.");
+    }
+    setDisableSend(false);
+  }
+
+  useEffect(() => {
+    if (chatLogRef.current) {
+      chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+    }
+  }, [chatLog]);
+
   return (
     <div className="mb-4">
-      {/* Header board */}
+      {/* Header */}
       <div className="flex items-center justify-between mt-10 ">
         <h1 className="text-2xl font-semibold mb-6 ">Discussion board</h1>
         <div className="mb-6">
-          <span className="text-sm mr-2">Sort: </span>
-          <Button animated={false} variant="outline">
-            <span>Most Recent</span>
-            <FontAwesomeIcon icon={faChevronDown} />
+          <Button variant="outline" className="flex items-center gap-2" onClick={() => refreshHandler(null)}>
+            Refresh
           </Button>
         </div>
       </div>
 
       {/*Comment Section*/}
       <div className="grid grid-cols-1 gap-4 bg-white rounded-xl border border-gray-300 shadow-md p-4">
-        <Comment />
-        <Comment />
-        <Comment />
+        <div ref={chatLogRef} className="overflow-y-auto h-100"> 
+        {chatLog.map((comment, index) => (
+            <Comment
+              key={index}
+              sender={comment.sender}
+              senderName={comment.senderName}
+              message={comment.message}
+              timestamp={comment.timestamp}
+            />
+        ))}
+        </div>
         {/* Add Comment Section */}
-        <div className="flex items-center mt-8 rounded-full border border-gray-200 px-4 py-2 shadow-sm w-full bg-white">
-          <span className="text-gray-400 mr-2">Aa</span>
+        <div className="flex items-center mt-8 rounded-full border border-gray-200 px-4 py-2 shadow-sm w-full bg-white focus-within:border-gray-600">
+          <label htmlFor="comment" className="text-gray-400 mr-2">Aa</label>
           <input
+            id="comment"
+            value={message}
+            onChange={(e) => {setMessage(e.target.value); if (e.target.value.length > 0) {setDisableSend(false);} else {setDisableSend(true);}}}
             type="text"
             placeholder="Write reply..."
             className="flex-1 outline-none text-sm text-gray-600 placeholder-gray-400 bg-transparent"
           />
-          <FontAwesomeIcon
-            icon={faCommentDots}
-            className="text-gray-400 ml-2"
-          />
+          <Button variant="ghost" onClick={() => handleSendMessage(message, (new Date()).toISOString())} disabled={disableSend} >
+            <FontAwesomeIcon 
+              icon={faCommentDots}
+              className="text-gray-400 ml-2"
+            />
+          </Button>
         </div>
       </div>
     </div>
