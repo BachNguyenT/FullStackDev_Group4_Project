@@ -2,35 +2,10 @@ import AttendeeInfo from "./AttendeeInfo";
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
-const attendeeData = [
-  {
-    id: "0000001",
-    name: "Lebron James",
-    imageUrl: "https://i.pravatar.cc/150?img=1",
-    invitationDate: "19/03/2026",
-    replyDate: "20/03/2026",
-    status: "Accepted",
-  },
-  {
-    id: "0000002",
-    name: "Ashton Hall",
-    imageUrl: "https://i.pravatar.cc/150?img=2",
-    invitationDate: "19/03/2026",
-    replyDate: "20/03/2026",
-    status: "Declined",
-  },
-  {
-    id: "0000003",
-    name: "Darren Jason Watkins Jr.",
-    imageUrl: "",
-    invitationDate: "19/03/2026",
-    replyDate: "20/03/2026",
-    status: "Pending",
-  }
-];
-
-function AttendeeList({ onDelete }: { onDelete: (id: string) => void }) {
+function AttendeeList({ attendeeList, refreshHandler }) {
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <div className="space-y-4">
       {/* Header row with filter/search/add */}
@@ -38,21 +13,6 @@ function AttendeeList({ onDelete }: { onDelete: (id: string) => void }) {
       <div className="flex flex-wrap gap-2 justify-between items-center">
         {/* Left: Show and Search */}
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-2">
-            <label htmlFor="show" className="text-sm ">
-              Show
-            </label>
-            <select
-              id="show"
-              className="text-sm py-1 border border-gray-300 rounded-md"
-              defaultValue={10}
-            >
-              <option value={10}>10</option>
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-            </select>
-          </div>
-
           <div className="relative">
             <input
               type="text"
@@ -66,32 +26,39 @@ function AttendeeList({ onDelete }: { onDelete: (id: string) => void }) {
           </div>
         </div>
 
-        {/* Right: Add Attendee */}
-        <Button animated={false} variant="default">
+        {/* Right: Add Attendee & Refresh */}
+        <Button animated={false} variant="default" disabled={isLoading}>
           <FontAwesomeIcon icon={faPlus} className="ml-1 text-xs" />
           Add Attendee
+        </Button>
+        <Button variant="outline" className="flex items-center gap-2" disabled={isLoading} onClick={async () => {setIsLoading(true); await refreshHandler(null); setIsLoading(false);}}>
+          Refresh
         </Button>
       </div>
 
       {/* Table */}
       <div className="border border-gray-300 rounded-md h-100 overflow-y-auto">
         <table className="min-w-full text-sm">
-          <thead className="bg-muted text-muted-foreground text-left sticky top-0" style={{ backgroundColor: "#F9FAFB" }}>
+          <thead
+            className="bg-muted text-muted-foreground text-left sticky top-0"
+            style={{ backgroundColor: "#F9FAFB" }}
+          >
             <tr>
               <th className="py-3 px-4 font-medium ">User ID</th>
               <th className="py-3 px-4 font-medium ">Name</th>
               <th className="py-3 px-4 font-medium ">Invitation date</th>
-              <th className="py-3 px-4 font-medium ">Reply Date</th>
               <th className="py-3 px-4 font-medium ">RSVP Status</th>
               <th className="py-3 px-4 font-medium ">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {attendeeData.map((attendee) => (
+            {attendeeList.map((attendee) => (
               <AttendeeInfo
-                key={attendee.id}
-                {...attendee}
-                onDelete={onDelete}
+                key={attendee.attendeeID}
+                id={attendee.attendeeID}
+                name={attendee.attendeeName}
+                status={attendee.rsvp}
+                invitationDate={attendee.date}
               />
             ))}
           </tbody>

@@ -10,7 +10,7 @@ import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg"; 
+import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 
 function EventDashboardHost() {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -19,7 +19,7 @@ function EventDashboardHost() {
     item: string;
   } | null>(null);
 
-
+  const [attendeeList, setAttendeeList] = useState([]);
   const { eventId } = useParams();
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
   const imageURLRef = useRef<string>(eventImagePlaceholder);
@@ -33,7 +33,7 @@ function EventDashboardHost() {
     eventVisibility: "Loading...",
     eventDescription: "Loading...",
     eventVenue: "Loading...",
-    isOrganizer: false
+    isOrganizer: false,
   });
   const [chatLog, setChatLog] = useState([]);
   const navigate = useNavigate();
@@ -41,21 +41,24 @@ function EventDashboardHost() {
   async function fetchEventImage(abortSignal: AbortSignal | null) {
     try {
       const queryParams = new URLSearchParams({
-        id: eventId || ""
+        id: eventId || "",
       });
 
-      const response = await fetch(`http://localhost:3000/get-event-image?${queryParams.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
+      const response = await fetch(
+        `http://localhost:3000/get-event-image?${queryParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
 
       if (response.status == 200) {
         const blob = await response.blob();
-        if(blob.size > 0) {
+        if (blob.size > 0) {
           const objectURL = URL.createObjectURL(blob);
           imageURLRef.current = objectURL;
           setImageURL(objectURL);
@@ -70,10 +73,9 @@ function EventDashboardHost() {
         navigate("/workspace/event");
       }
     } catch (error) {
-      if(error.name == "AbortError") {
+      if (error.name == "AbortError") {
         alert("Service temporarily unavailable. Please try again later.");
-      }
-      else {
+      } else {
         console.log(error);
       }
     }
@@ -82,32 +84,39 @@ function EventDashboardHost() {
   async function fetchEventInfo(abortSignal: AbortSignal | null) {
     try {
       const queryParams = new URLSearchParams({
-        id: eventId || ""
+        id: eventId || "",
       });
 
-      const response = await fetch(`http://localhost:3000/get-event-info?${queryParams.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
+      const response = await fetch(
+        `http://localhost:3000/get-event-info?${queryParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
 
       if (response.status == 200) {
         const data = await response.json();
-        setEventInfo({
+        return {
           eventName: data.eventName,
           eventID: data.eventID,
-          eventDateTime: (new Date(data.eventDateTime)).toLocaleString("en-UK", {hour12: true, dateStyle: "long", timeStyle: "short"}),
+          eventDateTime: new Date(data.eventDateTime).toLocaleString("en-UK", {
+            hour12: true,
+            dateStyle: "long",
+            timeStyle: "short",
+          }),
           eventDuration: data.eventDuration,
           eventType: data.eventType,
           eventStatus: data.eventStatus,
           eventVisibility: data.eventVisibility,
           eventDescription: data.eventDescription,
           eventVenue: data.eventVenue,
-          isOrganizer: data.isOrganizer
-        });
+          isOrganizer: data.isOrganizer,
+        };
       } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
@@ -117,34 +126,72 @@ function EventDashboardHost() {
         alert("Service temporarily unavailable. Please try again later.");
         navigate("/workspace/event");
       }
-    }
-    catch (error) {
-      if(error.name == "AbortError") {
+    } catch (error) {
+      if (error.name !== "AbortError") {
         alert("Service temporarily unavailable. Please try again later.");
-      }
-      else {
+      } else {
         console.log(error);
       }
     }
-  };
+  }
 
   async function fetchEventAttendeeList(abortSignal: AbortSignal | null) {
-  };
+    try {
+      const queryParams = new URLSearchParams({
+        id: eventId || "",
+      });
+
+      const response = await fetch(
+        `http://localhost:3000/get-attendees?${queryParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
+
+      if (response.status == 200) {
+        const data = await response.json();
+        setAttendeeList(data);
+      } else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else if (response.status == 404) {
+        navigate("/not-found-page");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+        navigate("/workspace/event");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.name !== "AbortError") {
+        alert("Service temporarily unavailable. Please try again later.");
+      } else {
+        console.log(error);
+      }
+    }
+  }
 
   async function fetchEventDiscussionBoard(abortSignal: AbortSignal | null) {
     try {
       const queryParams = new URLSearchParams({
-        id: eventId || ""
+        id: eventId || "",
       });
 
-      const response = await fetch(`http://localhost:3000/get-event-discussion-board?${queryParams.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
+      const response = await fetch(
+        `http://localhost:3000/get-event-discussion-board?${queryParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
 
       if (response.status == 200) {
         const data = await response.json();
@@ -158,30 +205,28 @@ function EventDashboardHost() {
         alert("Service temporarily unavailable. Please try again later.");
         navigate("/workspace/event");
       }
-    }
-    catch (error) {
-      if(error.name == "AbortError") {
+    } catch (error) {
+      if (error.name !== "AbortError") {
         alert("Service temporarily unavailable. Please try again later.");
-      }
-      else {
+      } else {
         console.log(error);
       }
     }
-  };
-
-  async function handleSendMessage(message: string) {
-
-  };
-
+  }
 
   useEffect(() => {
     const abortController = new AbortController();
 
     const fetchData = async () => {
-      fetchEventImage(abortController.signal);
-      
-      await fetchEventInfo(abortController.signal);
-      fetchEventDiscussionBoard(abortController.signal);
+      await fetchEventImage(abortController.signal);
+      await fetchEventDiscussionBoard(abortController.signal);
+
+      const result = await fetchEventInfo(abortController.signal);
+      if (result.isOrganizer) {
+        await fetchEventAttendeeList(abortController.signal);
+      }
+
+      setEventInfo(result);
     };
 
     fetchData();
@@ -190,7 +235,6 @@ function EventDashboardHost() {
       abortController.abort(); // Clean up the fetch request on component unmount
     };
   }, []);
-  
 
   const handleDelete = () => {
     // Handle the delete action here
@@ -203,9 +247,10 @@ function EventDashboardHost() {
     }
     setDeleteModalOpen(false);
   };
+
   return (
     <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
-      <EventInfo 
+      <EventInfo
         imageURL={imageURL}
         eventId={eventInfo.eventID}
         eventName={eventInfo.eventName}
@@ -218,8 +263,12 @@ function EventDashboardHost() {
         venue={eventInfo.eventVenue}
         isOrganizer={eventInfo.isOrganizer}
       />
-      <AttendeeList />
-      <DiscussionBoard chatLog={chatLog} eventID={eventInfo.eventID} refreshHandler={fetchEventDiscussionBoard}/>
+      <AttendeeList attendeeList={attendeeList} refreshHandler={fetchEventAttendeeList}/>
+      <DiscussionBoard
+        chatLog={chatLog}
+        eventID={eventInfo.eventID}
+        refreshHandler={fetchEventDiscussionBoard}
+      />
 
       {/* Delete modal for event and attendee */}
       {isDeleteModalOpen && deleteTarget && (

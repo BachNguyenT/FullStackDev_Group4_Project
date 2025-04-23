@@ -15,6 +15,7 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
   const [message, setMessage] = useState<string>("");
   const [disableSend, setDisableSend] = useState<boolean>(true);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSendMessage(message : string, timestamp : string) {
     setDisableSend(true);
@@ -60,7 +61,7 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
       <div className="flex items-center justify-between mt-10 ">
         <h1 className="text-2xl font-semibold mb-6 ">Discussion board</h1>
         <div className="mb-6">
-          <Button variant="outline" className="flex items-center gap-2" onClick={() => refreshHandler(null)}>
+          <Button variant="outline" className="flex items-center gap-2" onClick={async () => {setIsLoading(true); await refreshHandler(null); setIsLoading(false);}} disabled={isLoading}>
             Refresh
           </Button>
         </div>
@@ -90,7 +91,7 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
             placeholder="Write reply..."
             className="flex-1 outline-none text-sm text-gray-600 placeholder-gray-400 bg-transparent"
           />
-          <Button variant="ghost" onClick={() => handleSendMessage(message, (new Date()).toISOString())} disabled={disableSend} >
+          <Button variant="ghost" onClick={async () => {setIsLoading(true); await handleSendMessage(message, (new Date()).toISOString()); setIsLoading(false);}} disabled={disableSend || isLoading} >
             <FontAwesomeIcon 
               icon={faCommentDots}
               className="text-gray-400 ml-2"
