@@ -15,8 +15,12 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [sortDirection, setSortDirection] = useState(0);
   const [eventStatusSearch, setEventStatusSearch] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [hostedEvents, setHostedEvents] = useState<{ label: string; value: number }[]>([]);
+  const [joinedEvents, setJoinedEvents] = useState<{ label: string; value: number }[]>([]);
+  const [invitationsData, setInvitationsData] = useState<{ value: number }[]>([]);
   const navigate = useNavigate();
 
+  // Fetch organizing events (already in your code)
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
@@ -39,13 +43,13 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
         }
       );
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         const data = await response.json();
         setMaxAttendeeCount(data.maxAttendeeCount);
         setEvents(data.events);
         setIsLoading(false);
         return;
-      } else if (response.status == 401) {
+      } else if (response.status === 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
         return;
@@ -61,13 +65,86 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
     }
   }
 
+  // Fetch hosted events stats
+  async function fetchHostedEventsStats(abortSignal: AbortSignal | null) {
+    try {
+      const response = await fetch(`http://localhost:3000/get-hosted-events-stats`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal: abortSignal,
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setHostedEvents(data);
+      } else if (response.status === 401) {
+        navigate("/login");
+      }
+    } catch {
+      console.error("Failed to fetch hosted events stats");
+    }
+  }
+
+  // Fetch joined events stats
+  async function fetchJoinedEventsStats(abortSignal: AbortSignal | null) {
+    try {
+      const response = await fetch(`http://localhost:3000/get-joined-events-stats`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal: abortSignal,
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setJoinedEvents(data);
+      } else if (response.status === 401) {
+        navigate("/login");
+      }
+    } catch {
+      console.error("Failed to fetch joined events stats");
+    }
+  }
+
+  // Fetch invitations stats
+  async function fetchInvitationsStats(abortSignal: AbortSignal | null) {
+    try {
+      const response = await fetch(`http://localhost:3000/get-invitations-stats`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal: abortSignal,
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setInvitationsData(data);
+      } else if (response.status === 401) {
+        navigate("/login");
+      }
+    } catch {
+      console.error("Failed to fetch invitations stats");
+    }
+  }
+
+  // Fetch all data on component mount
   useEffect(() => {
     const abortController = new AbortController();
 
     fetchEvents(abortController.signal);
+    fetchHostedEventsStats(abortController.signal);
+    fetchJoinedEventsStats(abortController.signal);
+    fetchInvitationsStats(abortController.signal);
 
     return () => {
-      abortController.abort(); // Clean up the fetch request on component unmount
+      abortController.abort(); // Clean up fetch requests on component unmount
     };
   }, []);
 
@@ -79,30 +156,6 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   const invitations = Array(4).fill(null);
   const { showMore: showMoreInvitation, displayedItems: displayedInvitations } =
     useEvent(invitations, sidebarOpen);
-
-
-  // const userHostedEvents = events.filter((event) => event.userID === "userId"); // Replace "userId" with actual user ID
-  // const userJoinedEvents = events.filter((event) => event.userID !== "userId"); // Replace "userId" with actual user ID
-  // const userInvitations = invitations.filter((invitation) => invitation.userID === "userId"); // Replace "userId" with actual user ID
-
-  // Placeholder data for the graphs 
-  const hostedEvents = [
-    { label: "Ongoing", value: 7 },
-    { label: "Completed", value: 2 },
-    { label: "Canceled", value: 1 },
-  ];
-
-  const joinedEvents = [
-    { label: "Ongoing", value: 7 },
-    { label: "Completed", value: 2 },
-    { label: "Canceled", value: 1 },
-  ];
-
-  const invitationsData = [
-    { label: "Pending", value: 7 },
-    { label: "Accepted", value: 2 },
-    { label: "Declined", value: 1 },
-  ];
 
   // Calculate totals for display
   const totalHosted = hostedEvents.reduce((sum, item) => sum + item.value, 0);
@@ -118,24 +171,28 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
       <div className="bg-white p-4 rounded-lg shadow">
         <h4 className="text-sm font-semibold mb-2">{title}</h4>
         <div className="space-y-2">
-          {data.map((item, index) => (
-            <div key={index} className="flex items-center">
-              {/* Label */}
-              <span className="w-24 text-sm">{item.label}</span>
-              {/* Bar */}
-              <div className="flex-1 h-6 bg-gray-200 rounded">
-                <div
-                  className="h-full bg-purple-400 rounded"
-                  style={{
-                    width: `${(item.value / maxValue) * 100}%`,
-                    transition: "width 0.3s ease-in-out",
-                  }}
-                ></div>
+          {data.length > 0 ? (
+            data.map((item, index) => (
+              <div key={index} className="flex items-center">
+                {/* Label */}
+                <span className="w-24 text-sm">{item.label}</span>
+                {/* Bar */}
+                <div className="flex-1 h-6 bg-gray-200 rounded">
+                  <div
+                    className="h-full bg-purple-400 rounded"
+                    style={{
+                      width: `${(item.value / maxValue) * 100}%`,
+                      transition: "width 0.3s ease-in-out",
+                    }}
+                  ></div>
+                </div>
+                {/* Value */}
+                <span className="ml-2 text-sm">{item.value}</span>
               </div>
-              {/* Value */}
-              <span className="ml-2 text-sm">{item.value}</span>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
       </div>
     );
@@ -162,7 +219,10 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Total Invitations */}
         <Graph
           title={`TOTAL INVITATIONS: ${totalInvitations}`}
-          data={invitationsData}
+          data={invitationsData.map((item, index) => ({
+            label: `Invitation ${index + 1}`,
+            value: item.value,
+          }))}
         />
       </div>
 
