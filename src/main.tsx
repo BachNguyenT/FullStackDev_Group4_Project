@@ -6,6 +6,6 @@ import App from "@/App";
 import {SearchModal} from "@/components/ui/components/modals";
 createRoot(document.getElementById("root")!).render(
   //   <StrictMode>
-  <SearchModal />
+  <App />
   //    </StrictMode>
 );

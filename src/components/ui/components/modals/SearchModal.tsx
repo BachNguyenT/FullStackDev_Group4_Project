@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/components/Button";
+import AccountSearch from "@/components/ui/components/event/AccountSearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 interface ConfirmModalProps {
@@ -23,7 +24,7 @@ function SearchModal({
     return (
         <div className="fixed inset-0 backdrop-blur-md z-50" onClick={onCancel}>
             <div
-                className="bg-white rounded-xl shadow-xl w-full max-w-md mx-auto h-66 mt-20"
+                className="bg-white rounded-xl shadow-xl w-full max-w-md mx-auto mt-20"
                 onClick={handlePropagation}
             >
                 <div className="">
@@ -50,16 +51,15 @@ function SearchModal({
 
                     {/* Border */}
                     <div className="border-b border-gray-300 mb-4 mt-4"></div>
-                    <div className="flex justify-end  mr-6 mt-1">
-                        <Button
-                            animated={false}
-                            className="ml-2 bg-purple-500 text-white hover:bg-purple-700 hover:scale-105  focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-                            onClick={async () => { setIsLoading(true); await onConfirm(); setIsLoading(false); }}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? "Loading..." : "Invite"}
-                        </Button>
+
+                    {/* search result area */}
+                    <div>
+                        <AccountSearch />
+                        <AccountSearch />
+                        <AccountSearch />
+                        <AccountSearch />
                     </div>
+
                 </div>
             </div>
         </div>

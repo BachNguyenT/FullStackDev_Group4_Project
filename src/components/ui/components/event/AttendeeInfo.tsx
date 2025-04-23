@@ -91,7 +91,7 @@ function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler }) {
   return (
     <tr className="border-t  border-gray-300">
       <td className="px-4 py-3">{id}</td>
-      <td className="px-4 py-3 flex items-center gap-2">
+      <td className="px-4 py-3 flex items-center justify-center gap-2">
         <img
           src={avatarURL}
           alt={name}

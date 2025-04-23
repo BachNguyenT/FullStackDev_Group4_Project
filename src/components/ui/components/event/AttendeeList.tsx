@@ -99,7 +99,7 @@ function AttendeeList({ attendeeList, eventID, refreshHandler }) {
               className="bg-muted text-muted-foreground text-left sticky top-0"
               style={{ backgroundColor: "#F9FAFB" }}
             >
-              <tr>
+              <tr className="text-center">
                 <th className="py-3 px-4 font-medium ">User ID</th>
                 <th className="py-3 px-4 font-medium ">Name</th>
                 <th className="py-3 px-4 font-medium ">Invitation date</th>
@@ -107,7 +107,7 @@ function AttendeeList({ attendeeList, eventID, refreshHandler }) {
                 <th className="py-3 px-4 font-medium ">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-center">
               {attendeeList.map((attendee) => (
                 <AttendeeInfo
                   key={attendee.attendeeID}
