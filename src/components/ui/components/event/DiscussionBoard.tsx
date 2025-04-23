@@ -46,7 +46,6 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
     catch {
       alert("Service temporarily unavailable. Please try again later.");
     }
-    setDisableSend(false);
   }
 
   useEffect(() => {
@@ -86,12 +85,17 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
           <input
             id="comment"
             value={message}
-            onChange={(e) => {setMessage(e.target.value); if (e.target.value.length > 0) {setDisableSend(false);} else {setDisableSend(true);}}}
+            onChange={(e) => 
+              {
+                setMessage(e.target.value); 
+                if (e.target.value.length > 0) {setDisableSend(false);} else {setDisableSend(true);}
+              }}
             type="text"
             placeholder="Write reply..."
             className="flex-1 outline-none text-sm text-gray-600 placeholder-gray-400 bg-transparent"
           />
-          <Button variant="ghost" onClick={async () => {setIsLoading(true); await handleSendMessage(message, (new Date()).toISOString()); setIsLoading(false);}} disabled={disableSend || isLoading} >
+          <Button variant="ghost" 
+          onClick={async () => {setIsLoading(true); await handleSendMessage(message, (new Date()).toISOString()); setIsLoading(false);}} disabled={disableSend || isLoading} >
             <FontAwesomeIcon 
               icon={faCommentDots}
               className="text-gray-400 ml-2"

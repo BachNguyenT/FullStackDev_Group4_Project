@@ -14,11 +14,6 @@ import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg
 
 function EventDashboardHost() {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<{
-    type: "event" | "attendee";
-    item: string;
-  } | null>(null);
-
   const [attendeeList, setAttendeeList] = useState([]);
   const { eventId } = useParams();
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
@@ -236,18 +231,6 @@ function EventDashboardHost() {
     };
   }, []);
 
-  const handleDelete = () => {
-    // Handle the delete action here
-    if (deleteTarget) {
-      if (deleteTarget.type === "event") {
-        console.log("Event", deleteTarget.item);
-      } else {
-        console.log(deleteTarget.item);
-      }
-    }
-    setDeleteModalOpen(false);
-  };
-
   return (
     <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
       <EventInfo
@@ -263,7 +246,13 @@ function EventDashboardHost() {
         venue={eventInfo.eventVenue}
         isOrganizer={eventInfo.isOrganizer}
       />
-      <AttendeeList attendeeList={attendeeList} refreshHandler={fetchEventAttendeeList} eventID={eventId}/>
+      {eventInfo.isOrganizer && (
+        <AttendeeList
+          attendeeList={attendeeList}
+          refreshHandler={fetchEventAttendeeList}
+          eventID={eventId}
+        />
+      )}
       <DiscussionBoard
         chatLog={chatLog}
         eventID={eventInfo.eventID}
@@ -271,18 +260,14 @@ function EventDashboardHost() {
       />
 
       {/* Delete modal for event and attendee */}
-      {isDeleteModalOpen && deleteTarget && (
+      {isDeleteModalOpen && (
         <ConfirmModal
-          title={
-            deleteTarget.type === "event" ? "Delete Event" : "Delete Attendee"
-          }
+          title={"Delete Event"}
           message={
-            deleteTarget.type === "event"
-              ? "Once the event is deleted all info and attendees will be removed."
-              : "Are you sure you want to delete this attendee? This action cannot be undone."
+            "Once the event is deleted all info and attendees will be removed."
           }
           onCancel={() => setDeleteModalOpen(false)}
-          onConfirm={handleDelete}
+          onConfirm={() => {}}
         />
       )}
     </div>
