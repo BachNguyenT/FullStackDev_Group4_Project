@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/components/Button";
 import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+
 
 function Account({ pfp }: { pfp: string }) {
   console.log("when the component is mounted");
@@ -10,7 +13,6 @@ function Account({ pfp }: { pfp: string }) {
   const [email, setEmail] = useState<string>("");
   const [birthday, setBirthday] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
-  const [currentPassword, setCurrentPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>(pfp);
@@ -19,6 +21,18 @@ function Account({ pfp }: { pfp: string }) {
   const newImageURLRef = useRef<string>(userDummyPFP);
 
   const [isEditing, setIsEditing] = useState(false);
+
+
+  const [passwordMessage, setPasswordMessage] = useState(false);
+  const [newPasswordMessage, setNewPasswordMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+
+  const handleFocus = () => {
+    setPasswordMessage(false); // Clear any previous error messages
+    setNewPasswordMessage(false); // Clear any previous error messages
+    setErrorMessage(""); // Clear any previous error messages
+  }
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -196,13 +210,18 @@ function Account({ pfp }: { pfp: string }) {
   };
 
   const handleChangePassword = () => {
+    setPasswordMessage(false); // Clear any previous error messages
+    setNewPasswordMessage(false); // Clear any previous error messages
     if (!password || !newPassword) {
-      alert("Please fill in both current password and new password.");
+      setErrorMessage("Please fill in both current password and new password.");
+      setPasswordMessage(!password); // Show error for current password if empty
+      setNewPasswordMessage(!newPassword); // Show error for new password if empty
       return;
     }
 
     if (password === newPassword) {
-      alert("New password cannot be the same as current password.");
+      setNewPasswordMessage(true); // Show error for new password if same as current password
+      setErrorMessage("New password cannot be the same as current password.");
       return;
     }
 
@@ -238,15 +257,17 @@ function Account({ pfp }: { pfp: string }) {
         } else if (response.status === 400) {
           return response.text().then((text) => {
             if (text === "0x001") {
-              alert("Invalid current password");
+              setPasswordMessage(true); // Clear any previous error messages
+              setErrorMessage("Invalid current password");
             } else {
-              alert("Invalid request. Please try again.");
+              setErrorMessage("Invalid request. Please try again.");
             }
           });
         } else if (response.status === 401) {
           return response.text().then((text) => {
             if (text === "0x004") {
-              alert("Current password is incorrect.");
+              setPasswordMessage(true); // Clear any previous error messages
+              setErrorMessage("Current password is incorrect.");
             } else if (text === "Ux003") {
               alert("Session expired. Please log in again.");
             } else {
@@ -419,8 +440,11 @@ function Account({ pfp }: { pfp: string }) {
               onChange={(e) => setPassword(e.target.value)}
               id="currentPassword"
               value={password}
-              type="password" // Keep as password type for security
-              className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
+              type="password"
+              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${passwordMessage ? 'border-red-500 text-gray-700' : 'border-gray-300 text-gray-700'
+                }`}
+              onFocus={handleFocus}
+              placeholder="Enter your password"
             />
           </div>
           <div className="w-full sm:w-1/2">
@@ -431,13 +455,20 @@ function Account({ pfp }: { pfp: string }) {
               New Password:
             </label>
             <input
-              id="newPassword"
-              type="password" // Keep as password type for security
-              className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
               onChange={(e) => setNewPassword(e.target.value)}
+              id="newPassword"
               value={newPassword}
+              type="password" // Keep as password type for security
+              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${newPasswordMessage ? 'border-red-500 text-gray-700' : 'border-gray-300 text-gray-700'
+                }`}
+              onFocus={handleFocus}
+              placeholder="Enter your new password"
             />
           </div>
+        </div>
+        <div className="flex items-center mb-4">
+          {errorMessage && <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-600 mr-2" />}
+          <div className="text-red-600">{errorMessage}</div>
         </div>
         <h3 className="text-base font-medium">Password Requirements:</h3>
         <p className="text-sm text-gray-400 ml-6">
