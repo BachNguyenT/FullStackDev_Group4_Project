@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/components/Button";
 import AccountSearch from "@/components/ui/components/event/AccountSearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface ConfirmModalProps {
@@ -12,7 +12,7 @@ interface ConfirmModalProps {
   onCancel: () => void;
 }
 
-function AttendeeAddModal({ title, onConfirm, onCancel, eventID }: ConfirmModalProps) {
+function AttendeeAddModal({  onCancel, eventID }: ConfirmModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [userFound, setUserFound] = useState([]);
   const [searchString, setSearchString] = useState<string>(""); 
@@ -59,6 +59,10 @@ function AttendeeAddModal({ title, onConfirm, onCancel, eventID }: ConfirmModalP
 
     setIsLoading(false);
   }
+
+  useEffect(() => {
+    fetchInvitableAttendee();
+  }, []);
 
   return (
     <div className="fixed inset-0 backdrop-blur-md z-50" onClick={onCancel}>
