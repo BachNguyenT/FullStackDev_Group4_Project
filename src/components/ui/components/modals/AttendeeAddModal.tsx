@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/components/Button";
 import AccountSearch from "@/components/ui/components/event/AccountSearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useDebounce from "@/hooks/useDebounce";
 
 interface ConfirmModalProps {
   title: string;
@@ -12,11 +12,12 @@ interface ConfirmModalProps {
   onCancel: () => void;
 }
 
-function AttendeeAddModal({  onCancel, eventID }: ConfirmModalProps) {
+function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [userFound, setUserFound] = useState([]);
-  const [searchString, setSearchString] = useState<string>(""); 
-  const navigate = useNavigate(); 
+  const [searchString, setSearchString] = useState<string>("");
+  const navigate = useNavigate();
+  const debounced = useDebounce(searchString, 1000);
 
   const handlePropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -24,31 +25,32 @@ function AttendeeAddModal({  onCancel, eventID }: ConfirmModalProps) {
 
   const fetchInvitableAttendee = async () => {
     setIsLoading(true);
-    console.log(searchString);
 
     try {
       const queryParams = new URLSearchParams({
         id: eventID || "",
-        searchString: searchString || "",
+        searchString: debounced || "",
       });
 
       const response = await fetch(
-        `http://localhost:3000/get-invitable-attendee?${queryParams.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+        `http://localhost:3000/get-invitable-attendee?${queryParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         const data = await response.json();
         setUserFound(data);
-      } else if (response.status == 401) {
+
+      } else if (response.status === 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
-      }
-      else if (response.status == 404) {
+      } else if (response.status === 404) {
         navigate("/not-found-page");
       } else {
         alert("Service temporarily unavailable. Please try again later.");
@@ -56,13 +58,12 @@ function AttendeeAddModal({  onCancel, eventID }: ConfirmModalProps) {
     } catch (error) {
       console.error("Error fetching invitable attendees:", error);
     }
-
     setIsLoading(false);
-  }
+  };
 
   useEffect(() => {
     fetchInvitableAttendee();
-  }, []);
+  }, [debounced]);
 
   return (
     <div className="fixed inset-0 backdrop-blur-md z-50" onClick={onCancel}>
@@ -91,33 +92,36 @@ function AttendeeAddModal({  onCancel, eventID }: ConfirmModalProps) {
               placeholder="Search attendees..."
               className="text-sm border border-gray-300 rounded-md block w-full h-14 pl-9"
             />
+            {isLoading && (
+              <FontAwesomeIcon
+                icon={faSpinner}
+                className="absolute left-98 top-9.5 text-gray-500 text-base spin"
+              />
+            )}
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
               className="absolute left-9 top-9.5 text-gray-500 text-base"
             />
-            <Button variant="outline" onClick={fetchInvitableAttendee}>Find</Button>
           </div>
-          
 
           {/* Border */}
           <div className="border-b border-gray-300 mb-4 mt-4"></div>
 
           {/* search result area */}
           <div>
-            {
-              userFound.map((user, index) => (
-                <AccountSearch
-                  key={index}
-                  senderName={user.Name}
-                  email={user.Email}
-                  phoneNumber={user.PhoneNumber}
-                />
-              ))
-            }
+            {userFound.map((user, index) => (
+              <AccountSearch
+                key={index}
+                senderName={user.Name}
+                email={user.Email}
+                phoneNumber={user.PhoneNumber}
+              />
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 export default AttendeeAddModal;

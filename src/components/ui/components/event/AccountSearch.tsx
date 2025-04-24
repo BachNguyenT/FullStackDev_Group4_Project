@@ -22,7 +22,7 @@ function AccountSearch({ senderName, email, phoneNumber }) {
                         <span className="text-gray-400 text-sm font-light">{email} ({phoneNumber})</span>
                     </div>
                 </div>
-                <div className="hover:bg-purple-600 hover:text-white rounded-full p-2 cursor-pointer"> 
+                <div className="flex items-center hover:bg-purple-600 w-8 h-8 hover:text-white rounded-full p-2 cursor-pointer"> 
                     <FontAwesomeIcon icon={faPaperPlane} className="mr-1" />
                 </div>
             </div>
