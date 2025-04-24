@@ -269,7 +269,6 @@ function EventDashboardHost() {
         eventID={eventInfo.eventID}
         refreshHandler={fetchEventDiscussionBoard}
       />
-
       {/* Delete modal for event and attendee */}
       {isDeleteModalOpen && deleteTarget && (
         <ConfirmModal

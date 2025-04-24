@@ -48,6 +48,12 @@ function Login() {
   const handlePasswordBlur = () => {
     setPCheck(validatePassword(password));
   };
+  
+  const handleKeyDown =  (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isLoading) {
+      handleLogin();
+    }
+  };
   async function handleLogin() {
     // Clear error messages
     setLoading(true);
@@ -166,6 +172,7 @@ function Login() {
             placeholder="Enter Username"
             value={username}
             onChange={(e) => handleUsernameChange(e.target.value)}
+            onKeyDown={handleKeyDown}
             onBlur={handleUsernameBlur}
             className={`mb-2 p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 ${usernameCheck ? "ring-2 ring-red-400" : ""
               }`}
@@ -187,12 +194,13 @@ function Login() {
               {usernameCheck}
             </p>
           )}
-
+          
           <input
             type="password"
             placeholder="Enter Password"
             value={password}
             onChange={(e) => handlePasswordChange(e.target.value)}
+            onKeyDown={handleKeyDown}
             onBlur={handlePasswordBlur}
             className={`mb-2 p-3 w-full rounded-full bg-purple-100 focus:outline-none focus:ring-2 focus:ring-purple-400 ${passwordCheck ? "ring-2 ring-red-400" : ""
               }`}
@@ -214,7 +222,6 @@ function Login() {
               {passwordCheck}
             </p>
           )}
-
           <Button
             variant="link"
             className="w-full justify-end text-sm text-purple-500"
