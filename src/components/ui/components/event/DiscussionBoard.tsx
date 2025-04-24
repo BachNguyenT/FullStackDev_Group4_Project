@@ -53,7 +53,6 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
     catch {
       alert("Service temporarily unavailable. Please try again later.");
     }
-    setDisableSend(false);
   }
 
   useEffect(() => {

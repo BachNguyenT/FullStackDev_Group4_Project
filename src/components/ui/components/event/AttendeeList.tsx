@@ -5,12 +5,14 @@ import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { ConfirmModal } from "@/components/ui/components/modals";
 import { useNavigate } from "react-router-dom";
+import AttendeeAddModal from "../modals/AttendeeAddModal";
 
 function AttendeeList({ attendeeList, eventID, refreshHandler }) {
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [isAddAttendeeModalOpen, setAddAttendeeModalOpen] = useState(false);  
 
   const handleOnDeleteClick = (attendeeID, attendeeName) => {
     setDeleteTarget({ id: attendeeID, name: attendeeName });
@@ -86,7 +88,7 @@ function AttendeeList({ attendeeList, eventID, refreshHandler }) {
           </div>
 
           {/* Right: Add Attendee & Refresh */}
-          <Button animated={false} variant="default" disabled={isLoading}>
+          <Button animated={false} variant="default" disabled={isLoading} onClick={() => setAddAttendeeModalOpen(true)}>
             <FontAwesomeIcon icon={faPlus} className="ml-1 text-xs" />
             Add Attendee
           </Button>
@@ -130,6 +132,17 @@ function AttendeeList({ attendeeList, eventID, refreshHandler }) {
           message={`Are you sure you want to remove ${deleteTarget.name} from this event? This action cannot be undone.`}
           onCancel={() => setDeleteModalOpen(false)}
           onConfirm={() => deleteAttendee(deleteTarget.id)}
+        />
+      )}
+
+      {/* Add Attendee modal */}
+      {isAddAttendeeModalOpen && (
+        <AttendeeAddModal
+          eventID={eventID}
+          title={"Invite User"}
+          message={`Are you sure you want to invite this user to the event?`}
+          onCancel={() => setAddAttendeeModalOpen(false)}
+          onConfirm={() => {}}
         />
       )}
     </div>
