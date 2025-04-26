@@ -10,9 +10,8 @@ import Event from "@/pages/user/Event";
 import Invitation from "@/pages/user/Invitation";
 import Account from "@/pages/user/Account";
 import EventDashboardHost from "@/pages/user/EventDashboardHost";
-import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
-import EventAdd from "./EventAdd";
+import EventForm from "./EventForm";
 import DashBoard from "./DashBoard";
 import SessionValidator from "@/routes/SessionValidator";
 
@@ -79,17 +78,23 @@ function Workspace() {
       <div className="w-screen h-screen flex overflow-hidden">
         <Sidebar />
         <div
-          className={`flex flex-col bg-white border-r border-gray-200 h-full ${sidebarOpen ? "w-[65px] md:w-full" : "w-full"
-            }`}
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
+            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+          }`}
         >
           <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
           <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the workspace */}
-              <Route path="" element={<div>
-                <DashBoard sidebarOpen={sidebarOpen} /> <Footer />{" "}
-              </div>} />
-                {/* Resolve invalid path */}
+              <Route
+                path=""
+                element={
+                  <div>
+                    <DashBoard sidebarOpen={sidebarOpen} /> <Footer />{" "}
+                  </div>
+                }
+              />
+              {/* Resolve invalid path */}
               <Route path="*" element={<Navigate to="/not-found-page" />} />
               {/* Show all events */}
               <Route
@@ -97,12 +102,26 @@ function Workspace() {
                 element={<Event sidebarOpen={sidebarOpen} />}
               />
               {/* Dashboard of a specific event */}
-              <Route path="event/:eventId" element={<SessionValidator><EventDashboardHost /></SessionValidator>} />
+              <Route
+                path="event/:eventId"
+                element={
+                  <SessionValidator>
+                    <EventDashboardHost />
+                  </SessionValidator>
+                }
+              />
 
               {/* Create new event page */}
-              <Route path="event/create" element={<SessionValidator><EventAdd /></SessionValidator>} />
+              <Route
+                path="event/create"
+                element={
+                  <SessionValidator>
+                    <EventForm />
+                  </SessionValidator>
+                }
+              />
 
-              <Route path="event/:eventId/edit" element={<EventEdit />} />
+              <Route path="event/:eventId/edit" element={<EventForm />} />
               <Route path="invitation" element={<Invitation />} />
               <Route
                 path="invitation/:ivitationId"

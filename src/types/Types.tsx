@@ -29,9 +29,8 @@ interface EventInfoProps {
   createdOn: string;
   eventType: string;
   visibility: string;
-  attendeeCount: string;
-  maxAttendeeCount: string;
-  isEdit: boolean;
+  attendeeCount: number;
+  maxAttendeeCount: number;
 }
 
 interface AttendeeInfoProps {

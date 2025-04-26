@@ -26,13 +26,22 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
     { text: "Public" },
   ];
 
-  const [events, setEvents] = useState([]);
-  const [maxAttendeeCount, setMaxAttendeeCount] = useState(0);
-  const [eventNameSearch, setEventNameSearch] = useState("");
-  const [eventVisibilitySearch, setEventVisibilitySearch] = useState(0);
-  const [sortDirection, setSortDirection] = useState(0);
-  const [eventStatusSearch, setEventStatusSearch] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  interface Event {
+    ID: string;
+    Name: string;
+    Date: string;
+    Type: string;
+    IsPrivate: boolean;
+    AtendeeCount: number;
+  }
+
+  const [events, setEvents] = useState<Event[]>([]);
+  const [maxAttendeeCount, setMaxAttendeeCount] = useState<number>(0);
+  const [eventNameSearch, setEventNameSearch] = useState<string>("");
+  const [eventVisibilitySearch, setEventVisibilitySearch] = useState<number>(0);
+  const [sortDirection, setSortDirection] = useState<number>(0);
+  const [eventStatusSearch, setEventStatusSearch] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   async function fetchEvents(abortSignal: AbortSignal | null) {
@@ -158,7 +167,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
           <div>Loading...</div>
         ) : events.length > 0 ? (
           events.map((element, index) => {
-            let date = new Date(element.Date);
+            const date = new Date(element.Date);
             return (
               <EventCard
                 key={index}
@@ -169,7 +178,6 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
                 visibility={element.IsPrivate ? "Private" : "Public"}
                 attendeeCount={element.AtendeeCount}
                 maxAttendeeCount={maxAttendeeCount}
-                className="w-full sm:w-[300px] md:w-[280px] lg:w-[260px] xl:w-[240px] rounded-xl overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
               />
             );
           })

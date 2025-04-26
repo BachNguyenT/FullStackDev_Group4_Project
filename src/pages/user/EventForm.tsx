@@ -4,7 +4,7 @@ import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg
 import { Button } from "@/components/ui/components/Button";
 import Dropdown from "@/components/ui/components/Dropdown";
 import DurationInput from "@/components/ui/components/DurationInput";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EventForm = () => {
   const eventVisibilityItems = [{ text: "Private" }, { text: "Public" }];
@@ -20,12 +20,13 @@ const EventForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState(eventImagePlaceholder);
   const imageRef = useRef<string>(eventImagePlaceholder);
+  const [eventID, setEventID] = useState<string>(useParams().eventId || "");
   const [eventName, setEventName] = useState<string>("");
   const [eventDateTime, setEventDateTime] = useState<string>("");
   const [eventVenue, setEventVenue] = useState<string>("");
-  const [eventType, setEventType] = useState<number>(0);
+  const [eventType, setEventType] = useState<string>("Conference");
   const [eventDescription, setEventDescription] = useState<string>("");
-  const [eventVisibility, setEventVisibility] = useState<number>(0);
+  const [eventVisibility, setEventVisibility] = useState<boolean>("Private");
   const [eventDuration, setEventDuration] = useState({
     hour: 0,
     minute: 0,
@@ -115,7 +116,7 @@ const EventForm = () => {
           .map((byte) => byte.toString(16).padStart(2, "0"))
           .join("");
 
-      let response = await fetch("http://localhost:3000/create-event", {
+      const response = await fetch("http://localhost:3000/create-event", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -130,7 +131,7 @@ const EventForm = () => {
           EventVisibility: eventVisibility,
           EventType: eventType,
           Evp: image == eventImagePlaceholder ? "" : imageHexString,
-          EventDescription: eventDescription
+          EventDescription: eventDescription,
         }),
       });
 
@@ -172,7 +173,65 @@ const EventForm = () => {
     }
   }
 
+  async function handleFetchEvent() {
+    console.log("Fetching event information...");
+    setIsLoading(true);
+    try {
+      if (eventID) {
+        const queryParams = new URLSearchParams({
+          id: eventID || "",
+        });
+        const response = await fetch(
+          `http://localhost:3000/get-event-info?${queryParams.toString()}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+
+        if (response.status === 200) {
+          const data = await response.json();
+          setEventName(data.eventName);
+          setEventDateTime(data.eventDateTime);
+          setEventVenue(data.eventVenue);
+          setEventType(data.eventType);
+          setEventDescription(data.eventDescription);
+          setEventVisibility(data.eventVisibility);
+          const durationParts = data.eventDuration.split(" ");
+          const hour = parseInt(durationParts[0].replace("h", "")) || 0;
+          const minute = parseInt(durationParts[1].replace("m", "")) || 0;
+          const second = parseInt(durationParts[2].replace("s", "")) || 0;
+
+          setEventDuration({
+            hour,
+            minute,
+            second,
+          });
+          // setEventReminder({
+          //   hour: data.eventReminder.hour,
+          //   minute: data.eventReminder.minute,
+          //   second: data.eventReminder.second,
+          // });
+
+          console.log(data);
+        } else if (response.status === 401) {
+          alert("Session expired. Please log in again.");
+        } else {
+          alert("Service temporarily unavailable. Please try again later.");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user information:", error);
+      alert("Service temporarily unavailable. Please try again later.");
+    }
+    setIsLoading(false);
+  }
+
   useEffect(() => {
+    handleFetchEvent();
     return () => {
       if (imageRef.current !== eventImagePlaceholder) {
         URL.revokeObjectURL(imageRef.current);
@@ -183,7 +242,7 @@ const EventForm = () => {
   return (
     <div className="p-4">
       <h1 className="text-3xl font-semibold mt-4 mb-4 text-purple-600">
-        Add Event
+        {!eventID ? "Add" : "Edit"} Event
       </h1>
 
       <div className="grid grid-cols-2 gap-12">
@@ -194,6 +253,8 @@ const EventForm = () => {
               Event Name:<span className="text-red-500 ml-1">*</span>
             </label>
             <input
+              value={eventName}
+              type="text"
               onChange={(e) => {
                 const val = e.target.value;
                 setEventName(val);
@@ -206,7 +267,9 @@ const EventForm = () => {
               className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
             />
 
-            {eventNameCheck && <p className="text-red-500 italic">{eventNameCheck}</p>}
+            {eventNameCheck && (
+              <p className="text-red-500 italic">{eventNameCheck}</p>
+            )}
           </div>
 
           {/* Date and Time of the event input */}
@@ -216,6 +279,7 @@ const EventForm = () => {
             </label>
             <input
               id="date"
+              value={eventDateTime}
               onChange={(e) => {
                 const val = e.target.value;
                 setEventDateTime(val);
@@ -243,6 +307,7 @@ const EventForm = () => {
               Event Venue:<span className="text-red-500 ml-1">*</span>
             </label>
             <input
+              value={eventVenue}
               onChange={(e) => {
                 const val = e.target.value;
                 setEventVenue(val);
@@ -267,6 +332,7 @@ const EventForm = () => {
             Event Visibility:
           </label>
           <Dropdown
+            value={eventVisibility}
             placeholder="Event visibility:"
             items={eventVisibilityItems}
             valueSetter={setEventVisibility}
@@ -280,6 +346,7 @@ const EventForm = () => {
               Event Type:
             </label>
             <Dropdown
+              value={eventType}
               placeholder="Select event type:"
               items={eventTypeItems}
               valueSetter={setEventType}
@@ -352,7 +419,12 @@ const EventForm = () => {
       </div>
 
       <div className="flex justify-end mt-4">
-        <Button to="/workspace/event" variant="secondary" className="mr-2 min-w-8"  disabled={isLoading}>        
+        <Button
+          to="/workspace/event"
+          variant="secondary"
+          className="mr-2 min-w-8"
+          disabled={isLoading}
+        >
           Cancel
         </Button>
         <Button
@@ -366,6 +438,6 @@ const EventForm = () => {
       </div>
     </div>
   );
-}
+};
 
 export default EventForm;
