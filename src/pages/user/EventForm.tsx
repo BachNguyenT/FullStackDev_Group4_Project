@@ -26,7 +26,7 @@ const EventForm = () => {
   const [eventVenue, setEventVenue] = useState<string>("");
   const [eventType, setEventType] = useState<string>("Conference");
   const [eventDescription, setEventDescription] = useState<string>("");
-  const [eventVisibility, setEventVisibility] = useState<boolean>("Private");
+  const [eventVisibility, setEventVisibility] = useState<string>("Private");
   const [eventDuration, setEventDuration] = useState({
     hour: 0,
     minute: 0,
