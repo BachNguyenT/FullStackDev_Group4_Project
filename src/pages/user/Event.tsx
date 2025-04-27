@@ -71,6 +71,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
         setMaxAttendeeCount(data.maxAttendeeCount);
         setEvents(data.events);
         setIsLoading(false);
+        console.log(data.events);
         return;
       } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
@@ -131,6 +132,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
           </div>
 
           <Dropdown
+            value={sortDirection}
             placeholder="Order events by:"
             items={sortItems}
             valueSetter={setSortDirection}
@@ -139,11 +141,13 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
             placeholder="Event status:"
             items={statusItems}
             valueSetter={setEventStatusSearch}
+            value={eventStatusSearch}
           />
           <Dropdown
             placeholder="Event visibility:"
             items={visibilityItems}
             valueSetter={setEventVisibilitySearch}
+            value={eventVisibilitySearch}
           />
           <Button
             animated={false}
@@ -158,22 +162,24 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
 
       {/* Event Cards Grid */}
       <div
-        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${sidebarOpen
-          ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
-          : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
-          }`}
+        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${
+          sidebarOpen
+            ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
+            : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
+        }`}
       >
         {isLoading ? (
           <div>Loading...</div>
         ) : events.length > 0 ? (
           events.map((element, index) => {
             const date = new Date(element.Date);
+            console.log(element.Date);
             return (
               <EventCard
                 key={index}
                 eventId={element.ID}
                 eventName={element.Name}
-                createdOn={date.toLocaleString("en-UK", { hour12: true, dateStyle: "long", timeStyle: "short" })}
+                createdOn={date.toISOString().split("T")[0]}
                 eventType={element.Type}
                 visibility={element.IsPrivate ? "Private" : "Public"}
                 attendeeCount={element.AtendeeCount}

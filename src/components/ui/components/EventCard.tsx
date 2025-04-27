@@ -22,7 +22,7 @@ function EventCard({
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
   const imageURLRef = useRef<string>(eventImagePlaceholder);
   const navigate = useNavigate();
-
+  
   async function fetchEventImage(abortSignal: AbortSignal) {
     try {
       const queryParams = new URLSearchParams({

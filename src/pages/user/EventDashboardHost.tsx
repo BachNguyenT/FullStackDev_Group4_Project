@@ -83,7 +83,7 @@ function EventDashboardHost() {
       });
 
       const response = await fetch(
-        `http://localhost:3000/get-event-info?${queryParams.toString()}`,
+        `http://localhost:3000/get-event?${queryParams.toString()}`,
         {
           method: "GET",
           headers: {

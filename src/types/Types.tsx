@@ -14,6 +14,12 @@ type EventType = {
   maxAttendees: number;
 };
 
+type TimeDuration = {
+  hour: number;
+  minute: number;
+  second: number;
+};
+
 type Event = {
   id: string;
   name: string;
@@ -46,4 +52,11 @@ interface AttendeeInfoProps {
   status: "Accepted" | "Declined" | "Pending";
 }
 
-export type { User, EventType, EventInfoProps, AttendeeInfoProps, Event };
+export type {
+  User,
+  EventType,
+  EventInfoProps,
+  AttendeeInfoProps,
+  Event,
+  TimeDuration,
+};

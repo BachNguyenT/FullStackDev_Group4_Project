@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/components/Button";
 import Dropdown from "@/components/ui/components/Dropdown";
 import DurationInput from "@/components/ui/components/DurationInput";
 import { useNavigate, useParams } from "react-router-dom";
+import { EVENT_TYPE, EVENT_VISIBILITY } from "@/lib/enum";
+import { TimeDuration } from "@/types/Types";
 
 const EventForm = () => {
   const eventVisibilityItems = [{ text: "Private" }, { text: "Public" }];
@@ -24,15 +26,18 @@ const EventForm = () => {
   const [eventName, setEventName] = useState<string>("");
   const [eventDateTime, setEventDateTime] = useState<string>("");
   const [eventVenue, setEventVenue] = useState<string>("");
-  const [eventType, setEventType] = useState<string>("Conference");
+  const [eventType, setEventType] = useState<EVENT_TYPE>(EVENT_TYPE.CONFERENCE);
   const [eventDescription, setEventDescription] = useState<string>("");
-  const [eventVisibility, setEventVisibility] = useState<string>("Private");
-  const [eventDuration, setEventDuration] = useState({
+  const [eventVisibility, setEventVisibility] = useState<EVENT_VISIBILITY>(
+    EVENT_VISIBILITY.PRIVATE
+  );
+
+  const [eventDuration, setEventDuration] = useState<TimeDuration>({
     hour: 0,
     minute: 0,
     second: 0,
   });
-  const [eventReminder, setEventReminder] = useState({
+  const [eventReminder, setEventReminder] = useState<TimeDuration>({
     hour: 0,
     minute: 0,
     second: 0,
@@ -99,12 +104,15 @@ const EventForm = () => {
       eventReminderProcessed.setHours(
         eventReminderProcessed.getHours() - eventReminder.hour
       );
+      console.log("Hours:", eventReminderProcessed.getHours() - eventReminder.hour);
       eventReminderProcessed.setMinutes(
         eventReminderProcessed.getMinutes() - eventReminder.minute
       );
+      console.log("Minutes:", eventReminderProcessed.getMinutes() - eventReminder.minute);
       eventReminderProcessed.setSeconds(
         eventReminderProcessed.getSeconds() - eventReminder.second
       );
+      console.log("Seconds:", eventReminderProcessed.getSeconds() - eventReminder.second);
 
       const getImage = await fetch(image);
       const imageBlob = await getImage.blob();
@@ -150,6 +158,108 @@ const EventForm = () => {
     return;
   }
 
+  async function handleUpdateEvent() {
+    setIsLoading(true);
+    setEventNameCheck("");
+    setEventDateTimeCheck("");
+    setEventVenueCheck("");
+    setEventDescriptionCheck("");
+    setEventDurationCheck("");
+    let isValid = true;
+
+    if (!eventName.trim()) {
+      setEventNameCheck("*Event name is required.");
+      isValid = false;
+    }
+
+    if (!eventDateTime || isNaN(new Date(eventDateTime).getTime())) {
+      setEventDateTimeCheck("*Please enter a valid date and time.");
+      isValid = false;
+    }
+
+    const eventDate = new Date(eventDateTime);
+    if (eventDate < new Date()) {
+      setEventDateTimeCheck("*Event date cannot be in the past.");
+      isValid = false;
+    }
+
+    if (!eventVenue.trim()) {
+      setEventVenueCheck("*Event venue is required.");
+      isValid = false;
+    }
+
+    if (eventDescription.trim().length < 10) {
+      setEventDescriptionCheck("*Please provide a longer event description.");
+      isValid = false;
+    }
+
+    const durationInSec =
+      eventDuration.hour * 3600 +
+      eventDuration.minute * 60 +
+      eventDuration.second;
+    if (durationInSec <= 0) {
+      setEventDurationCheck("*Event duration must be greater than zero.");
+      isValid = false;
+    }
+
+    if (isValid) {
+      // Process data to send to the server
+      const eventDurationProcessed = `${eventDuration.hour}h ${eventDuration.minute}m ${eventDuration.second}s`;
+      const eventReminderProcessed = new Date(eventDate);
+      const reminderDurationInMs =
+        (eventReminder.hour * 3600 +
+          eventReminder.minute * 60 +
+          eventReminder.second) * 1000;
+      eventReminderProcessed.setTime(eventReminderProcessed.getTime() - reminderDurationInMs);
+      console.log(eventReminderProcessed.getTime() - reminderDurationInMs);
+
+      const getImage = await fetch(image);
+      const imageBlob = await getImage.blob();
+      const imageArrayBuffer = await imageBlob.arrayBuffer();
+      const imageByteArray = new Uint8Array(imageArrayBuffer);
+      const imageHexString =
+        "\\x" +
+        Array.from(imageByteArray)
+          .map((byte) => byte.toString(16).padStart(2, "0"))
+          .join("");
+
+      const response = await fetch(
+        `http://localhost:3000/update-event/${eventID}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            EventName: eventName,
+            EventVenue: eventVenue,
+            EventDateTime: eventDateTime,
+            EventDuration: eventDurationProcessed,
+            EventReminderTime: eventReminderProcessed,
+            EventVisibility: eventVisibility,
+            EventType: eventType,
+            Evp: image == eventImagePlaceholder ? "" : imageHexString,
+            EventDescription: eventDescription,
+          }),
+        }
+      );
+
+      if (response.status == 200) {
+        alert("Event updated successfully.");
+        navigate("/workspace/event");
+      } else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    }
+
+    setIsLoading(false);
+    return;
+  }
+
   function handleSetImage(file: File | undefined) {
     if (file) {
       const validTypes = ["image/png", "image/jpeg"];
@@ -182,7 +292,7 @@ const EventForm = () => {
           id: eventID || "",
         });
         const response = await fetch(
-          `http://localhost:3000/get-event-info?${queryParams.toString()}`,
+          `http://localhost:3000/get-event?${queryParams.toString()}`,
           {
             method: "GET",
             headers: {
@@ -194,6 +304,7 @@ const EventForm = () => {
 
         if (response.status === 200) {
           const data = await response.json();
+          console.log(data);
           setEventName(data.eventName);
           setEventDateTime(data.eventDateTime);
           setEventVenue(data.eventVenue);
@@ -210,11 +321,21 @@ const EventForm = () => {
             minute,
             second,
           });
-          // setEventReminder({
-          //   hour: data.eventReminder.hour,
-          //   minute: data.eventReminder.minute,
-          //   second: data.eventReminder.second,
-          // });
+            const eventDateTimeObj = new Date(data.eventDateTime);
+            const reminderDateTimeObj = new Date(data.eventReminderTime);
+            const diffInSeconds = Math.floor(
+            (eventDateTimeObj.getTime() - reminderDateTimeObj.getTime()) / 1000
+            );
+
+            const hours = Math.floor(diffInSeconds / 3600);
+            const minutes = Math.floor((diffInSeconds % 3600) / 60);
+            const seconds = diffInSeconds % 60;
+
+            setEventReminder({
+            hour: hours,
+            minute: minutes,
+            second: seconds,
+            });
 
           console.log(data);
         } else if (response.status === 401) {
@@ -356,6 +477,7 @@ const EventForm = () => {
           {/* Event duration input */}
           <div>
             <DurationInput
+              value={eventDuration}
               label="Event Duration:"
               required={true}
               valueSetter={setEventDuration}
@@ -368,6 +490,7 @@ const EventForm = () => {
           {/* Event reminder input */}
           <div>
             <DurationInput
+              value={eventReminder}
               label="Reminder Setting:"
               required={false}
               valueSetter={setEventReminder}
@@ -409,6 +532,8 @@ const EventForm = () => {
           Description:
         </label>
         <textarea
+          value={eventDescription}
+          placeholder="Event description"
           onChange={(e) => setEventDescription(e.target.value)}
           id="description"
           className="border-2 border-gray-300 rounded-md p-2 mb-4 w-full font-light text-sm resize-y min-h-[80px]"
@@ -429,11 +554,11 @@ const EventForm = () => {
         </Button>
         <Button
           disabled={isLoading}
-          onClick={handleCreateEvent}
+          onClick={eventID ? handleUpdateEvent : handleCreateEvent}
           animated={false}
           className="ml-2 bg-purple-500 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 min-w-18"
         >
-          {isLoading ? "Loading..." : "Add"}
+          {isLoading ? "Loading..." : !eventID ? "Add" : "Edit"}
         </Button>
       </div>
     </div>

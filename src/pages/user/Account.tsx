@@ -80,7 +80,7 @@ function Account({ pfp }: { pfp: string }) {
     console.log("Fetching user information...");
     try {
       const response = await fetch(
-        "http://localhost:3000/get-user-information",
+        "http://localhost:3000/get-user",
         {
           method: "GET",
           headers: {
@@ -121,7 +121,7 @@ function Account({ pfp }: { pfp: string }) {
       Username: userName,
     };
 
-    fetch("http://localhost:3000/update-user-information", {
+    fetch("http://localhost:3000/update-user", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

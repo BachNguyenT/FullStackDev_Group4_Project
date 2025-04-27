@@ -1,16 +1,31 @@
 import { useEffect, useState } from "react";
+import { TimeDuration } from "@/types/Types";
 
 interface DurationInputProps {
+  value: TimeDuration;
   label: string;
-  required: boolean,
-  valueSetter: React.Dispatch<React.SetStateAction<{ hour: number; minute: number; second: number }>>;
+  required: boolean;
+  valueSetter: React.Dispatch<
+    React.SetStateAction<{ hour: number; minute: number; second: number }>
+  >;
 }
 
-const DurationInput: React.FC<DurationInputProps> = ({ label, required, valueSetter }) => {
+const DurationInput: React.FC<DurationInputProps> = ({
+  value,
+  label,
+  required,
+  valueSetter,
+}) => {
   const [hour, setHour] = useState<number>(0);
   const [minute, setMinute] = useState<number>(0);
   const [second, setSecond] = useState<number>(0);
-  const [isValidating, setIsValidating] = useState(false);
+  const [isValidating, setIsValidating] = useState<boolean>(false);
+
+  useEffect(() => {
+    setHour(value.hour);
+    setMinute(value.minute);
+    setSecond(value.second);
+  }, [value]);
 
   function validateNumber(value: number, min?: number, max?: number): boolean {
     let res = true;
@@ -74,7 +89,7 @@ const DurationInput: React.FC<DurationInputProps> = ({ label, required, valueSet
           placeholder="Hour..."
           className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
           disabled={isValidating}
-          value={hour.toString()}
+          value={hour}
         />
         <div>:</div>
         <input
@@ -111,6 +126,6 @@ const DurationInput: React.FC<DurationInputProps> = ({ label, required, valueSet
       </div>
     </div>
   );
-}
+};
 
 export default DurationInput;
