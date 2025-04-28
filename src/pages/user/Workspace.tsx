@@ -7,6 +7,7 @@ import Sidebar from "@/components/DefaultLayout/components/Sidebar";
 import Header from "@/components/DefaultLayout/components/Header";
 import Footer from "@/components/DefaultLayout/components/Footer";
 import Event from "@/pages/user/Event";
+import EventBrowser from "@/pages/user/EventBrowser";
 import Invitation from "@/pages/user/Invitation";
 import Account from "@/pages/user/Account";
 import EventDashboard from "@/pages/user/EventDashboard";
@@ -99,6 +100,11 @@ function Workspace() {
                 path="event"
                 element={<Event sidebarOpen={sidebarOpen} />}
               />
+              {/*Browser events */}
+              <Route
+                path="event-browser"
+                element={<EventBrowser sidebarOpen={sidebarOpen} />}
+              />
               {/* Dashboard of a specific event */}
               <Route
                 path="event/:eventId"
@@ -121,10 +127,10 @@ function Workspace() {
 
               <Route path="event/:eventId/edit" element={<EventForm />} />
               <Route path="invitation" element={<Invitation />} />
-              <Route
+              {/* <Route
                 path="invitation/:ivitationId"
                 element={<InvitationDashboardAttendee />}
-              />
+              /> */}
               <Route path="account" element={<Account pfp={avatarURL} />} />
             </Routes>
             <div className="mt-auto "></div>
