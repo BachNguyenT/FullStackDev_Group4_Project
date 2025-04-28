@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
-import { Event } from "@/types/Types";
+import { Event } from "@/Types";
 
 function AdminEventInfo({
   eventId,

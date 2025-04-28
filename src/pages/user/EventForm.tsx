@@ -6,7 +6,7 @@ import Dropdown from "@/components/ui/components/Dropdown";
 import DurationInput from "@/components/ui/components/DurationInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { EVENT_TYPE, EVENT_VISIBILITY } from "@/lib/enum";
-import { TimeDuration } from "@/types/Types";
+import { TimeDuration } from "@/Types";
 
 const EventForm = () => {
   const eventVisibilityItems = [{ text: "Private" }, { text: "Public" }];

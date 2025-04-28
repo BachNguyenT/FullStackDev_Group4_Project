@@ -1,9 +1,8 @@
-import AvatarIcon from "@/assets/Icons/avatar-placeholder.svg";
 import { Button } from "@/components/ui/components/Button";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import LogoText from "@/assets/Icons/plan-event-text.svg";
-import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
+import userPFPPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
@@ -17,8 +16,8 @@ function Register() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isTermsAgreed, setIsTermsAgreed] = useState<boolean>(false);
-  const [image, setImage] = useState<string>(userDummyPFP);
-  const imageRef = useRef<string>(userDummyPFP);
+  const [image, setImage] = useState<string>(userPFPPlaceholder);
+  const imageRef = useRef<string>(userPFPPlaceholder);
 
   // Validation states
   const [fullNameCheck, setNameCheck] = useState<string>("");
@@ -170,7 +169,7 @@ function Register() {
         return;
       }
 
-      if (image !== userDummyPFP) {
+      if (image !== userPFPPlaceholder) {
         URL.revokeObjectURL(imageRef.current);
       }
       const previewURL = URL.createObjectURL(file);
@@ -181,7 +180,7 @@ function Register() {
 
   useEffect(() => {
     return () => {
-      if (imageRef.current !== userDummyPFP) {
+      if (imageRef.current !== userPFPPlaceholder) {
         URL.revokeObjectURL(imageRef.current);
       }
     };
@@ -263,7 +262,7 @@ function Register() {
             Birthday: birthday,
             Username: username,
             Password: password,
-            Pfp: image == userDummyPFP ? "" : "\\x" + imageHexString,
+            Pfp: image == userPFPPlaceholder ? "" : "\\x" + imageHexString,
           }),
         }
       );

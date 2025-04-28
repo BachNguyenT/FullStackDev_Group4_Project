@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import {
   AttendeeList,
   EventInfo,
@@ -12,7 +11,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 
-function EventDashboardHost() {
+function EventDashboard() {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [attendeeList, setAttendeeList] = useState([]);
   const { eventId } = useParams();
@@ -273,4 +272,4 @@ function EventDashboardHost() {
   );
 }
 
-export default EventDashboardHost;
+export default EventDashboard;

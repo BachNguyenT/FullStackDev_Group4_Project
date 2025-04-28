@@ -9,11 +9,10 @@ import Footer from "@/components/DefaultLayout/components/Footer";
 import Event from "@/pages/user/Event";
 import Invitation from "@/pages/user/Invitation";
 import Account from "@/pages/user/Account";
-import EventDashboardHost from "@/pages/user/EventDashboardHost";
-import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
+import EventDashboard from "@/pages/user/EventDashboard";
 import EventForm from "./EventForm";
 import DashBoard from "./DashBoard";
-import SessionValidator from "@/routes/SessionValidator";
+import SessionValidator from "@/route-protectors/SessionValidator";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -31,8 +30,7 @@ function Workspace() {
       const response = await fetch("http://localhost:3000/get-user-pfp", {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
         credentials: "include",
         signal: abortSignal,
@@ -106,7 +104,7 @@ function Workspace() {
                 path="event/:eventId"
                 element={
                   <SessionValidator>
-                    <EventDashboardHost />
+                    <EventDashboard />
                   </SessionValidator>
                 }
               />

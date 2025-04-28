@@ -7,7 +7,7 @@ import About from "./pages/info/About";
 import PrivacyPolicy from "./pages/info/PrivacyPolicy";
 import NotFoundPage from "./pages/others/NotFoundPage";
 import Workspace from "./pages/user/Workspace";
-import SessionValidator from "./routes/SessionValidator";
+import SessionValidator from "./route-protectors/SessionValidator";
 
 //import the components
 
