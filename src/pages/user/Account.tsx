@@ -117,7 +117,7 @@ function Account({ pfp }: { pfp: string }) {
       Username: userName,
     };
 
-    fetch("http://localhost:3000/update-user", {
+    fetch(`http://localhost:3000/update-user/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
