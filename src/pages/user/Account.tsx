@@ -6,7 +6,6 @@ import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 
 function Account({ pfp }: { pfp: string }) {
-  console.log("when the component is mounted");
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
@@ -49,7 +48,6 @@ function Account({ pfp }: { pfp: string }) {
   }, []);
 
   async function fetchAvatar(abortSignal: AbortSignal) {
-    console.log("Fetching avatar...");
     try {
       const response = await fetch("http://localhost:3000/get-user-pfp", {
         method: "GET",
@@ -77,7 +75,6 @@ function Account({ pfp }: { pfp: string }) {
   }
 
   async function handleDisplayUserInformation() {
-    console.log("Fetching user information...");
     try {
       const response = await fetch(
         "http://localhost:3000/get-user",
@@ -107,7 +104,6 @@ function Account({ pfp }: { pfp: string }) {
         alert("Service temporarily unavailable. Please try again later.");
       }
     } catch (error) {
-      console.error("Error fetching user information:", error);
       alert("Service temporarily unavailable. Please try again later.");
     }
   }
@@ -142,7 +138,6 @@ function Account({ pfp }: { pfp: string }) {
         }
       })
       .catch((error) => {
-        console.error("Error updating user information:", error);
         alert("Service temporarily unavailable. Please try again later.");
       });
   };
@@ -201,7 +196,6 @@ function Account({ pfp }: { pfp: string }) {
           }
         })
         .catch((error) => {
-          console.error("Error updating avatar:", error);
           alert("Service temporarily unavailable. Please try again later.");
         });
     };
@@ -281,7 +275,6 @@ function Account({ pfp }: { pfp: string }) {
         }
       })
       .catch((error) => {
-        console.error("Error changing password:", error);
         alert("Service temporarily unavailable. Please try again later.");
       });
   };

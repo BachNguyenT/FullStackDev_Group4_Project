@@ -98,12 +98,22 @@ function Workspace() {
               {/* Show all events */}
               <Route
                 path="event"
-                element={<Event sidebarOpen={sidebarOpen} />}
+                element={
+                  <div>
+                    <Event sidebarOpen={sidebarOpen} />
+                    <Footer />{" "}
+                  </div>
+              }
               />
               {/*Browser events */}
               <Route
                 path="event-browser"
-                element={<EventBrowser sidebarOpen={sidebarOpen} />}
+                element={
+                <div>
+                  <EventBrowser sidebarOpen={sidebarOpen} />
+                  <Footer />{" "}
+                </div>
+                }
               />
               {/* Dashboard of a specific event */}
               <Route
@@ -126,7 +136,12 @@ function Workspace() {
               />
 
               <Route path="event/:eventId/edit" element={<EventForm />} />
-              <Route path="invitation" element={<Invitation />} />
+              <Route path="invitation" element={
+                <div>
+                  <Invitation />
+                  <Footer />{" "}
+                </div>
+            } />
               {/* <Route
                 path="invitation/:ivitationId"
                 element={<InvitationDashboardAttendee />}
