@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { EventInfoProps } from "@/Types";
+import { EventInfoProps } from "@/types";
 //import components and libraries
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 import Calender from "@/assets/Icons/calendar.svg";

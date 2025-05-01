@@ -14,7 +14,7 @@ import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg
 import Loading from "../others/Loading";
 import { verifyEventAccess, fetchEventInfo, fetchEventImage, fetchEventChatLog, fetchEventAttendeeList } from "@/api/event-services.ts";
 import { FetchStatus } from "@/enum.ts";
-import { FetchResult } from "@/Types";
+import { FetchResult } from "@/types";
 
 function EventDashboard() {
   // Get event ID from URL parameters

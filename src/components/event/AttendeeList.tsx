@@ -7,7 +7,7 @@ import ConfirmModal from "@/components/modals/ConfirmModal";
 import { useNavigate } from "react-router-dom";
 import AttendeeAddModal from "../modals/AttendeeAddModal";
 import { deleteAttendee } from "@/api/event-services";
-import { FetchResult } from "@/Types";
+import { FetchResult } from "@/types";
 import { FetchStatus } from "@/enum.ts";
 
 function AttendeeList({ attendeeList, eventID, refreshHandler } : {
