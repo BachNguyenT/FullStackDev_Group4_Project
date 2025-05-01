@@ -1,4 +1,4 @@
-import { FetchResult } from "@/Types.ts";
+import { FetchResult } from "@/types";
 import { FetchStatus } from "@/enum.ts";
 
 async function verifyEventAccess(

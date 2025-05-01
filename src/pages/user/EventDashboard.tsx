@@ -5,7 +5,7 @@ import {
   EventInfo,
   DiscussionBoard,
 } from "@/components/event";
-import { ConfirmModal } from "@/components/modals/ConfirmModal";
+import ConfirmModal from "@/components/modals/ConfirmModal";
 import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -14,7 +14,7 @@ import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg
 import Loading from "../others/Loading";
 import { verifyEventAccess, fetchEventInfo, fetchEventImage, fetchEventChatLog, fetchEventAttendeeList } from "@/api/event-services.ts";
 import { FetchStatus } from "@/enum.ts";
-import { FetchResult } from "@/Types.ts";
+import { FetchResult } from "@/types";
 
 function EventDashboard() {
   // Get event ID from URL parameters
@@ -42,6 +42,7 @@ function EventDashboard() {
   // Navigate hook
   const navigate = useNavigate();
 
+  // Data fetching functions
   function processFetchFail (fetchResult : FetchResult) {
     if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
       console.log("Session expired. Please log in again.");
@@ -157,7 +158,13 @@ function EventDashboard() {
     onMount();
 
     return () => {
-      abortController.abort(); // Clean up the fetch request on component unmount
+      // Clean up image URL on unmount
+      if (imageURLRef.current !== eventImagePlaceholder) {
+        URL.revokeObjectURL(imageURLRef.current); // Clean up the image URL object
+      }
+
+      // Abort any ongoing fetch requests
+      abortController.abort();
     };
   }, []);
 
@@ -193,7 +200,7 @@ function EventDashboard() {
           <DiscussionBoard
             chatLog={chatLog}
             eventID={eventInfo.eventID}
-            refreshHandler={undefined}
+            refreshHandler={loadAttendeeList}
           />
           {/* Delete modal for event and attendee */}
           {isDeleteModalOpen && (
