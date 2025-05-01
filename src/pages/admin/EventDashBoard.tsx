@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 
-import { EventInfo } from "@/components/ui/components/event";
-import AttendeeInfo from "@/components/ui/components/event/AttendeeInfo";
+import { EventInfo } from "@/components/event";
+import AttendeeInfo from "@/components/event/AttendeeInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { ConfirmModal } from "@/components/ui/components/modals";
+import { ConfirmModal } from "@/components/modals";
 const attendeeData = [
   {
     id: "0000001",

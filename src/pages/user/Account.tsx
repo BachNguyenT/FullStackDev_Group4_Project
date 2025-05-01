@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/components/Button";
-import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
+import { Button } from "@/components/general/Button";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,8 +16,8 @@ function Account({ pfp }: { pfp: string }) {
   const [newPassword, setNewPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>(pfp);
   const imageURLRef = useRef<string>(pfp);
-  const [newAvatar, setNewAvatar] = useState<string>(userDummyPFP);
-  const newImageURLRef = useRef<string>(userDummyPFP);
+  const [newAvatar, setNewAvatar] = useState<string>(pfpPlaceholder);
+  const newImageURLRef = useRef<string>(pfpPlaceholder);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -52,8 +52,7 @@ function Account({ pfp }: { pfp: string }) {
       const response = await fetch("http://localhost:3000/get-user-pfp", {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
         credentials: "include",
         signal: abortSignal,
@@ -120,8 +119,7 @@ function Account({ pfp }: { pfp: string }) {
     fetch(`http://localhost:3000/update-user/${id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        "Content-Type": "application/json"
       },
       credentials: "include",
       body: JSON.stringify(updatedUser),
@@ -168,7 +166,7 @@ function Account({ pfp }: { pfp: string }) {
       const base64String = (reader.result as string).split(",")[1]; // Remove the data prefix
 
       // Optional: Show preview
-      if (newAvatar !== userDummyPFP) {
+      if (newAvatar !== pfpPlaceholder) {
         URL.revokeObjectURL(newImageURLRef.current);
       }
       const previewURL = URL.createObjectURL(file);
@@ -179,8 +177,7 @@ function Account({ pfp }: { pfp: string }) {
       fetch("http://localhost:3000/update-user-pfp", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
         credentials: "include",
         body: JSON.stringify({ Pfp: base64String }),
@@ -227,8 +224,7 @@ function Account({ pfp }: { pfp: string }) {
     fetch("http://localhost:3000/update-user-password", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        "Content-Type": "application/json"
       },
       credentials: "include",
       body: JSON.stringify(passwordData),

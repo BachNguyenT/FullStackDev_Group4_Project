@@ -3,18 +3,27 @@ import {
   AttendeeList,
   EventInfo,
   DiscussionBoard,
-} from "@/components/ui/components/event";
-import { ConfirmModal } from "@/components/ui/components/modals";
+} from "@/components/event";
+import ConfirmModal from "@/components/modals/ConfirmModal";
 import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
+import Loading from "../others/Loading";
+import { verifyEventAccess, fetchEventInfo, fetchEventImage, fetchEventChatLog, fetchEventAttendeeList } from "@/api/event-services.ts";
+import { FetchStatus } from "@/enum.ts";
+import { FetchResult } from "@/Types";
 
 function EventDashboard() {
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [attendeeList, setAttendeeList] = useState([]);
+  // Get event ID from URL parameters
   const { eventId } = useParams();
+  // Interface control hooks
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [render, setRender] = useState<boolean>(false);
+  // Data hooks
+  const [attendeeList, setAttendeeList] = useState<any>([]);
+  const [chatLog, setChatLog] = useState<any>([]);
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
   const imageURLRef = useRef<string>(eventImagePlaceholder);
   const [eventInfo, setEventInfo] = useState({
@@ -29,244 +38,183 @@ function EventDashboard() {
     eventVenue: "Loading...",
     isOrganizer: false,
   });
-  const [chatLog, setChatLog] = useState([]);
+  const isOrganizerRef = useRef<boolean>(false);
+  // Navigate hook
   const navigate = useNavigate();
 
-  async function fetchEventImage(abortSignal: AbortSignal | null) {
-    try {
-      const queryParams = new URLSearchParams({
-        id: eventId || "",
-      });
-
-      const response = await fetch(
-        `http://localhost:3000/get-event-image?${queryParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          signal: abortSignal,
-        }
-      );
-
-      if (response.status == 200) {
-        const blob = await response.blob();
-        if (blob.size > 0) {
-          const objectURL = URL.createObjectURL(blob);
-          imageURLRef.current = objectURL;
-          setImageURL(objectURL);
-        }
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-      } else if (response.status == 404) {
-        navigate("/not-found-page");
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        navigate("/workspace/event");
-      }
-    } catch (error) {
-      if (error.name == "AbortError") {
-        alert("Service temporarily unavailable. Please try again later.");
-      } else {
-        console.log(error);
-      }
+  // Data fetching functions
+  function processFetchFail (fetchResult : FetchResult) {
+    if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
+      console.log("Session expired. Please log in again.");
+      alert("Session expired. Please log in again.");
+      navigate("/login");
+    } else if (fetchResult.status === FetchStatus.NOT_FOUND) {
+      navigate("/not-found-page");
+    } else if (fetchResult.status === FetchStatus.ERROR) {
+      alert("Service temporarily unavailable. Please try again later.");
+      navigate("/workspace/event");
     }
   }
 
-  async function fetchEventInfo(abortSignal: AbortSignal | null) {
-    try {
-      const queryParams = new URLSearchParams({
-        id: eventId || "",
-      });
-
-      const response = await fetch(
-        `http://localhost:3000/get-event?${queryParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          signal: abortSignal,
-        }
-      );
-
-      if (response.status == 200) {
-        const data = await response.json();
-        return {
-          eventName: data.eventName,
-          eventID: data.eventID,
-          eventDateTime: new Date(data.eventDateTime).toLocaleString("en-UK", {
-            hour12: true,
-            dateStyle: "long",
-            timeStyle: "short",
-          }),
-          eventDuration: data.eventDuration,
-          eventType: data.eventType,
-          eventStatus: data.eventStatus,
-          eventVisibility: data.eventVisibility,
-          eventDescription: data.eventDescription,
-          eventVenue: data.eventVenue,
-          isOrganizer: data.isOrganizer,
-        };
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-      } else if (response.status == 404) {
-        navigate("/not-found-page");
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        navigate("/workspace/event");
+  async function checkAccess (abortSignal: AbortSignal | undefined) {
+    const verificationResult = await verifyEventAccess(abortSignal, eventId);
+      if (verificationResult.status === FetchStatus.SUCCESS) {
+        return true;
       }
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        alert("Service temporarily unavailable. Please try again later.");
-      } else {
-        console.log(error);
+      else  {
+        console.log(verificationResult.status);
+        processFetchFail(verificationResult);
+        return false;
       }
+  }
+
+  async function loadInfo (abortSignal: AbortSignal | undefined) {
+    const eventInfo = await fetchEventInfo(
+      abortSignal,
+      eventId);
+
+    if (eventInfo.status === FetchStatus.SUCCESS) {
+      isOrganizerRef.current = eventInfo.result.isOrganizer;
+      setEventInfo(eventInfo.result);
+      return true;
+    } 
+    else {
+      processFetchFail(eventInfo);
+      return false;
     }
   }
 
-  async function fetchEventAttendeeList(abortSignal: AbortSignal | null) {
-    try {
-      const queryParams = new URLSearchParams({
-        id: eventId || "",
-      });
+  async function loadImage (abortSignal: AbortSignal | undefined) {
+    const eventImage = await fetchEventImage(
+      abortSignal,
+      eventId);
 
-      const response = await fetch(
-        `http://localhost:3000/get-attendees?${queryParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          signal: abortSignal,
-        }
-      );
-
-      if (response.status == 200) {
-        const data = await response.json();
-        setAttendeeList(data);
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-      } else if (response.status == 404) {
-        navigate("/not-found-page");
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        navigate("/workspace/event");
+    if (eventImage.status === FetchStatus.SUCCESS) {
+      if (eventImage.result) {
+        imageURLRef.current = eventImage.result;
+        setImageURL(eventImage.result);
       }
-    } catch (error) {
-      console.log(error);
-      if (error.name !== "AbortError") {
-        alert("Service temporarily unavailable. Please try again later.");
-      } else {
-        console.log(error);
-      }
+      return true;
+    } 
+    else {
+      processFetchFail(eventImage);
+      return false;
     }
   }
 
-  async function fetchEventDiscussionBoard(abortSignal: AbortSignal | null) {
-    try {
-      const queryParams = new URLSearchParams({
-        id: eventId || "",
-      });
+  async function loadChatLog (abortSignal: AbortSignal | undefined) {
+    const eventChatlog = await fetchEventChatLog(
+      abortSignal,
+      eventId);
 
-      const response = await fetch(
-        `http://localhost:3000/get-event-discussion-board?${queryParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          signal: abortSignal,
-        }
-      );
+    if (eventChatlog.status === FetchStatus.SUCCESS) {
+      setChatLog(eventChatlog.result);
+      return true;
+    } 
+    else {
+      processFetchFail(eventChatlog);
+      return false;
+    }
+  }
 
-      if (response.status == 200) {
-        const data = await response.json();
-        setChatLog(data);
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-      } else if (response.status == 404) {
-        navigate("/not-found-page");
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        navigate("/workspace/event");
-      }
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        alert("Service temporarily unavailable. Please try again later.");
-      } else {
-        console.log(error);
-      }
+  async function loadAttendeeList (abortSignal: AbortSignal | undefined) {
+    const eventAttendeeList = await fetchEventAttendeeList(
+      abortSignal,
+      eventId);
+
+    if (eventAttendeeList.status === FetchStatus.SUCCESS) {
+      setAttendeeList(eventAttendeeList.result);
+      return true;
+    } 
+    else {
+      processFetchFail(eventAttendeeList);
+      return false;
     }
   }
 
   useEffect(() => {
     const abortController = new AbortController();
 
-    const fetchData = async () => {
-      await fetchEventImage(abortController.signal);
-      await fetchEventDiscussionBoard(abortController.signal);
-
-      const result = await fetchEventInfo(abortController.signal);
-      if (result.isOrganizer) {
-        await fetchEventAttendeeList(abortController.signal);
+    async function onMount() {
+      // Check access privileges and load event info
+      if (!(await checkAccess(abortController.signal))) {
+        return;
+      }
+      
+      if (!(await loadInfo(abortController.signal))) {
+        return;
       }
 
-      setEventInfo(result);
-    };
+      // Close loading screen
+      setRender(true);
 
-    fetchData();
+      // Fetch other data (fetch asynchonously to improve loading time)
+      loadImage(abortController.signal);
+      loadChatLog(abortController.signal);
+      if(isOrganizerRef.current) {
+        loadAttendeeList(abortController.signal);
+      }
+    }
+
+    onMount();
 
     return () => {
-      abortController.abort(); // Clean up the fetch request on component unmount
+      // Clean up image URL on unmount
+      if (imageURLRef.current !== eventImagePlaceholder) {
+        URL.revokeObjectURL(imageURLRef.current); // Clean up the image URL object
+      }
+
+      // Abort any ongoing fetch requests
+      abortController.abort();
     };
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
-      <EventInfo
-        imageURL={imageURL}
-        eventId={eventInfo.eventID}
-        eventName={eventInfo.eventName}
-        eventType={eventInfo.eventType}
-        visibility={eventInfo.eventVisibility}
-        dateTime={eventInfo.eventDateTime}
-        duration={eventInfo.eventDuration}
-        status={eventInfo.eventStatus}
-        description={eventInfo.eventDescription}
-        venue={eventInfo.eventVenue}
-        isOrganizer={eventInfo.isOrganizer}
-      />
-      {eventInfo.isOrganizer && (
-        <AttendeeList
-          attendeeList={attendeeList}
-          refreshHandler={fetchEventAttendeeList}
-          eventID={eventId}
-        />
-      )}
-      <DiscussionBoard
-        chatLog={chatLog}
-        eventID={eventInfo.eventID}
-        refreshHandler={fetchEventDiscussionBoard}
-      />
-      {/* Delete modal for event and attendee */}
-      {isDeleteModalOpen && (
-        <ConfirmModal
-          title={"Delete Event"}
-          message={
-            "Once the event is deleted all info and attendees will be removed."
-          }
-          onCancel={() => setDeleteModalOpen(false)}
-          onConfirm={() => {}}
-        />
+    <div>
+      {!render ? (
+        <Loading />
+      ) : (
+        <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
+          {/* Event info and image */}
+          <EventInfo
+            imageURL={imageURL}
+            eventId={eventInfo.eventID}
+            eventName={eventInfo.eventName}
+            eventType={eventInfo.eventType}
+            visibility={eventInfo.eventVisibility}
+            dateTime={eventInfo.eventDateTime}
+            duration={eventInfo.eventDuration}
+            status={eventInfo.eventStatus}
+            description={eventInfo.eventDescription}
+            venue={eventInfo.eventVenue}
+            isOrganizer={eventInfo.isOrganizer}
+          />
+          {/* Attendee list (Only show attendee list if the user is the organizer) */}
+          {eventInfo.isOrganizer && (
+            <AttendeeList
+              attendeeList={attendeeList}
+              refreshHandler={loadAttendeeList}
+              eventID={eventId}
+            />
+          )}
+          {/* Discussion board */}
+          <DiscussionBoard
+            chatLog={chatLog}
+            eventID={eventInfo.eventID}
+            refreshHandler={loadAttendeeList}
+          />
+          {/* Delete modal for event and attendee */}
+          {isDeleteModalOpen && (
+            <ConfirmModal
+              title={"Delete Event"}
+              message={
+                "Once the event is deleted all info and attendees will be removed."
+              }
+              onCancel={() => setDeleteModalOpen(false)}
+              onConfirm={() => {}}
+            />
+          )}
+        </div>
       )}
     </div>
   );

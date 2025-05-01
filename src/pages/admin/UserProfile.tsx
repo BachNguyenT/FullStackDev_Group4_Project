@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/components/Button";
-import AdminEventInfo from "@/components/ui/components/event/AdminEventInfo";
-import ConfirmModal from "@/components/ui/components/modals/ConfirmModal";
+import { Button } from "@/components/general/Button";
+import AdminEventInfo from "@/components/event/AdminEventInfo";
+import ConfirmModal from "@/components/modals/ConfirmModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,

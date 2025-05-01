@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import LogoText from "@/assets/Icons/plan-event-text.svg";
-import userPFPPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
@@ -16,8 +16,8 @@ function Register() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isTermsAgreed, setIsTermsAgreed] = useState<boolean>(false);
-  const [image, setImage] = useState<string>(userPFPPlaceholder);
-  const imageRef = useRef<string>(userPFPPlaceholder);
+  const [image, setImage] = useState<string>(pfpPlaceholder);
+  const imageRef = useRef<string>(pfpPlaceholder);
 
   // Validation states
   const [fullNameCheck, setNameCheck] = useState<string>("");
@@ -169,7 +169,7 @@ function Register() {
         return;
       }
 
-      if (image !== userPFPPlaceholder) {
+      if (image !== pfpPlaceholder) {
         URL.revokeObjectURL(imageRef.current);
       }
       const previewURL = URL.createObjectURL(file);
@@ -180,7 +180,7 @@ function Register() {
 
   useEffect(() => {
     return () => {
-      if (imageRef.current !== userPFPPlaceholder) {
+      if (imageRef.current !== pfpPlaceholder) {
         URL.revokeObjectURL(imageRef.current);
       }
     };
@@ -251,8 +251,7 @@ function Register() {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+            "Content-Type": "application/json"
           },
           credentials: "include",
           body: JSON.stringify({
@@ -262,7 +261,7 @@ function Register() {
             Birthday: birthday,
             Username: username,
             Password: password,
-            Pfp: image == userPFPPlaceholder ? "" : "\\x" + imageHexString,
+            Pfp: image == pfpPlaceholder ? "" : "\\x" + imageHexString,
           }),
         }
       );

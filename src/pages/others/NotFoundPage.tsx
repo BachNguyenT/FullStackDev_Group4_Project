@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { useNavigate } from "react-router-dom";
 
 function NotFoundPage({ returnTo }: { returnTo: string }) {

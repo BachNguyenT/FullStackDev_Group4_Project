@@ -5,7 +5,7 @@ import { faArrowAltCircleRight } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 //import components and libraries
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 
 //import icons
 import Logo from "@/assets/Icons/app-logo.svg";

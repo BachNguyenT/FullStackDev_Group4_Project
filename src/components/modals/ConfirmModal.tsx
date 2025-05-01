@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
@@ -44,7 +44,7 @@ function ConfirmModal({
             onClick={async () => { setIsLoading(true); await onConfirm(); setIsLoading(false); }}
             disabled={isLoading}
           >
-            {isLoading}
+            {isLoading ? "Loading..." : "Confirm"}
           </Button>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { FetchStatus } from "@/enum";
+
 type User = {
   id: string;
   username: string;
@@ -29,6 +31,7 @@ type Event = {
   status: "Accepted" | "Declined" | "Pending";
 };
 
+
 interface EventInfoProps {
   eventId: string;
   eventName: string;
@@ -51,6 +54,19 @@ interface AttendeeInfoProps {
   isEdit: boolean;
   status: "Accepted" | "Declined" | "Pending";
 }
+
+
+interface FetchUserPFPResponse {
+  status : number;
+  debugCode : string;
+  imageURL : string | undefined;
+}
+
+interface FetchResult {
+  status : FetchStatus;
+  result : any | undefined;
+}
+
 
 export type {
   User,

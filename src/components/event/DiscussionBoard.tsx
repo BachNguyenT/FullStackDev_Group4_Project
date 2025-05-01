@@ -1,5 +1,5 @@
-import Comment from "./Comment";
-import { Button } from "@/components/ui/components/Button";
+import ChatLine from "./Comment";
+import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
@@ -11,11 +11,15 @@ import { useEffect } from "react";
 import { useRef } from "react";
 
 function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
+  // Interface control hooks
   const chatLogRef = useRef<HTMLDivElement>(null);
-  const [message, setMessage] = useState<string>("");
   const [disableSend, setDisableSend] = useState<boolean>(true);
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  // Data hooks
+  const [message, setMessage] = useState<string>("");
+  // Navigate hook
+  const navigate = useNavigate();
+  
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !isLoading) {
@@ -24,6 +28,7 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
       setIsLoading(false);
     }
   }
+
   async function handleSendMessage(message: string, timestamp: string) {
     setDisableSend(true);
     try {
@@ -55,6 +60,7 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
     }
   }
 
+  // Scroll to the bottom of the chat log whenever chat log changes
   useEffect(() => {
     if (chatLogRef.current) {
       chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
@@ -73,11 +79,11 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
         </div>
       </div>
 
-      {/*Comment Section*/}
+      {/*Chat log display section*/}
       <div className="grid grid-cols-1 gap-4 bg-white rounded-xl border border-gray-300 shadow-md p-4">
         <div ref={chatLogRef} className="overflow-y-auto h-100">
-          {chatLog.map((comment, index) => (
-            <Comment
+          {chatLog.map((comment : any, index : any) => (
+            <ChatLine
               key={index}
               sender={comment.sender}
               senderName={comment.senderName}
@@ -86,6 +92,7 @@ function DiscussionBoard({ chatLog, refreshHandler, eventID }) {
             />
           ))}
         </div>
+
         {/* Add Comment Section */}
         <div className="flex items-center mt-8 rounded-full border border-gray-200 px-4 py-2 shadow-sm w-full bg-white focus-within:border-gray-600">
           <label htmlFor="comment" className="text-gray-400 mr-2">Aa</label>

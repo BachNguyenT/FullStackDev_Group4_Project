@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@/components/ui/components/Button";
-import EventCard from "@/components/ui/components/EventCard";
-import Dropdown from "@/components/ui/components/Dropdown";
+import { Button } from "@/components/general/Button";
+import EventCard from "@/components/event/EventCard";
+import Dropdown from "@/components/general/Dropdown";
 import { useNavigate } from "react-router-dom";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -44,6 +44,8 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  
+
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
@@ -80,11 +82,13 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
       } else {
         alert("Service temporarily unavailable. Please try again later.");
         setIsLoading(false);
+        setEvents([]);  
         return;
       }
     } catch {
       alert("Service temporarily unavailable. Please try again later.");
       setIsLoading(false);
+      setEvents([]);  
       return;
     }
   }
@@ -179,7 +183,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
                 key={index}
                 eventId={element.ID}
                 eventName={element.Name}
-                createdOn={date.toISOString().split("T")[0]}
+                dateTime={date}
                 eventType={element.Type}
                 visibility={element.IsPrivate ? "Private" : "Public"}
                 attendeeCount={element.AtendeeCount}

@@ -2,70 +2,49 @@ import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LayoutContext } from "@/context/LayoutContext";
 import { useRef } from "react";
-import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
-import Sidebar from "@/components/DefaultLayout/components/Sidebar";
-import Header from "@/components/DefaultLayout/components/Header";
-import Footer from "@/components/DefaultLayout/components/Footer";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
+import Sidebar from "@/components/layout/Sidebar";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import Event from "@/pages/user/Event";
 import EventBrowser from "@/pages/user/EventBrowser";
 import Invitation from "@/pages/user/Invitation";
 import Account from "@/pages/user/Account";
 import EventDashboard from "@/pages/user/EventDashboard";
-import EventForm from "./EventForm";
+import EventEdit from "./EventEdit";
+import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
+import EventAdd from "./EventAdd";
 import DashBoard from "./DashBoard";
 import SessionValidator from "@/route-protectors/SessionValidator";
+import { fetchUserPFP } from "@/lib/api";
 
 function Workspace() {
-  const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
+  const [avatarURL, setAvatarURL] = useState<string>(pfpPlaceholder);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const avatarURLRef = useRef<string>(userDummyPFP);
+  const avatarURLRef = useRef<string>(pfpPlaceholder);
   const navigate = useNavigate();
 
   function toggleSidebar(): void {
     setSidebarOpen((prevState) => !prevState);
   }
 
-  async function fetchPFP(abortSignal: AbortSignal) {
-    // Call API
-    try {
-      const response = await fetch("http://localhost:3000/get-user-pfp", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
-
-      // Handle response
-      if (response.status == 200) {
-        const blob = await response.blob();
-        const objectURL = URL.createObjectURL(blob);
-        avatarURLRef.current = objectURL;
-        setAvatarURL(objectURL);
-        return;
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-        return;
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        return;
-      }
-    } catch {
-      // Handle API call error
-      alert("Service temporarily unavailable. Please try again later.");
-      return;
-    }
-  }
-
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchPFP(abortController.signal);
+    fetchUserPFP(abortController.signal, undefined)
+    .then((response) => {
+      if (response.status == 200) {
+        avatarURLRef.current = response.imageURL ? response.imageURL : pfpPlaceholder;
+        setAvatarURL(response.imageURL ? response.imageURL : pfpPlaceholder);
+      } else if (response.status == 401) {
+        navigate("/login");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    })
 
     return () => {
-      if (avatarURLRef.current != userDummyPFP) {
+      if (avatarURLRef.current != pfpPlaceholder) {
         URL.revokeObjectURL(avatarURLRef.current);
       }
       abortController.abort();
@@ -85,17 +64,14 @@ function Workspace() {
           <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the workspace */}
-              <Route
-                path=""
-                element={
-                  <div>
-                    <DashBoard sidebarOpen={sidebarOpen} /> <Footer />{" "}
-                  </div>
-                }
-              />
+              <Route path="" element={<div>
+                <DashBoard sidebarOpen={sidebarOpen} /> <Footer />{" "}
+              </div>} />
+
               {/* Resolve invalid path */}
               <Route path="*" element={<Navigate to="/not-found-page" />} />
-              {/* Show all events */}
+
+              {/* Show all organizing events */}
               <Route
                 path="event"
                 element={
@@ -115,15 +91,9 @@ function Workspace() {
                 </div>
                 }
               />
+
               {/* Dashboard of a specific event */}
-              <Route
-                path="event/:eventId"
-                element={
-                  <SessionValidator>
-                    <EventDashboard />
-                  </SessionValidator>
-                }
-              />
+              <Route path="event/:eventId" element={<EventDashboard />} />
 
               {/* Create new event page */}
               <Route

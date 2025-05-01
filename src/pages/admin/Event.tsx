@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
-import AdminEventInfo from "@/components/ui/components/event/AdminEventInfo";
+import AdminEventInfo from "@/components/event/AdminEventInfo";
 function Event() {
   const events = [
     {

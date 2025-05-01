@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 
-import { Button } from "@/components/ui/components/Button";
-import Dropdown from "@/components/ui/components/Dropdown";
-import DurationInput from "@/components/ui/components/DurationInput";
-import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "@/components/general/Button";
+import Dropdown from "@/components/general/Dropdown";
+import DurationInput from "@/components/event/DurationInput";
+import { useNavigate } from "react-router-dom";
+
 import { EVENT_TYPE, EVENT_VISIBILITY } from "@/lib/enum";
-import { TimeDuration } from "@/types";
+import { TimeDuration } from "@/Types";
 
 const EventForm = () => {
   const eventVisibilityItems = [{ text: "Private" }, { text: "Public" }];

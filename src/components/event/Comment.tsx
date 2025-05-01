@@ -1,48 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
-import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { useState, useRef } from "react";
 import { useEffect } from "react";
 
-function Comment({ sender, senderName, message, timestamp }) {
-  const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
-  const avatarURLRef = useRef<string>(userDummyPFP);
+function ChatLine({ sender, senderName, message, timestamp }) {
+  const [avatarURL, setAvatarURL] = useState<string>(pfpPlaceholder);
+  const avatarURLRef = useRef<string>(pfpPlaceholder);
 
   async function fetchPFP(abortSignal: AbortSignal) {
-    // Call API
-    const queryParams = new URLSearchParams({
-      id: sender || ""
-    });
-
-    try {
-      const response = await fetch(`http://localhost:3000/get-user-pfp?${queryParams.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
-
-      // Handle response
-      if (response.status == 200) {
-        const blob = await response.blob();
-        if(blob.size > 0) {
-          const objectURL = URL.createObjectURL(blob);
-          avatarURLRef.current = objectURL;
-          setAvatarURL(objectURL);
-        }
-        return;
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-        return;
-      } else {
-        return;
-      }
-    } catch {
-      return;
-    }
+    
   }
 
   useEffect(() => {
@@ -51,7 +18,7 @@ function Comment({ sender, senderName, message, timestamp }) {
     fetchPFP(abortController.signal);
 
     return () => {
-      if (avatarURLRef.current != userDummyPFP) {
+      if (avatarURLRef.current != pfpPlaceholder) {
         URL.revokeObjectURL(avatarURLRef.current);
       }
       abortController.abort();
@@ -88,4 +55,4 @@ function Comment({ sender, senderName, message, timestamp }) {
   );
 }
 
-export default Comment;
+export default ChatLine;

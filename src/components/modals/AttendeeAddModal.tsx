@@ -1,4 +1,4 @@
-import AccountSearch from "@/components/ui/components/event/AccountSearch";
+import AttendeeEntry from "@/components/event/AccountSearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
@@ -6,15 +6,20 @@ import { useNavigate } from "react-router-dom";
 import useDebounce from "@/hooks/useDebounce";
 
 interface ConfirmModalProps {
-  title: string;
-  message: string;
-  onConfirm: () => void;
+  eventID: string | undefined;
   onCancel: () => void;
+}
+
+interface Attendee {
+  ID: string;
+  Name: string;
+  Email: string;
+  PhoneNumber: string;
 }
 
 function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [userFound, setUserFound] = useState([]);
+  const [userFound, setUserFound] = useState<Attendee[]>([]);
   const [searchString, setSearchString] = useState<string>("");
   const navigate = useNavigate();
   const debounced = useDebounce(searchString, 1000);
@@ -45,6 +50,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
 
       if (response.status === 200) {
         const data = await response.json();
+        console.log(data);  
         setUserFound(data);
 
       } else if (response.status === 401) {
@@ -64,6 +70,10 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
   useEffect(() => {
     fetchInvitableAttendee();
   }, [debounced]);
+
+  async function handleOnInviteClick(userID : string) {
+
+  }
 
   return (
     <div className="fixed inset-0 backdrop-blur-md z-50" onClick={onCancel}>
@@ -108,11 +118,13 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
           <div className="border-b border-gray-300 mb-4 mt-4"></div>
 
           {/* search result area */}
-          <div>
+          <div className="h-80 overflow-y-auto">
             {userFound.map((user, index) => (
-              <AccountSearch
+              <AttendeeEntry
                 key={index}
-                senderName={user.Name}
+                id={user.ID}
+                loadingSetter={setIsLoading}
+                name={user.Name}
                 email={user.Email}
                 phoneNumber={user.PhoneNumber}
               />

@@ -1,17 +1,26 @@
 import { useState } from "react";
-import { AttendeeInfoProps } from "@/types";
-import { Button } from "@/components/ui/components/Button";
+import { fetchUserPFP } from "@/api/user-services";
+import { FetchResult } from "@/Types";
+import { FetchStatus } from "@/enum.ts";
+import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";
-
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-import avatarPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
-function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler }) {
-  const [avatarURL, setAvatarURL] = useState<string>(avatarPlaceholder);
-  const avatarURLRef = useRef<string>(avatarPlaceholder);
+function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler } : {
+  id: string;
+  name: string;
+  status: string;
+  invitationDate: string;
+  onDeleteHandler: (id: string, name: string) => void;
+}) {
+  const [pfpURL, setPfpURL] = useState<string>(pfpPlaceholder);
+  const avatarURLRef = useRef<string>(pfpPlaceholder);
+  const navigate = useNavigate();
 
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -38,51 +47,28 @@ function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler }) {
     }
   };
 
-  async function fetchPFP(abortSignal: AbortSignal) {
-    // Call API
-    const queryParams = new URLSearchParams({
-      id: id || ""
-    });
-
-    try {
-      const response = await fetch(`http://localhost:3000/get-user-pfp?${queryParams.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
-
-      // Handle response
-      if (response.status == 200) {
-        const blob = await response.blob();
-        if(blob.size > 0) {
-          const objectURL = URL.createObjectURL(blob);
-          avatarURLRef.current = objectURL;
-          setAvatarURL(objectURL);
-        }
-        return;
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-        return;
-      } else {
-        return;
+  async function loadPfp(abortSignal: AbortSignal) {
+    const fetchResult = await fetchUserPFP(abortSignal, id);
+    if (fetchResult.status === FetchStatus.SUCCESS) {
+      if (fetchResult.result) {
+        setPfpURL(fetchResult.result);
+        avatarURLRef.current = fetchResult.result;
       }
-    } catch {
-      return;
+    } else if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
+      console.log("Session expired. Please log in again.");
+      alert("Session expired. Please log in again.");
+      navigate("/login");
     }
   }
 
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchPFP(abortController.signal);
+    loadPfp(abortController.signal);
 
     return () => {
-      if (avatarURL.current != avatarPlaceholder) {
-        URL.revokeObjectURL(avatarURL.current);
+      if (avatarURLRef.current != pfpPlaceholder) {
+        URL.revokeObjectURL(avatarURLRef.current);
       }
       abortController.abort();
     };
@@ -93,7 +79,7 @@ function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler }) {
       <td className="px-4 py-3">{id}</td>
       <td className="pl-32 py-3 flex items-center justify-start gap-2">
         <img
-          src={avatarURL}
+          src={pfpURL}
           alt={name}
           className="w-8 h-8 rounded-full object-cover"
         />

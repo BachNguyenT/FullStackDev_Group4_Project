@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import InvitationCard from "@/components/ui/components/InvitationCard";
-import { Button } from "@/components/ui/components/Button";
+import InvitationCard from "@/components/invitation/InvitationCard";
+import { Button } from "@/components/general/Button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

@@ -1,6 +1,6 @@
 import Notification from "@/assets/Icons/notification.svg";
 
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { useLayoutContext } from "@/context/LayoutContext";
 import { useNavigate } from "react-router-dom";
 
