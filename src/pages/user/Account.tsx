@@ -54,8 +54,7 @@ function Account({ pfp }: { pfp: string }) {
       const response = await fetch("http://localhost:3000/get-user-pfp", {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
         credentials: "include",
         signal: abortSignal,
@@ -184,8 +183,7 @@ function Account({ pfp }: { pfp: string }) {
       fetch("http://localhost:3000/update-user-pfp", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
         credentials: "include",
         body: JSON.stringify({ Pfp: base64String }),

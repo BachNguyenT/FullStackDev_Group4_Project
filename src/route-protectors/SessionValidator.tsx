@@ -11,8 +11,7 @@ function SessionValidator({ children }: any) {
         method: "GET",
         credentials: "include", // Send cookies with the request
         headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+          "Content-Type": "application/json"
         },
       })
         .then((response) => response.text())

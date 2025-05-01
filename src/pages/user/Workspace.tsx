@@ -9,12 +9,13 @@ import Footer from "@/components/DefaultLayout/components/Footer";
 import Event from "@/pages/user/Event";
 import Invitation from "@/pages/user/Invitation";
 import Account from "@/pages/user/Account";
-import EventDashboardHost from "@/pages/user/EventDashboardHost";
+import EventDashboard from "@/pages/user/EventDashboard";
 import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
 import EventAdd from "./EventAdd";
 import DashBoard from "./DashBoard";
-import SessionValidator from "@/routes/SessionValidator";
+import SessionValidator from "@/route-protectors/SessionValidator";
+import { fetchUserPFP } from "@/lib/api";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -26,45 +27,20 @@ function Workspace() {
     setSidebarOpen((prevState) => !prevState);
   }
 
-  async function fetchPFP(abortSignal: AbortSignal) {
-    // Call API
-    try {
-      const response = await fetch("http://localhost:3000/get-user-pfp", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
-
-      // Handle response
-      if (response.status == 200) {
-        const blob = await response.blob();
-        const objectURL = URL.createObjectURL(blob);
-        avatarURLRef.current = objectURL;
-        setAvatarURL(objectURL);
-        return;
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-        return;
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        return;
-      }
-    } catch {
-      // Handle API call error
-      alert("Service temporarily unavailable. Please try again later.");
-      return;
-    }
-  }
-
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchPFP(abortController.signal);
+    fetchUserPFP(abortController.signal, undefined)
+    .then((response) => {
+      if (response.status == 200) {
+        avatarURLRef.current = response.imageURL ? response.imageURL : userDummyPFP;
+        setAvatarURL(response.imageURL ? response.imageURL : userDummyPFP);
+      } else if (response.status == 401) {
+        navigate("/login");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    })
 
     return () => {
       if (avatarURLRef.current != userDummyPFP) {
@@ -89,15 +65,18 @@ function Workspace() {
               <Route path="" element={<div>
                 <DashBoard sidebarOpen={sidebarOpen} /> <Footer />{" "}
               </div>} />
-                {/* Resolve invalid path */}
+
+              {/* Resolve invalid path */}
               <Route path="*" element={<Navigate to="/not-found-page" />} />
-              {/* Show all events */}
+
+              {/* Show all organizing events */}
               <Route
                 path="event"
                 element={<Event sidebarOpen={sidebarOpen} />}
               />
+
               {/* Dashboard of a specific event */}
-              <Route path="event/:eventId" element={<SessionValidator><EventDashboardHost /></SessionValidator>} />
+              <Route path="event/:eventId" element={<EventDashboard />} />
 
               {/* Create new event page */}
               <Route path="event/create" element={<SessionValidator><EventAdd /></SessionValidator>} />

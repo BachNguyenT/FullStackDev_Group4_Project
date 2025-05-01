@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { EventInfoProps } from "@/types/Types";
+import { EventInfoProps } from "@/Types";
 //import components and libraries
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 import Calender from "@/assets/Icons/calendar.svg";
@@ -13,7 +13,7 @@ import { Button } from "./Button";
 function EventCard({
   eventId,
   eventName,
-  createdOn,
+  dateTime,
   eventType,
   visibility,
   attendeeCount,
@@ -71,11 +71,11 @@ function EventCard({
         <img
           className="w-full h-48 object-cover rounded-md"
           src={imageURL}
-          alt="Wedding Venue"
+          alt="Image"
         />
         <div className="absolute top-0 left-0 bg-white mt-[10px] ml-[10px] flex flex-col items-center rounded-sm font-semibold px-2 py-1">
-          <span className="text-gray-800 h-5">01</span>
-          <span className="text-purple-500 text-xs">JAN</span>
+          <span className="text-gray-800 h-5">{dateTime.getDay()}</span>
+          <span className="text-purple-500 text-xs">{dateTime.toLocaleString("en-US", { month: "short" }).toUpperCase()}</span>
         </div>
       </div>
       <div className="py-[10px]">
@@ -94,7 +94,7 @@ function EventCard({
             <span className="font-medium flex items-center justify-end">
               <img className="h-[18px]" src={Calender} />
             </span>
-            <span> {createdOn}</span>
+            <span> {dateTime.toLocaleString("en-UK", { hour12: true, dateStyle: "long", timeStyle: "short" })}</span>
           </div>
           <div className="flex flex-row items-center gap-1">
             <span className="font-medium flex items-center">

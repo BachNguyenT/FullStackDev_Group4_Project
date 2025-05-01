@@ -1,25 +1,61 @@
-const loginUser = async (username: string, password: string) => {
+// FEx001: indicate error comming from the front end
+import { fetchUserPFPResponse } from "@/Types";
+
+async function fetchUserPFP(
+  abortSignal: AbortSignal,
+  userID: string | undefined
+) : Promise<fetchUserPFPResponse> {
   try {
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+    const searchParams = new URLSearchParams({
+      id: userID ? userID : "#SENDER#",
     });
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error("Invalid credentials");
-      } else {
-        throw new Error("An error occurred. Please try again.");
+    const response = await fetch(`http://localhost:3000/get-user-pfp?${searchParams.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      signal: abortSignal,
+    });
+
+    const responsePackage = await response.json();
+
+    if (response.status == 200) {
+      let imageURL = undefined;
+
+      if (responsePackage.imageBlob.length > 0) {
+        const byteArray = new Uint8Array(responsePackage.imageBlob);
+        const blob = new Blob([byteArray]);
+        imageURL = URL.createObjectURL(blob);
       }
+
+      return {
+        status: response.status,
+        debugCode: responsePackage.debugCode,
+        imageURL: imageURL,
+      };
+    } else if (response.status == 401) {
+      return {
+        status: response.status,
+        debugCode: responsePackage.debugCode,
+        imageURL: undefined,
+      };
+    } else {
+      return {
+        status: response.status,
+        debugCode: responsePackage.debugCode,
+        imageURL: undefined,
+      };
     }
-
-    const userData = await response.json();
-    return userData; // Ensure this includes user details
-  } catch (error) {
-    throw new Error(error.message || "An unexpected error occurred");
+  } catch {
+    return { 
+      status: 500, 
+      debugCode: "FEx001",
+      imageURL: undefined, 
+    };
   }
-};
+}
 
-export { loginUser };
-//Replace '/api/login' with your actual backend login endpoint.
+
+export { fetchUserPFP };

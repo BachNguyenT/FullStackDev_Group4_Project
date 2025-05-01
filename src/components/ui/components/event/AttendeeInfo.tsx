@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AttendeeInfoProps } from "@/types/Types";
+import { AttendeeInfoProps } from "@/Types";
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";

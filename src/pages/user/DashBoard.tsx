@@ -265,11 +265,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
                 key={index}
                 eventId={element.ID}
                 eventName={element.Name}
-                createdOn={date.toLocaleString("en-UK", {
-                  hour12: true,
-                  dateStyle: "long",
-                  timeStyle: "short",
-                })}
+                dateTime={date}
                 eventType={element.Type}
                 visibility={element.IsPrivate ? "Private" : "Public"}
                 attendeeCount={element.AtendeeCount}

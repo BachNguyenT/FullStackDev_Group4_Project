@@ -1,5 +1,5 @@
 //import the internal files
-import { EventInfoProps } from "@/types/Types";
+import { EventInfoProps } from "@/Types";
 import { Button } from "@/components/ui/components/Button";
 import { Card, CardContent } from "@/components/ui/components/Card";
 
@@ -16,6 +16,7 @@ import {
   FaPenToSquare,
   FaTrashCan,
 } from "react-icons/fa6";
+
 const getStatusStyle = (status: string) => {
   switch (status) {
     case "Ongoing":
@@ -24,6 +25,21 @@ const getStatusStyle = (status: string) => {
       return "bg-gray-500 text-white rounded-full px-3 py-1 text-xs font-medium";
   }
 };
+
+interface EventInfoProps {
+  eventId: string;
+  eventName: string;
+  imageURL: string;
+  eventType: string;
+  visibility: string;
+  dateTime: string;
+  duration: string;
+  status: string;
+  description : string;
+  venue : string;
+  isOrganizer : boolean;
+}
+
 function EventInfo({
   eventId,
   eventName,
@@ -36,12 +52,34 @@ function EventInfo({
   description,
   venue,
   isOrganizer,
-}: EventInfoProps) {
-
-
-
+} : EventInfoProps) {
   function handleDelete() {
 
+  }
+
+  // Reusable info row
+  function InfoItem({
+    icon,
+    label,
+    value,
+  }: {
+    icon: React.ReactNode;
+    label: string;
+    value: string;
+  }) {
+    return (
+      <div className="flex gap-2">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full text-gray-600">
+          {icon}
+        </div>
+        <div className="flex flex-col" >
+          <div className="font-semibold mb-1">{label}:</div>
+          <div className={`text-gray-700  ${getStatusStyle(
+            value
+          )}`}>{value}</div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -140,31 +178,6 @@ function EventInfo({
         </Card>
       </div>
     </>
-  );
-}
-
-// Reusable info row
-function InfoItem({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex gap-2">
-      <div className="flex items-center justify-center w-8 h-8 rounded-full text-gray-600">
-        {icon}
-      </div>
-      <div className="flex flex-col" >
-        <div className="font-semibold mb-1">{label}:</div>
-        <div className={`text-gray-700  ${getStatusStyle(
-          value
-        )}`}>{value}</div>
-      </div>
-    </div>
   );
 }
 

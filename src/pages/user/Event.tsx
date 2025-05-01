@@ -35,6 +35,8 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  
+
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
@@ -70,11 +72,13 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
       } else {
         alert("Service temporarily unavailable. Please try again later.");
         setIsLoading(false);
+        setEvents([]);  
         return;
       }
     } catch {
       alert("Service temporarily unavailable. Please try again later.");
       setIsLoading(false);
+      setEvents([]);  
       return;
     }
   }
@@ -164,7 +168,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
                 key={index}
                 eventId={element.ID}
                 eventName={element.Name}
-                createdOn={date.toLocaleString("en-UK", { hour12: true, dateStyle: "long", timeStyle: "short" })}
+                dateTime={date}
                 eventType={element.Type}
                 visibility={element.IsPrivate ? "Private" : "Public"}
                 attendeeCount={element.AtendeeCount}

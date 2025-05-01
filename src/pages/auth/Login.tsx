@@ -117,8 +117,7 @@ function Login() {
           method: "GET",
           credentials: "include",
           headers: {
-            "Content-Type": "application/json",
-            key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+            "Content-Type": "application/json"
           },
         }
       );
