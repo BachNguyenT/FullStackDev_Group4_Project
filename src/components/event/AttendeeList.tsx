@@ -3,7 +3,7 @@ import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { ConfirmModal } from "@/components/modals";
+import ConfirmModal from "@/components/modals/ConfirmModal";
 import { useNavigate } from "react-router-dom";
 import AttendeeAddModal from "../modals/AttendeeAddModal";
 
