@@ -61,22 +61,8 @@ function AttendeeList({
       <div className="space-y-4">
         {/* Header row with filter/search/add */}
         <h1 className="text-2xl font-semibold mb-4 mt-8 ">Attendees</h1>
-        <div className="flex flex-wrap gap-2 justify-between items-center">
-          {/* Left: Show and Search */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="relative">{/* Search input field */}</div>
-          </div>
-
-          {/* Right: Add Attendee & Refresh */}
-          <Button
-            animated={false}
-            variant="default"
-            disabled={isLoading}
-            onClick={() => setAddAttendeeModalOpen(true)}
-          >
-            <FontAwesomeIcon icon={faPlus} className="ml-1 text-xs" />
-            Add Attendee
-          </Button>
+        {/* Right: Add Attendee & Refresh */}
+        <div className="flex justify-between items-center gap-2 flex-wrap">
           <Button
             variant="outline"
             className="flex items-center gap-2"
@@ -88,6 +74,15 @@ function AttendeeList({
             }}
           >
             Refresh
+          </Button>
+          <Button
+            animated={false}
+            variant="default"
+            disabled={isLoading}
+            onClick={() => setAddAttendeeModalOpen(true)}
+          >
+            <FontAwesomeIcon icon={faPlus} className="ml-1 text-xs" />
+            Add Attendee
           </Button>
         </div>
 
