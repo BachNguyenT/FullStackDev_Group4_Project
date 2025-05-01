@@ -1,4 +1,4 @@
-import { FetchResult } from "@/types.ts";
+import { FetchResult } from "@/Type";
 import { FetchStatus } from "@/enum.ts";
 
 async function fetchUserPFP(

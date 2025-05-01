@@ -1,5 +1,5 @@
 // FEx001: indicate error comming from the front end
-import { fetchUserPFPResponse } from "@/types";
+import { fetchUserPFPResponse } from "@/Type";
 
 async function fetchUserPFP(
   abortSignal: AbortSignal,
