@@ -6,52 +6,50 @@ import { useState } from "react";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import { useNavigate } from "react-router-dom";
 import AttendeeAddModal from "../modals/AttendeeAddModal";
+import { deleteAttendee } from "@/api/event-services";
+import { FetchResult } from "@/types.ts";
+import { FetchStatus } from "@/enum.ts";
 
-function AttendeeList({ attendeeList, eventID, refreshHandler }) {
+function AttendeeList({ attendeeList, eventID, refreshHandler } : {
+  attendeeList: any[];
+  eventID: string | undefined;
+  refreshHandler (abortSignal: AbortSignal | undefined) : Promise<boolean>;
+}) {
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [isAddAttendeeModalOpen, setAddAttendeeModalOpen] = useState(false);  
 
-  const handleOnDeleteClick = (attendeeID, attendeeName) => {
+  function processFetchFail (fetchResult : FetchResult) {
+    if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
+      console.log("Session expired. Please log in again.");
+      alert("Session expired. Please log in again.");
+      navigate("/login");
+    } else if (fetchResult.status === FetchStatus.NOT_FOUND) {
+      navigate("/not-found-page");
+    } else if (fetchResult.status === FetchStatus.ERROR) {
+      alert("Service temporarily unavailable. Please try again later.");
+      navigate("/workspace/event");
+    }
+  }
+
+  function handleOnDeleteClick (attendeeID : string, attendeeName : string) {
     setDeleteTarget({ id: attendeeID, name: attendeeName });
     setDeleteModalOpen(true);
   };
 
-  const deleteAttendee = async (attendeeID) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/delete-attendee`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            eventID: eventID,
-            attendeeID: attendeeID,
-          }),
-          credentials: "include",
-        }
-      );
-
-      if (response.status === 200) {
-        setDeleteModalOpen(false);
-        refreshHandler(null);
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-      } else if (response.status == 404) {
-        navigate("/not-found-page");
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        navigate("/workspace/event");
-      }
+  async function handleOnConfirmDeleteClick (attendeeID : string) {
+    setIsLoading(true);
+    const fetchResult = await deleteAttendee(undefined, eventID, attendeeID);
+    console.log(fetchResult);
+    if (fetchResult.status === FetchStatus.SUCCESS) {
+      refreshHandler(undefined);
+    } else {
+      processFetchFail(fetchResult);
     }
-    catch (error) {
-      console.error("Error deleting attendee:", error);
-    }
+    setIsLoading(false);
+    setDeleteModalOpen(false);
   };
 
   return (
@@ -79,7 +77,7 @@ function AttendeeList({ attendeeList, eventID, refreshHandler }) {
               disabled={isLoading}
               onClick={async () => {
                 setIsLoading(true);
-                await refreshHandler(null);
+                await refreshHandler(undefined);
                 setIsLoading(false);
               }}
             >
@@ -131,7 +129,7 @@ function AttendeeList({ attendeeList, eventID, refreshHandler }) {
           title={"Delete Attendee"}
           message={`Are you sure you want to remove ${deleteTarget.name} from this event? This action cannot be undone.`}
           onCancel={() => setDeleteModalOpen(false)}
-          onConfirm={() => deleteAttendee(deleteTarget.id)}
+          onConfirm={() => handleOnConfirmDeleteClick(deleteTarget.id)}
         />
       )}
 
@@ -139,10 +137,7 @@ function AttendeeList({ attendeeList, eventID, refreshHandler }) {
       {isAddAttendeeModalOpen && (
         <AttendeeAddModal
           eventID={eventID}
-          title={"Invite User"}
-          message={`Are you sure you want to invite this user to the event?`}
-          onCancel={() => setAddAttendeeModalOpen(false)}
-          onConfirm={() => {}}
+          onCancel={() => {setAddAttendeeModalOpen(false); refreshHandler(undefined);}}
         />
       )}
     </div>

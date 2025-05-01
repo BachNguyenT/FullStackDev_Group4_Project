@@ -44,7 +44,7 @@ function ConfirmModal({
             onClick={async () => { setIsLoading(true); await onConfirm(); setIsLoading(false); }}
             disabled={isLoading}
           >
-            {isLoading}
+            {isLoading ? "Loading..." : "Confirm"}
           </Button>
         </div>
       </div>

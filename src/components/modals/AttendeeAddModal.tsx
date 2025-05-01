@@ -1,4 +1,4 @@
-import AccountSearch from "@/components/event/AccountSearch";
+import AttendeeEntry from "@/components/event/AccountSearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
@@ -6,15 +6,19 @@ import { useNavigate } from "react-router-dom";
 import useDebounce from "@/hooks/useDebounce";
 
 interface ConfirmModalProps {
-  title: string;
-  message: string;
-  onConfirm: () => void;
+  eventID: string | undefined;
   onCancel: () => void;
+}
+
+interface Attendee {
+  Name: string;
+  Email: string;
+  PhoneNumber: string;
 }
 
 function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [userFound, setUserFound] = useState([]);
+  const [userFound, setUserFound] = useState<Attendee[]>([]);
   const [searchString, setSearchString] = useState<string>("");
   const navigate = useNavigate();
   const debounced = useDebounce(searchString, 1000);
@@ -65,6 +69,10 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
     fetchInvitableAttendee();
   }, [debounced]);
 
+  async function handleOnInviteClick(userID : string) {
+
+  }
+
   return (
     <div className="fixed inset-0 backdrop-blur-md z-50" onClick={onCancel}>
       <div
@@ -110,9 +118,11 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
           {/* search result area */}
           <div>
             {userFound.map((user, index) => (
-              <AccountSearch
+              <AttendeeEntry
                 key={index}
-                senderName={user.Name}
+                id={user.ID}
+                isLoading={isLoading}
+                name={user.Name}
                 email={user.Email}
                 phoneNumber={user.PhoneNumber}
               />

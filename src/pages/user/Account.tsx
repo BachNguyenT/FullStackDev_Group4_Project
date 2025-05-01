@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/general/Button";
-import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
@@ -17,8 +17,8 @@ function Account({ pfp }: { pfp: string }) {
   const [newPassword, setNewPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>(pfp);
   const imageURLRef = useRef<string>(pfp);
-  const [newAvatar, setNewAvatar] = useState<string>(userDummyPFP);
-  const newImageURLRef = useRef<string>(userDummyPFP);
+  const [newAvatar, setNewAvatar] = useState<string>(pfpPlaceholder);
+  const newImageURLRef = useRef<string>(pfpPlaceholder);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -171,7 +171,7 @@ function Account({ pfp }: { pfp: string }) {
       const base64String = (reader.result as string).split(",")[1]; // Remove the data prefix
 
       // Optional: Show preview
-      if (newAvatar !== userDummyPFP) {
+      if (newAvatar !== pfpPlaceholder) {
         URL.revokeObjectURL(newImageURLRef.current);
       }
       const previewURL = URL.createObjectURL(file);

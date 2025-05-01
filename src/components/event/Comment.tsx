@@ -1,12 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
-import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { useState, useRef } from "react";
 import { useEffect } from "react";
 
 function ChatLine({ sender, senderName, message, timestamp }) {
-  const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
-  const avatarURLRef = useRef<string>(userDummyPFP);
+  const [avatarURL, setAvatarURL] = useState<string>(pfpPlaceholder);
+  const avatarURLRef = useRef<string>(pfpPlaceholder);
 
   async function fetchPFP(abortSignal: AbortSignal) {
     
@@ -18,7 +18,7 @@ function ChatLine({ sender, senderName, message, timestamp }) {
     fetchPFP(abortController.signal);
 
     return () => {
-      if (avatarURLRef.current != userDummyPFP) {
+      if (avatarURLRef.current != pfpPlaceholder) {
         URL.revokeObjectURL(avatarURLRef.current);
       }
       abortController.abort();

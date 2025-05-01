@@ -39,6 +39,7 @@ function EventDashboard() {
     eventVenue: "Loading...",
     isOrganizer: false,
   });
+  const isOrganizerRef = useRef<boolean>(false);
   // Navigate hook
   const navigate = useNavigate();
 
@@ -74,6 +75,7 @@ function EventDashboard() {
       eventId);
 
     if (eventInfo.status === FetchStatus.SUCCESS) {
+      isOrganizerRef.current = eventInfo.result.isOrganizer;
       setEventInfo(eventInfo.result);
       return true;
     } 
@@ -150,7 +152,7 @@ function EventDashboard() {
       // Fetch other data (fetch asynchonously to improve loading time)
       loadImage(abortController.signal);
       loadChatLog(abortController.signal);
-      if(eventInfo.isOrganizer) {
+      if(isOrganizerRef.current) {
         loadAttendeeList(abortController.signal);
       }
     }
@@ -192,7 +194,7 @@ function EventDashboard() {
           {eventInfo.isOrganizer && (
             <AttendeeList
               attendeeList={attendeeList}
-              refreshHandler={undefined}
+              refreshHandler={loadAttendeeList}
               eventID={eventId}
             />
           )}

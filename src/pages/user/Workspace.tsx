@@ -2,7 +2,7 @@ import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LayoutContext } from "@/context/LayoutContext";
 import { useRef } from "react";
-import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -18,9 +18,9 @@ import SessionValidator from "@/route-protectors/SessionValidator";
 import { fetchUserPFP } from "@/lib/api";
 
 function Workspace() {
-  const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
+  const [avatarURL, setAvatarURL] = useState<string>(pfpPlaceholder);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const avatarURLRef = useRef<string>(userDummyPFP);
+  const avatarURLRef = useRef<string>(pfpPlaceholder);
   const navigate = useNavigate();
 
   function toggleSidebar(): void {
@@ -33,8 +33,8 @@ function Workspace() {
     fetchUserPFP(abortController.signal, undefined)
     .then((response) => {
       if (response.status == 200) {
-        avatarURLRef.current = response.imageURL ? response.imageURL : userDummyPFP;
-        setAvatarURL(response.imageURL ? response.imageURL : userDummyPFP);
+        avatarURLRef.current = response.imageURL ? response.imageURL : pfpPlaceholder;
+        setAvatarURL(response.imageURL ? response.imageURL : pfpPlaceholder);
       } else if (response.status == 401) {
         navigate("/login");
       } else {
@@ -43,7 +43,7 @@ function Workspace() {
     })
 
     return () => {
-      if (avatarURLRef.current != userDummyPFP) {
+      if (avatarURLRef.current != pfpPlaceholder) {
         URL.revokeObjectURL(avatarURLRef.current);
       }
       abortController.abort();
