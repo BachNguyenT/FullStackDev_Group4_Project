@@ -5,6 +5,7 @@ import {
   faTshirt,
   faCloudSun, // For Weather Forecast
 } from "@fortawesome/free-solid-svg-icons";
+import { DetailCardProps } from "@/Types";
 
 function InvitationEssentials() {
   return (
@@ -59,12 +60,6 @@ function InvitationEssentials() {
   );
 }
 
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-type DetailCardProps = {
-  icon: IconProp; // FontAwesomeIcon type
-  title: string;
-  details: (string | JSX.Element)[]; // Array of strings or JSX elements
-};
 function DetailCard({ icon, title, details }: DetailCardProps) {
   return (
     <div className="bg-gray-50 rounded-xl shadow p-5 hover:shadow-lg transition">

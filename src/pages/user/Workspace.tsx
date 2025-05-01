@@ -12,10 +12,7 @@ import Invitation from "@/pages/user/Invitation";
 import Account from "@/pages/user/Account";
 import EventDashboard from "@/pages/user/EventDashboard";
 import EventForm from "@/pages/user/EventForm";
-import EventEdit from "./EventEdit";
-import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
-import EventAdd from "./EventAdd";
-import DashBoard from "./DashBoard";
+import DashBoard from "@/pages/user/DashBoard";
 import SessionValidator from "@/route-protectors/SessionValidator";
 import { fetchUserPFP } from "@/lib/api";
 
@@ -32,17 +29,18 @@ function Workspace() {
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchUserPFP(abortController.signal, undefined)
-    .then((response) => {
+    fetchUserPFP(abortController.signal, undefined).then((response) => {
       if (response.status == 200) {
-        avatarURLRef.current = response.imageURL ? response.imageURL : pfpPlaceholder;
+        avatarURLRef.current = response.imageURL
+          ? response.imageURL
+          : pfpPlaceholder;
         setAvatarURL(response.imageURL ? response.imageURL : pfpPlaceholder);
       } else if (response.status == 401) {
         navigate("/login");
       } else {
         alert("Service temporarily unavailable. Please try again later.");
       }
-    })
+    });
 
     return () => {
       if (avatarURLRef.current != pfpPlaceholder) {
@@ -65,9 +63,10 @@ function Workspace() {
           <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the workspace */}
-              <Route path="" element={<div>
-                <DashBoard sidebarOpen={sidebarOpen} /> <Footer />{" "}
-              </div>} />
+              <Route
+                path=""
+                element={<DashBoard sidebarOpen={sidebarOpen} />}
+              />
 
               {/* Resolve invalid path */}
               <Route path="*" element={<Navigate to="/not-found-page" />} />
@@ -75,20 +74,13 @@ function Workspace() {
               {/* Show all organizing events */}
               <Route
                 path="event"
-                element={
-                  <Event sidebarOpen={sidebarOpen} />
-              }
+                element={<Event sidebarOpen={sidebarOpen} />}
               />
 
               {/*Browse events */}
               <Route
                 path="event-browser"
-                element={
-                <div>
-                  <EventBrowser sidebarOpen={sidebarOpen} />
-                  <Footer />{" "}
-                </div>
-                }
+                element={<EventBrowser sidebarOpen={sidebarOpen} />}
               />
 
               {/* Dashboard of a specific event */}
@@ -104,21 +96,16 @@ function Workspace() {
                 }
               />
 
+              {/* Edit event page */}
               <Route path="event/:eventId/edit" element={<EventForm />} />
-              
-              <Route path="invitation" element={
-                <div>
-                  <Invitation />
-                  <Footer />{" "}
-                </div>
-            } />
-              {/* <Route
-                path="invitation/:ivitationId"
-                element={<InvitationDashboardAttendee />}
-              /> */}
+
+              {/* Invitation page */}
+              <Route path="invitation" element={<Invitation />} />
+
+              {/* Account page */}
               <Route path="account" element={<Account pfp={avatarURL} />} />
             </Routes>
-            <div className="mt-auto "></div>
+            <Footer />
           </div>
         </div>
       </div>

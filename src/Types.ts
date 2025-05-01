@@ -1,4 +1,6 @@
 import { FetchStatus } from "@/enum";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { JSX } from "react";
 
 type User = {
   id: string;
@@ -31,18 +33,27 @@ type Event = {
   status: "Accepted" | "Declined" | "Pending";
 };
 
-
 interface EventInfoProps {
   eventId: string;
   eventName: string;
-  createdOn: string;
+  imageURL: string;
   eventType: string;
   visibility: string;
-  attendeeCount: number;
-  maxAttendeeCount: number;
+  dateTime: string;
+  duration: string;
+  status: string;
+  description: string;
+  venue: string;
+  isOrganizer: boolean;
 }
 
-interface AttendeeInfoProps {
+type DetailCardProps = {
+  icon: IconProp;
+  title: string;
+  details: (string | JSX.Element)[];
+};
+
+type AttendeeInfoProps = {
   id: string;
   name: string;
   imageUrl?: string;
@@ -55,18 +66,34 @@ interface AttendeeInfoProps {
   status: "Accepted" | "Declined" | "Pending";
 }
 
+type SessionValidatorProps = {
+  children: JSX.Element;
+};
 
-interface FetchUserPFPResponse {
-  status : number;
-  debugCode : string;
-  imageURL : string | undefined;
+type StatusBarProps = {
+  label: string;
+  percentage: number;
+  color: string;
 }
 
-interface FetchResult {
-  status : FetchStatus;
-  result : any | undefined;
+type UserRowProps = {
+  id: string;
+  name: string;
+  events: number;
+  image?: string;
+  showDefaultAvatar?: boolean;
 }
 
+type FetchUserPFPResponse = {
+  status: number;
+  debugCode: string;
+  imageURL: string | undefined;
+}
+
+type FetchResult = {
+  status: FetchStatus;
+  result: any | undefined;
+}
 
 export type {
   User,
@@ -75,5 +102,11 @@ export type {
   AttendeeInfoProps,
   Event,
   TimeDuration,
-  FetchResult
+  DetailCardProps,
+  SessionValidatorProps,
+  StatusBarProps,
+  UserRowProps,
+  FetchUserPFPResponse,
+  FetchResult,
+  FetchStatus,
 };

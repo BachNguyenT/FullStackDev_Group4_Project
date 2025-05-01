@@ -27,20 +27,6 @@ const getStatusStyle = (status: string) => {
   }
 };
 
-interface EventInfoProps {
-  eventId: string;
-  eventName: string;
-  imageURL: string;
-  eventType: string;
-  visibility: string;
-  dateTime: string;
-  duration: string;
-  status: string;
-  description : string;
-  venue : string;
-  isOrganizer : boolean;
-}
-
 function EventInfo({
   eventId,
   eventName,
@@ -127,10 +113,10 @@ function EventInfo({
           {eventName || "AB Wedding"}
         </h1>
         <div className="flex-end">
-          {isOrganizer ? (
+          {isOrganizer && (
             <div>
               <Button
-                to="/workspace/event/${eventId}/edit"
+                to={`/workspace/event/${eventId}/edit`}
                 animated={false}
                 variant="secondary"
               >
@@ -146,7 +132,7 @@ function EventInfo({
                 <FaTrashCan />
               </Button>
             </div>
-          ) : <></>}
+          )}
         </div>
       </div>
       <div className="">

@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
-import { useParams } from "react-router-dom";
 import { Button } from "@/components/general/Button";
 import Dropdown from "@/components/general/Dropdown";
 import DurationInput from "@/components/event/DurationInput";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { fetchEventImage } from "@/api/event-services";
 import { EVENT_TYPE, EVENT_VISIBILITY } from "@/lib/enum";
 import { TimeDuration } from "@/Types";
@@ -25,7 +24,7 @@ const EventForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState(eventImagePlaceholder);
   const imageRef = useRef<string>(eventImagePlaceholder);
-  const [eventID, setEventID] = useState<string>(useParams().eventId || "");
+  const [eventID] = useState<string>(useParams().eventId || "");
   const [eventName, setEventName] = useState<string>("");
   const [eventDateTime, setEventDateTime] = useState<string>("");
   const [eventVenue, setEventVenue] = useState<string>("");
@@ -320,27 +319,28 @@ const EventForm = () => {
           const hour = parseInt(durationParts[0].replace("h", "")) || 0;
           const minute = parseInt(durationParts[1].replace("m", "")) || 0;
           const second = parseInt(durationParts[2].replace("s", "")) || 0;
-
           setEventDuration({
             hour,
             minute,
             second,
           });
-            const eventDateTimeObj = new Date(data.eventDateTime);
+
+          const eventDateTimeObj = new Date(data.eventDateTime);
             const reminderDateTimeObj = new Date(data.eventReminderTime);
-            const diffInSeconds = Math.floor(
+            reminderDateTimeObj.setHours(reminderDateTimeObj.getHours() + 7);
+          const diffInSeconds = Math.floor(
             (eventDateTimeObj.getTime() - reminderDateTimeObj.getTime()) / 1000
-            );
+          );
 
-            const hours = Math.floor(diffInSeconds / 3600);
-            const minutes = Math.floor((diffInSeconds % 3600) / 60);
-            const seconds = diffInSeconds % 60;
+          const hours = Math.floor(diffInSeconds / 3600);
+          const minutes = Math.floor((diffInSeconds % 3600) / 60);
+          const seconds = diffInSeconds % 60;
 
-            setEventReminder({
+          setEventReminder({
             hour: hours,
             minute: minutes,
             second: seconds,
-            });
+          });
 
           
         } else if (response.status === 401) {

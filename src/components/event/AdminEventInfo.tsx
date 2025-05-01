@@ -4,7 +4,7 @@ import { faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { Event } from "@/Types";
 
 function AdminEventInfo({
-  eventId,
+  id,
   name,
   HostID,
   date,
@@ -25,7 +25,7 @@ function AdminEventInfo({
   };
   return (
     <tr className="border-t  border-gray-300 text-center">
-      <td className="px-4 py-3">{eventId}</td>
+      <td className="px-4 py-3">{id}</td>
       <td className="px-4 py-3">{name}</td>
       <td className="px-4 py-3">{HostID}</td>
       <td className="px-4 py-3">{date}</td>
