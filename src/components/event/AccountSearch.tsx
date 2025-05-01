@@ -71,7 +71,7 @@ function AttendeeEntry({
         </div>
 
         <button
-          className="flex items-center hover:bg-purple-600 w-8 h-8 hover:text-white rounded-full p-2 cursor-pointer"
+          className="flex items-center hover:bg-purple-600 w-8 h-8 hover:text-white rounded-full p-2 cursor-pointer disabled:border-gray- disabled:bg-gray-50 disabled:text-gray-300 disabled:shadow-none "
           disabled={true}
         >
           <FontAwesomeIcon icon={faPaperPlane} className="mr-1" />
