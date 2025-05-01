@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@/components/general/Button";
-import EventCard from "@/components/event/EventCard";
-import Dropdown from "@/components/general/Dropdown";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "@/components/ui/components/Button";
+import EventCard from "@/components/ui/components/EventCard";
+import Dropdown from "@/components/ui/components/Dropdown";
 import { useNavigate } from "react-router-dom";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 
-function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
-  // Visibility: 0 = All, 1 = Private, 2 = Public
+function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
   // SortDirection: 0 = Default, 1 = Most recent, 2 = Oldest
   // Status: 0 = All, 1 = Completed, 2 = Ongoing
   const sortItems = [
@@ -20,10 +19,13 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
     { text: "Completed" },
     { text: "Ongoing" },
   ];
-  const visibilityItems = [
-    { text: "All" },
-    { text: "Private" },
-    { text: "Public" },
+  const eventTypes = [
+    { text: "Conference" },
+    { text: "Workshop" },
+    { text: "Webinar" },
+    { text: "Meetup" },
+    { text: "Wedding" },
+    { text: "Other" },
   ];
 
   interface Event {
@@ -38,26 +40,24 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [events, setEvents] = useState<Event[]>([]);
   const [maxAttendeeCount, setMaxAttendeeCount] = useState<number>(0);
   const [eventNameSearch, setEventNameSearch] = useState<string>("");
-  const [eventVisibilitySearch, setEventVisibilitySearch] = useState<number>(0);
-  const [sortDirection, setSortDirection] = useState<number>(0);
+  const [eventTypeSearch, setEventTypeSearch] = useState<string>("");
   const [eventStatusSearch, setEventStatusSearch] = useState<number>(0);
+  const [sortDirection, setSortDirection] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-
-  
 
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
       const searchParams = new URLSearchParams({
         name: eventNameSearch,
+        type: eventTypeSearch,
         status: eventStatusSearch.toString(),
-        visibility: eventVisibilitySearch.toString(),
         order: sortDirection.toString(),
       });
 
       const response = await fetch(
-        `http://localhost:3000/query-organizing-events?${searchParams.toString()}`,
+        `http://localhost:3000/browse-event?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {
@@ -68,27 +68,26 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
         }
       );
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         const data = await response.json();
         setMaxAttendeeCount(data.maxAttendeeCount);
         setEvents(data.events);
         setIsLoading(false);
         console.log(data.events);
         return;
-      } else if (response.status == 401) {
+      } else if (response.status === 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
         return;
       } else {
         alert("Service temporarily unavailable. Please try again later.");
         setIsLoading(false);
-        setEvents([]);  
         return;
       }
-    } catch {
+    } catch (error) {
+      console.error("Error fetching events:", error);
       alert("Service temporarily unavailable. Please try again later.");
       setIsLoading(false);
-      setEvents([]);  
       return;
     }
   }
@@ -107,19 +106,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
     <div className="p-4 sm:p-6 md:p-4 overflow-x">
       <div className="flex items-center justify-between mb-4">
         {/* Title */}
-        <h2 className="text-xl sm:text-2xl font-semibold mb-4">My Events</h2>
-
-        {/* Add new event */}
-        <span>
-          <Button
-            to="/workspace/event/create"
-            className="mb-2"
-            animated={false}
-          >
-            <FontAwesomeIcon icon={faPlus} className="ml-2" />
-            Add New Event
-          </Button>
-        </span>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Browse Events</h2>
       </div>
 
       {/* Search, Filter & Sort Section */}
@@ -142,16 +129,16 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
             valueSetter={setSortDirection}
           />
           <Dropdown
+            value={eventTypeSearch}
+            placeholder="Event type:"
+            items={[{ text: "All" }, ...eventTypes]}
+            valueSetter={(value) => setEventTypeSearch(value === "All" ? "" : value)}
+          />
+          <Dropdown
+            value={eventStatusSearch}
             placeholder="Event status:"
             items={statusItems}
             valueSetter={setEventStatusSearch}
-            value={eventStatusSearch}
-          />
-          <Dropdown
-            placeholder="Event visibility:"
-            items={visibilityItems}
-            valueSetter={setEventVisibilitySearch}
-            value={eventVisibilitySearch}
           />
           <Button
             animated={false}
@@ -177,13 +164,12 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
         ) : events.length > 0 ? (
           events.map((element, index) => {
             const date = new Date(element.Date);
-            console.log(element.Date);
             return (
               <EventCard
                 key={index}
                 eventId={element.ID}
                 eventName={element.Name}
-                dateTime={date}
+                createdOn={date.toISOString().split("T")[0]}
                 eventType={element.Type}
                 visibility={element.IsPrivate ? "Private" : "Public"}
                 attendeeCount={element.AtendeeCount}
@@ -199,4 +185,4 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   );
 }
 
-export default Event;
+export default EventBrowser;

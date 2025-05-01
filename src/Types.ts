@@ -16,6 +16,12 @@ type EventType = {
   maxAttendees: number;
 };
 
+type TimeDuration = {
+  hour: number;
+  minute: number;
+  second: number;
+};
+
 type Event = {
   id: string;
   name: string;
@@ -24,6 +30,17 @@ type Event = {
   attendees: number;
   status: "Accepted" | "Declined" | "Pending";
 };
+
+
+interface EventInfoProps {
+  eventId: string;
+  eventName: string;
+  createdOn: string;
+  eventType: string;
+  visibility: string;
+  attendeeCount: number;
+  maxAttendeeCount: number;
+}
 
 interface AttendeeInfoProps {
   id: string;
@@ -38,6 +55,7 @@ interface AttendeeInfoProps {
   status: "Accepted" | "Declined" | "Pending";
 }
 
+
 interface FetchUserPFPResponse {
   status : number;
   debugCode : string;
@@ -49,4 +67,12 @@ interface FetchResult {
   result : any | undefined;
 }
 
-export type { FetchResult, User, EventType, AttendeeInfoProps, Event, FetchUserPFPResponse as fetchUserPFPResponse };
+
+export type {
+  User,
+  EventType,
+  EventInfoProps,
+  AttendeeInfoProps,
+  Event,
+  TimeDuration,
+};

@@ -1,5 +1,5 @@
 //import the internal files
-import { EventInfoProps } from "@/types";
+import { EventInfoProps } from "@/Types";
 import { Button } from "@/components/general/Button";
 import { Card, CardContent } from "@/components/general/Card";
 

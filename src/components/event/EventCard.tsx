@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { EventInfoProps } from "@/types";
+import { Link, useNavigate } from "react-router-dom";
+import { EventInfoProps } from "@/Types";
 //import components and libraries
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 import Calender from "@/assets/Icons/calendar.svg";
@@ -21,21 +21,25 @@ function EventCard({
 }: EventInfoProps) {
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
   const imageURLRef = useRef<string>(eventImagePlaceholder);
-
+  const navigate = useNavigate();
+  
   async function fetchEventImage(abortSignal: AbortSignal) {
     try {
       const queryParams = new URLSearchParams({
-        id: eventId || ""
+        id: eventId || "",
       });
 
-      const response = await fetch(`http://localhost:3000/get-event-image?${queryParams.toString()}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
+      const response = await fetch(
+        `http://localhost:3000/get-event-image?${queryParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
 
       if (response.ok) {
         const imageBlob = await response.blob();
@@ -65,7 +69,10 @@ function EventCard({
 
   return (
     <div
-      className="p-[10px] min-w-[250px] max-w-[320px] rounded-md overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+      className="p-[10px] min-w-[250px] max-w-[320px] rounded-md overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+      onClick={() => {
+        navigate(`/workspace/event/${eventId}`);
+      }}
     >
       <div className="relative">
         <img
@@ -113,8 +120,20 @@ function EventCard({
         </div>
       </div>
       <div className="flex flex-row text-right gap-2">
-        <Button className="w-full h-[30px] rounded-sm">Edit</Button>
-        <Button to={`/workspace/event/${eventId}`} variant="secondary" className="w-full h-[30px] rounded-sm">
+        <Button
+          className="w-full h-[30px] rounded-sm"
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            navigate(`/workspace/event/${eventId}/edit`);
+            e.stopPropagation();
+          }}
+        >
+          Edit
+        </Button>
+        <Button
+          to={`/workspace/event/${eventId}`}
+          variant="secondary"
+          className="w-full h-[30px] rounded-sm"
+        >
           View details
         </Button>
       </div>

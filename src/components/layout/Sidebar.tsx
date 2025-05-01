@@ -129,7 +129,7 @@ function Sidebar() {
                 <li>
                   <Button
                     variant="sidebar"
-                    onClick={() => navigate("/workspace/event/browse")}
+                    onClick={() => navigate("/workspace/event-browser")}
                     className="w-full h-[40px] my-1 flex items-center justify-start gap-3 px-4 py-2 text-sm"
                     animated={false}
                   >
