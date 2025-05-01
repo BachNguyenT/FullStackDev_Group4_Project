@@ -11,6 +11,7 @@ import EventBrowser from "@/pages/user/EventBrowser";
 import Invitation from "@/pages/user/Invitation";
 import Account from "@/pages/user/Account";
 import EventDashboard from "@/pages/user/EventDashboard";
+import EventForm from "@/pages/user/EventForm";
 import EventEdit from "./EventEdit";
 import InvitationDashboardAttendee from "./InvitationDashboardAttendee";
 import EventAdd from "./EventAdd";

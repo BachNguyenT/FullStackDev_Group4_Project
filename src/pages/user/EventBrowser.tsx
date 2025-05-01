@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "@/components/ui/components/Button";
-import EventCard from "@/components/ui/components/EventCard";
-import Dropdown from "@/components/ui/components/Dropdown";
+import { Button } from "@/components/general/Button";
+import EventCard from "@/components/event/EventCard";
+import Dropdown from "@/components/general/Dropdown";
 import { useNavigate } from "react-router-dom";
 
 function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
