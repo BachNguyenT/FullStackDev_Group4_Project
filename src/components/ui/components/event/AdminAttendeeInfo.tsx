@@ -1,4 +1,4 @@
-import { AttendeeInfoProps } from "@/Types";
+import { AttendeeInfoProps } from "@/types";
 import { Button } from "@/components/ui/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";

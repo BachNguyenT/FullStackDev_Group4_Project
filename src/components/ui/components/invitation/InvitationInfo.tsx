@@ -1,5 +1,5 @@
 //import the internal files
-import { EventInfoProps } from "@/Types";
+import { EventInfoProps } from "@/types";
 import { Card, CardContent, CardTitle } from "@/components/ui/components/Card";
 
 // Import the icons from react-icons

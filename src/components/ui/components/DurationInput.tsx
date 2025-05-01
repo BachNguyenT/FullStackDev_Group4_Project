@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TimeDuration } from "@/Types";
+import { TimeDuration } from "@/types";
 
 interface DurationInputProps {
   value: TimeDuration;
