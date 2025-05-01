@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { InvitationCard } from "@/components/ui";
-import { Button } from "@/components/ui/components/Button";
+import InvitationCard from "@/components/invitation/InvitationCard";
+import { Button } from "@/components/general/Button";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -37,7 +37,11 @@ function Invitation() {
             />
           </div>
 
-          <Button animated={false} variant="ghost" className="border border-gray-300 shadow-sm">
+          <Button
+            animated={false}
+            variant="ghost"
+            className="border border-gray-300 shadow-sm"
+          >
             <span>Filter</span>
             <FontAwesomeIcon icon={faChevronDown} />
           </Button>
@@ -46,7 +50,11 @@ function Invitation() {
         {/* Right: Sort */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <span className="text-sm">Sort:</span>
-          <Button animated={false} variant="ghost" className="border border-gray-300 shadow-sm">
+          <Button
+            animated={false}
+            variant="ghost"
+            className="border border-gray-300 shadow-sm"
+          >
             Most Recent
             <FontAwesomeIcon icon={faChevronDown} />
           </Button>
@@ -54,7 +62,7 @@ function Invitation() {
       </div>
 
       {/* Invitations List */}
-      <div >
+      <div className="flex flex-col items-center">
         {invitations.map((_, index) => (
           <InvitationCard key={index} />
         ))}

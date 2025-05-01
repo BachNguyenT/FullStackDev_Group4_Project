@@ -1,76 +1,115 @@
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { AvatarContext } from "@/context/AvatarContext";
 import { LayoutContext } from "@/context/LayoutContext";
 import { useRef } from "react";
-import userDummyPFP from "@/assets/Icons/user-dummy.svg";
-import Sidebar from "@/components/DefaultLayout/components/Sidebar";
-import Header from "@/components/DefaultLayout/components/Header";
-import Footer from "@/components/DefaultLayout/components/Footer";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
+import Sidebar from "@/components/layout/Sidebar";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import Event from "@/pages/user/Event";
+import EventBrowser from "@/pages/user/EventBrowser";
+import Invitation from "@/pages/user/Invitation";
+import Account from "@/pages/user/Account";
+import EventDashboard from "@/pages/user/EventDashboard";
+import EventForm from "@/pages/user/EventForm";
+import DashBoard from "@/pages/user/DashBoard";
+import SessionValidator from "@/route-protectors/SessionValidator";
+import { fetchUserPFP } from "@/lib/api";
 
 function Workspace() {
-  const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
+  const [avatarURL, setAvatarURL] = useState<string>(pfpPlaceholder);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const avatarURLRef = useRef<string>(userDummyPFP);
+  const avatarURLRef = useRef<string>(pfpPlaceholder);
+  const navigate = useNavigate();
 
   function toggleSidebar(): void {
     setSidebarOpen((prevState) => !prevState);
   }
 
-  function fillPageData(): void {
-    fetch("http://localhost:3000/get-user-pfp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
-      },
-      body: JSON.stringify({
-        userID: "UID-2",
-      }),
-      credentials: "include",
-    })
-      .then((response) => response.blob())
-      .then((data) => {
-        const img = URL.createObjectURL(data);
-        avatarURLRef.current = img; 
-        setAvatarURL(img);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   useEffect(() => {
     const abortController = new AbortController();
 
-    fillPageData();
+    fetchUserPFP(abortController.signal, undefined).then((response) => {
+      if (response.status == 200) {
+        avatarURLRef.current = response.imageURL
+          ? response.imageURL
+          : pfpPlaceholder;
+        setAvatarURL(response.imageURL ? response.imageURL : pfpPlaceholder);
+      } else if (response.status == 401) {
+        navigate("/login");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    });
 
     return () => {
-      URL.revokeObjectURL(avatarURLRef.current); // Clean up the object URL when the component unmounts
+      if (avatarURLRef.current != pfpPlaceholder) {
+        URL.revokeObjectURL(avatarURLRef.current);
+      }
       abortController.abort();
     };
   }, []);
 
   return (
-    <AvatarContext.Provider value={{ avatarURL, setAvatarURL }}>
-      <LayoutContext.Provider value={{ sidebarOpen, toggleSidebar }}>
-        <div className="w-screen h-screen flex overflow-hidden">
-          <Sidebar />
-          <div className="flex flex-col flex-1 transition-all duration-300">
-            <Header avatarURL={avatarURL}/>
-            <div className="overflow-y-auto h-[calc(100vh-4rem)] p-4 bg-gray-50">
-              <Routes>
-                <Route path="" element={<div>Home</div>} />
-                <Route path="*" element={<Navigate to="/not-found-page" />} />
-              </Routes>
-              <div className="mt-auto ">
-                <Footer />
-              </div>
-            </div>
+    <LayoutContext.Provider value={{ sidebarOpen, toggleSidebar }}>
+      <div className="w-screen h-screen flex overflow-hidden">
+        <Sidebar />
+        <div
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
+            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+          }`}
+        >
+          <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
+          <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
+            <Routes>
+              {/* Dashboard of the workspace */}
+              <Route
+                path=""
+                element={<DashBoard sidebarOpen={sidebarOpen} />}
+              />
+
+              {/* Resolve invalid path */}
+              <Route path="*" element={<Navigate to="/not-found-page" />} />
+
+              {/* Show all organizing events */}
+              <Route
+                path="event"
+                element={<Event sidebarOpen={sidebarOpen} />}
+              />
+
+              {/*Browse events */}
+              <Route
+                path="event-browser"
+                element={<EventBrowser sidebarOpen={sidebarOpen} />}
+              />
+
+              {/* Dashboard of a specific event */}
+              <Route path="event/:eventId" element={<EventDashboard />} />
+
+              {/* Create new event page */}
+              <Route
+                path="event/create"
+                element={
+                  <SessionValidator>
+                    <EventForm />
+                  </SessionValidator>
+                }
+              />
+
+              {/* Edit event page */}
+              <Route path="event/:eventId/edit" element={<EventForm />} />
+
+              {/* Invitation page */}
+              <Route path="invitation" element={<Invitation />} />
+
+              {/* Account page */}
+              <Route path="account" element={<Account pfp={avatarURL} />} />
+            </Routes>
+            <Footer />
           </div>
         </div>
-      </LayoutContext.Provider>
-    </AvatarContext.Provider>
+      </div>
+    </LayoutContext.Provider>
   );
 }
 

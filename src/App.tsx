@@ -4,8 +4,11 @@ import { Navigate } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import About from "./pages/info/About";
+import PrivacyPolicy from "./pages/info/PrivacyPolicy";
 import NotFoundPage from "./pages/others/NotFoundPage";
 import Workspace from "./pages/user/Workspace";
+import SessionValidator from "./route-protectors/SessionValidator";
+import AdminWorkspace from "./pages/admin/AdminWorkspace";
 
 //import the components
 
@@ -19,12 +22,32 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Info pages */}
-        <Route path="/terms" element={<About />} />
+        <Route path="/terms" element={<PrivacyPolicy />} />
         <Route path="/about" element={<About />} />
-        <Route path="/not-found-page" element={<NotFoundPage returnTo="/workspace"/>} />
+        <Route
+          path="/not-found-page"
+          element={<NotFoundPage returnTo="/workspace" />}
+        />
 
         {/* Workspace Routes */}
-        <Route path="/workspace/*" element={<Workspace />} />
+        <Route
+          path="/workspace/*"
+          element={
+            <SessionValidator>
+              <Workspace />
+            </SessionValidator>
+          }
+        />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin/*"
+          element={
+            <SessionValidator>
+              <AdminWorkspace />
+            </SessionValidator>
+          }
+        />
 
         {/* Resolve invalid paths*/}
         <Route path="*" element={<Navigate to="/not-found-page" />} />

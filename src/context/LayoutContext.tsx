@@ -11,4 +11,4 @@ const useLayoutContext = () => {
   return context;
 };
 
-export {useLayoutContext, LayoutContext}
+export { useLayoutContext, LayoutContext };

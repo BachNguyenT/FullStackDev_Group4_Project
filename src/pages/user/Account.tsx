@@ -1,84 +1,346 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/components/Button"
-function Account() {
-  const [id, setId] = useState<string>("JD123");
-  const [name, setName] = useState<string>("Name");
-  const [phone, setPhone] = useState<string>("Phone");
-  const [email, setEmail] = useState<string>("Email");
-  const [birthday, setBirthday] = useState<string>("Birthday");
-  const [userName, setUserName] = useState<string>("Username");
-  const [password, setPassword] = useState<string>("Password");
-  const [newPassword, setNewPassword] = useState<string>("New Password");
-  const [avatar, setAvatar] = useState<string>("https://b.fssta.com/uploads/application/nba/headshots/1120.vresize.350.350.medium.27.png")
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/general/Button";
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
-  const handleChangeAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const previewURL = URL.createObjectURL(file);
-      setAvatar(previewURL);
-    }
+
+function Account({ pfp }: { pfp: string }) {
+  const [id, setId] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [birthday, setBirthday] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>(pfp);
+  const imageURLRef = useRef<string>(pfp);
+  const [newAvatar, setNewAvatar] = useState<string>(pfpPlaceholder);
+  const newImageURLRef = useRef<string>(pfpPlaceholder);
+
+  const [isEditing, setIsEditing] = useState(false);
+
+
+  const [passwordMessage, setPasswordMessage] = useState(false);
+  const [newPasswordMessage, setNewPasswordMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+
+  const handleFocus = () => {
+    setPasswordMessage(false); // Clear any previous error messages
+    setNewPasswordMessage(false); // Clear any previous error messages
+    setErrorMessage(""); // Clear any previous error messages
   }
 
   useEffect(() => {
-    // clean up function to revoke the object URL
+    const abortController = new AbortController();
+
+    fetchAvatar(abortController.signal);
+    handleDisplayUserInformation(); // Call the function here to fetch user data
+
     return () => {
-      if (typeof avatar === "string") {
-        URL.revokeObjectURL(avatar);
+      if (imageURLRef.current !== pfp) {
+        URL.revokeObjectURL(imageURLRef.current);
       }
+      abortController.abort();
+    };
+  }, []);
+
+  async function fetchAvatar(abortSignal: AbortSignal) {
+    try {
+      const response = await fetch("http://localhost:3000/get-user-pfp", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        signal: abortSignal,
+      });
+
+      if (response.status === 200) {
+        const blob = await response.blob();
+        const objectURL = URL.createObjectURL(blob);
+        imageURLRef.current = objectURL;
+        setAvatar(objectURL);
+      } else if (response.status === 401) {
+        alert("Session expired. Please log in again.");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    } catch (error) {
+      alert("Service temporarily unavailable. Please try again later.");
     }
-  }, [avatar]);
+  }
+
+  async function handleDisplayUserInformation() {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/get-user",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setId(data.ID);
+        setName(data.Name);
+        setPhone(data.PhoneNumber);
+        setEmail(data.Email);
+        const rawDate = new Date(data.Birthday);
+        const formattedDate = rawDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
+        setBirthday(formattedDate);
+
+        setUserName(data.Username);
+      } else if (response.status === 401) {
+        alert("Session expired. Please log in again.");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    } catch (error) {
+      alert("Service temporarily unavailable. Please try again later.");
+    }
+  }
+
+  const handleSave = () => {
+    const updatedUser = {
+      Name: name,
+      PhoneNumber: phone,
+      Email: email,
+      Birthday: birthday,
+      Username: userName,
+    };
+
+    fetch(`http://localhost:3000/update-user/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify(updatedUser),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          alert("User information updated successfully.");
+          setIsEditing(false);
+          handleDisplayUserInformation(); // Refresh the user information after saving
+        } else if (response.status === 401) {
+          alert("Session expired. Please log in again.");
+        } else {
+          alert("Service temporarily unavailable. Please try again later.");
+        }
+      })
+      .catch((error) => {
+        alert("Service temporarily unavailable. Please try again later.");
+      });
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    // Reset the state variables to their original values
+    handleDisplayUserInformation();
+  };
+
+  const handleChangeAvatar = (file: File | undefined) => {
+    if (!file) return;
+
+    const validTypes = ["image/png", "image/jpeg"];
+    if (!validTypes.includes(file.type)) {
+      alert("Invalid file type. Please upload a PNG or JPEG image.");
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("File size must be smaller than 5MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = (reader.result as string).split(",")[1]; // Remove the data prefix
+
+      // Optional: Show preview
+      if (newAvatar !== pfpPlaceholder) {
+        URL.revokeObjectURL(newImageURLRef.current);
+      }
+      const previewURL = URL.createObjectURL(file);
+      newImageURLRef.current = previewURL;
+      setNewAvatar(previewURL);
+
+      // Send the Base64 string to backend
+      fetch("http://localhost:3000/update-user-pfp", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({ Pfp: base64String }),
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            alert("Avatar updated successfully.");
+            setAvatar(previewURL); // Set the new avatar in state
+          } else if (res.status === 401) {
+            alert("Session expired. Please log in again.");
+          } else {
+            alert("Service temporarily unavailable. Please try again later.");
+          }
+        })
+        .catch((error) => {
+          alert("Service temporarily unavailable. Please try again later.");
+        });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handleChangePassword = () => {
+    setPasswordMessage(false); // Clear any previous error messages
+    setNewPasswordMessage(false); // Clear any previous error messages
+    if (!password || !newPassword) {
+      setErrorMessage("Please fill in both current password and new password.");
+      setPasswordMessage(!password); // Show error for current password if empty
+      setNewPasswordMessage(!newPassword); // Show error for new password if empty
+      return;
+    }
+
+    if (password === newPassword) {
+      setNewPasswordMessage(true); // Show error for new password if same as current password
+      setErrorMessage("New password cannot be the same as current password.");
+      return;
+    }
+
+    const passwordData = {
+      CurrentPassword: password,
+      NewPassword: newPassword,
+    };
+
+    fetch("http://localhost:3000/update-user-password", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify(passwordData),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.text().then((text) => {
+            if (text === "0x000") {
+              alert("Password changed successfully.");
+              setPassword("");
+              setNewPassword("");
+            } else if (text === "0x001") {
+              alert("Session expired. Please log in again.");
+            } else if (text === "0x002") {
+              alert("Invalid session. Please log in again.");
+            } else {
+              alert("Service temporarily unavailable. Please try again later.");
+            }
+          });
+        } else if (response.status === 400) {
+          return response.text().then((text) => {
+            if (text === "0x001") {
+              setPasswordMessage(true); // Clear any previous error messages
+              setErrorMessage("Invalid current password");
+            } else {
+              setErrorMessage("Invalid request. Please try again.");
+            }
+          });
+        } else if (response.status === 401) {
+          return response.text().then((text) => {
+            if (text === "0x004") {
+              setPasswordMessage(true); // Clear any previous error messages
+              setErrorMessage("Current password is incorrect.");
+            } else if (text === "Ux003") {
+              alert("Session expired. Please log in again.");
+            } else {
+              alert("Unauthorized request. Please log in again.");
+            }
+          });
+        } else if (response.status === 404) {
+          alert("User not found.");
+        } else {
+          alert("Service temporarily unavailable. Please try again later.");
+        }
+      })
+      .catch((error) => {
+        alert("Service temporarily unavailable. Please try again later.");
+      });
+  };
 
   return (
-    <div>
+    <div className="p-4 sm:p-6 md:p-4">
       {/* Title */}
       <h2 className="text-xl sm:text-2xl font-semibold mb-4">My Account</h2>
       <div className="mb-4 gap-4">
         {/* Account Information */}
-        <div className="flex ">
+        <div className="flex flex-col md:flex-row gap-4">
           {/* Avatar */}
-          <div className="rounded w-60 bg-white shadow-md flex flex-col justify-center items-center mr-4">
+          <div className="rounded py-4 w-sm md:w-60 bg-white shadow-md flex flex-col justify-center items-center mr-4">
             <img
               src={avatar}
               alt="Avatar"
-              className="w-40 h-40 rounded-full mb-4 border-2 border-gray-200 shadow-md hover:scale-105 transition-transform duration-200"
+              className="w-40 h-40 rounded-full mb-4 border-2 border-gray-200 shadow-md object-cover hover:scale-105 transition-transform duration-200"
             />
-            <label htmlFor="avatar" className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white">Change Avatar</label>
+            <label
+              htmlFor="avatar"
+              className="rounded-md shadow p-2 text-sm font-semibold hover:bg-purple-600 hover:text-white cursor-pointer"
+            >
+              Change Avatar
+            </label>
             <input
               id="avatar"
               type="file"
               accept="image/*"
               placeholder="Upload Avatar"
-              onChange={handleChangeAvatar}
               className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0]; // Get the first file from the file input
+                if (file) {
+                  handleChangeAvatar(file); // Pass the file to the handler
+                }
+              }}
             />
-            <p className="mt-4 font-semibold">UID: {id}</p>
+
+            <p className="mt-4 font-semibold">ID: {id} </p>
           </div>
           {/* Text Information */}
-          <div className="flex rounded bg-white shadow-md flex--1 flex-1">
-            <div className="w-full p-4">
-              <div className="flex justify-between gap-6">
-                <div className="w-1/2">
+          <div className="flex rounded bg-white shadow-md w-sm md:w-full">
+            <div className="p-4 w-full">
+              <div className="flex flex-col md:flex-row justify-between gap-6">
+                <div className="w-full md:w-1/2">
                   <div>
-                    <label htmlFor="name" className="block mb-2 font-light text-base">
+                    <label
+                      htmlFor="name"
+                      className="block mb-2 font-light text-base"
+                    >
                       Full Name:
                     </label>
                     <input
-                      onChange={(e) => {
-                        setName(e.target.value);
-                      }}
+                      readOnly={!isEditing}
+                      onChange={(e) => setName(e.target.value)}
                       id="name"
                       value={name}
                       className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
                     />
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block mb-2 font-light text-base">
+                    <label
+                      htmlFor="phone"
+                      className="block mb-2 font-light text-base"
+                    >
                       Phone:
                     </label>
                     <input
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                      }}
+                      readOnly={!isEditing}
+                      onChange={(e) => setPhone(e.target.value)}
                       type="tel"
                       id="phone"
                       value={phone}
@@ -86,28 +348,32 @@ function Account() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="userName" className="block mb-2 font-light text-base">
-                      UserName:
+                    <label
+                      htmlFor="userName"
+                      className="block mb-2 font-light text-base"
+                    >
+                      Username:
                     </label>
                     <input
-                      onChange={(e) => {
-                        setUserName(e.target.value);
-                      }}
+                      readOnly={!isEditing}
+                      onChange={(e) => setUserName(e.target.value)}
                       id="userName"
                       value={userName}
                       className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
                     />
                   </div>
                 </div>
-                <div className="w-1/2">
+                <div className="w-full md:w-1/2">
                   <div>
-                    <label htmlFor="email" className="block mb-2 font-light text-base">
+                    <label
+                      htmlFor="email"
+                      className="block mb-2 font-light text-base"
+                    >
                       Email:
                     </label>
                     <input
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                      }}
+                      readOnly={!isEditing}
+                      onChange={(e) => setEmail(e.target.value)}
                       type="email"
                       id="email"
                       value={email}
@@ -117,69 +383,93 @@ function Account() {
                   <div>
                     <label
                       htmlFor="birthday"
-                      className="block mb-2 font-light text-base text-gray-700"
+                      className="block mb-2 font-light text-base"
                     >
                       Birthday:
                     </label>
                     <input
-                      type="date"
-                      id="birthday"
-                      value={birthday}
+                      readOnly={!isEditing}
                       onChange={(e) => setBirthday(e.target.value)}
-                      className="border-2 border-gray-300 text-gray-700 rounded-md p-2 mb-4 w-full font-light text-sm focus:outline-none focus:border-blue-500"
-                      aria-required="true"
-                      placeholder="YYYY-MM-DD"
-                      max={new Date().toISOString().split("T")[0]} // Prevent future dates
+                      id="birthday"
+                      type="birthday"
+                      value={birthday}
+                      className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
                     />
                   </div>
                 </div>
               </div>
               <div className="flex justify-end">
-                <Button>Save</Button>
+                {!isEditing && (
+                  <Button onClick={() => setIsEditing(!isEditing)}>
+                    Edit Information
+                  </Button>
+                )}
+                {isEditing && (
+                  <div className="flex gap-2">
+                    <Button onClick={handleCancel}>Cancel</Button>
+                    <Button onClick={handleSave}>Save</Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
       {/* Change password */}
-      <div className="bg-white shadow-md rounded p-4 mb-4">
-
-        <div className="flex justify-between">
-          <div className="w-1/3">
-            <label htmlFor="currentPassword" className="block mb-2 font-light text-base">
+      <div className="bg-white shadow-md rounded p-4 mb-4 w-sm md:w-full">
+        <div className="flex flex-col sm:flex-row gap-4 justify-between">
+          <div className="w-full sm:w-1/2">
+            <label
+              htmlFor="currentPassword"
+              className="block mb-2 font-light text-base"
+            >
               Current Password:
             </label>
             <input
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              onChange={(e) => setPassword(e.target.value)}
               id="currentPassword"
               value={password}
-              className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
+              type="password"
+              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${passwordMessage ? 'border-red-500 text-gray-700' : 'border-gray-300 text-gray-700'
+                }`}
+              onFocus={handleFocus}
+              placeholder="Enter your password"
             />
           </div>
-          <div className="w-1/3">
-            <label htmlFor="newPassword" className="block mb-2 font-light text-base">
+          <div className="w-full sm:w-1/2">
+            <label
+              htmlFor="newPassword"
+              className="block mb-2 font-light text-base"
+            >
               New Password:
             </label>
             <input
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-              }}
+              onChange={(e) => setNewPassword(e.target.value)}
               id="newPassword"
               value={newPassword}
-              className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
+              type="password" // Keep as password type for security
+              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${newPasswordMessage ? 'border-red-500 text-gray-700' : 'border-gray-300 text-gray-700'
+                }`}
+              onFocus={handleFocus}
+              placeholder="Enter your new password"
             />
           </div>
         </div>
+        <div className="flex items-center mb-4">
+          {errorMessage && <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-600 mr-2" />}
+          <div className="text-red-600">{errorMessage}</div>
+        </div>
         <h3 className="text-base font-medium">Password Requirements:</h3>
-        <p className="text-sm text-gray-400 ml-6">At least 8 characters, 1 uppercase letter, 1 lowercase letter and 1 special character</p>
+        <p className="text-sm text-gray-400 ml-6">
+          At least 8 characters, 1 uppercase letter, 1 lowercase letter and 1
+          special character
+        </p>
         <div className="flex justify-end mt-4">
-          <Button>Change Password</Button>
+          <Button onClick={handleChangePassword}>Change Password</Button>
         </div>
       </div>
     </div>
-
   );
 }
+
 export default Account;

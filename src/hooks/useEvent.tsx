@@ -1,17 +1,15 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 
-const useEvent = (initialEvents: Array<any>, sidebarOpen: boolean) => {
-    const [items] = useState(initialEvents);
+const useEvent = (events: Array<object>, sidebarOpen: boolean) => {
+  const showMore = useMemo(() => {
+    return events.length > (sidebarOpen ? 3 : 4);
+  }, [events, sidebarOpen]);
 
-    const showMore = useMemo(() => {
-        return sidebarOpen ? items.length > 3 : items.length > 4;
-    }, [items, sidebarOpen]);
+  const displayedItems = useMemo(() => {
+    return events.slice(0, sidebarOpen ? 3 : 4);
+  }, [events, sidebarOpen]);
 
-    const displayedItems = useMemo(() => {
-        return items.slice(0, sidebarOpen ? 3 : 4);
-    }, [items, sidebarOpen]);
-
-    return { items, showMore, displayedItems };
+  return { showMore, displayedItems };
 };
 
 export default useEvent;

@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 const AvatarContext = createContext<{
-  avatarURL: string,
+  avatarURL: string;
   setAvatarURL: React.Dispatch<React.SetStateAction<string>>;
 } | null>(null);
 
@@ -11,4 +11,4 @@ const useAvatarContext = () => {
   return context;
 };
 
-export {useAvatarContext, AvatarContext}
+export { useAvatarContext, AvatarContext };
