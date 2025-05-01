@@ -123,8 +123,7 @@ function Account({ pfp }: { pfp: string }) {
     fetch("http://localhost:3000/update-user-information", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        "Content-Type": "application/json"
       },
       credentials: "include",
       body: JSON.stringify(updatedUser),
@@ -231,8 +230,7 @@ function Account({ pfp }: { pfp: string }) {
     fetch("http://localhost:3000/update-user-password", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        key: "5MLGUGJL4GMe86pG4CfrE241BxDYxkeI",
+        "Content-Type": "application/json"
       },
       credentials: "include",
       body: JSON.stringify(passwordData),
