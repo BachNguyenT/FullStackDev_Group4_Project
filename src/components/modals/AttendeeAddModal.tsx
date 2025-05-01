@@ -11,6 +11,7 @@ interface ConfirmModalProps {
 }
 
 interface Attendee {
+  ID: string;
   Name: string;
   Email: string;
   PhoneNumber: string;
@@ -49,6 +50,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
 
       if (response.status === 200) {
         const data = await response.json();
+        console.log(data);  
         setUserFound(data);
 
       } else if (response.status === 401) {
@@ -116,12 +118,12 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
           <div className="border-b border-gray-300 mb-4 mt-4"></div>
 
           {/* search result area */}
-          <div>
+          <div className="h-80 overflow-y-auto">
             {userFound.map((user, index) => (
               <AttendeeEntry
                 key={index}
                 id={user.ID}
-                isLoading={isLoading}
+                loadingSetter={setIsLoading}
                 name={user.Name}
                 email={user.Email}
                 phoneNumber={user.PhoneNumber}

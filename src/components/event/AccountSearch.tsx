@@ -26,6 +26,7 @@ function AttendeeEntry({
 
   async function loadPfp(abortSignal: AbortSignal) {
     const fetchResult = await fetchUserPFP(abortSignal, id);
+    console.log(fetchResult);
     if (fetchResult.status === FetchStatus.SUCCESS) {
       if (fetchResult.result) {
         setPfpURL(fetchResult.result);
