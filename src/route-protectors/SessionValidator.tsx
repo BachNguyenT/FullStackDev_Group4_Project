@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import Loading from "@/pages/others/Loading";
+import { SessionValidatorProps } from "@/Types";
 
-function SessionValidator({ children }: any) {
+
+
+function SessionValidator({ children } : SessionValidatorProps) {
   const [renderChildren, setRenderChildren] = useState<number>(-1);
 
   useEffect(() => {

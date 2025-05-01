@@ -8,6 +8,7 @@ import PrivacyPolicy from "./pages/info/PrivacyPolicy";
 import NotFoundPage from "./pages/others/NotFoundPage";
 import Workspace from "./pages/user/Workspace";
 import SessionValidator from "./route-protectors/SessionValidator";
+import AdminWorkspace from "./pages/admin/AdminWorkspace";
 
 //import the components
 
@@ -34,6 +35,16 @@ function App() {
           element={
             <SessionValidator>
               <Workspace />
+            </SessionValidator>
+          }
+        />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin/*"
+          element={
+            <SessionValidator>
+              <AdminWorkspace />
             </SessionValidator>
           }
         />

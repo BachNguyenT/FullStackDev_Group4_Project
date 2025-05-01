@@ -5,8 +5,10 @@ import {
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import AdminEventInfo from "@/components/event/AdminEventInfo";
+import type { Event } from "@/Types";
+
 function Event() {
-  const events = [
+  const events: Event[] = [
     {
       id: "1",
       name: "Event 1",
@@ -96,7 +98,7 @@ function Event() {
             {events.map((event, index) => (
               <AdminEventInfo
                 key={index}
-                eventId={event.id}
+                id={event.id}
                 name={event.name}
                 HostID={event.HostID}
                 date={event.date}
