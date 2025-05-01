@@ -8,7 +8,7 @@ import ID from "@/assets/Icons/card.svg";
 import Visibility from "@/assets/Icons/eye2.svg";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
-import { Button } from "./Button";
+import { Button } from "../general/Button";
 
 function EventCard({
   eventId,

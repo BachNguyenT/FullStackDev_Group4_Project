@@ -1,6 +1,6 @@
-import { DiscussionBoard } from "@/components/ui/components/event";
-import InvitationInfo from "@/components/ui/components/invitation/InvitationInfo";
-import InvitationEssentials from "@/components/ui/components/invitation/InvitationEssentials";
+import { DiscussionBoard } from "@/components/event";
+import InvitationInfo from "@/components/invitation/InvitationInfo";
+import InvitationEssentials from "@/components/invitation/InvitationEssentials";
 
 function InvitationDashboardAttendee() {
   return (

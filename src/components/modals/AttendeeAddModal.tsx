@@ -1,4 +1,4 @@
-import AccountSearch from "@/components/ui/components/event/AccountSearch";
+import AccountSearch from "@/components/event/AccountSearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";

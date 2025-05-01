@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import AdminAttendeeInfo from "@/components/ui/components/event/AdminAttendeeInfo";
+import AdminAttendeeInfo from "@/components/event/AdminAttendeeInfo";
 const attendeeData = [
   {
     id: "0000001",

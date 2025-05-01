@@ -1,7 +1,7 @@
 // src/Login.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import LoginImage from "@/assets/Pictures/LoginImage.png";
 const LOGIN_SUCCESS_TARGET = "/workspace"; // Define the target URL for successful login\
 

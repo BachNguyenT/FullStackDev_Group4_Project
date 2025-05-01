@@ -1,9 +1,9 @@
 import AttendeeInfo from "./AttendeeInfo";
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { ConfirmModal } from "@/components/ui/components/modals";
+import { ConfirmModal } from "@/components/modals";
 import { useNavigate } from "react-router-dom";
 import AttendeeAddModal from "../modals/AttendeeAddModal";
 

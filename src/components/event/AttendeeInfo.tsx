@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AttendeeInfoProps } from "@/Types";
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import { useRef } from "react";

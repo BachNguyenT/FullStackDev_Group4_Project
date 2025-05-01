@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { useNavigate } from "react-router-dom";
 import useEvent from "@/hooks/useEvent";
-import EventCard from "@/components/ui/components/EventCard";
-import InvitationCard from "@/components/ui/components/InvitationCard";
+import EventCard from "@/components/event/EventCard";
+import InvitationCard from "@/components/invitation/InvitationCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 

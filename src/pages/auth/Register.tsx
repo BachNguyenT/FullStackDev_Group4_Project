@@ -1,5 +1,5 @@
 import AvatarIcon from "@/assets/Icons/avatar-placeholder.svg";
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import LogoText from "@/assets/Icons/plan-event-text.svg";

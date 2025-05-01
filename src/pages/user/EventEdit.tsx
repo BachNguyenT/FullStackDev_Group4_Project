@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 
 const eventTypes = ["conference", "workshop", "webinar", "meetup"];
 const durationUnits = ["hours", "minutes", "days"];

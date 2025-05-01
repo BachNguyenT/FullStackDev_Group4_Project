@@ -4,8 +4,8 @@ import {
   AttendeeList,
   EventInfo,
   DiscussionBoard,
-} from "@/components/ui/components/event";
-import { ConfirmModal } from "@/components/ui/components/modals";
+} from "@/components/event";
+import { ConfirmModal } from "@/components/modals/ConfirmModal";
 import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";

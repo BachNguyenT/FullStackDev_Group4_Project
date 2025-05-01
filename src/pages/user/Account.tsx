@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/components/Button";
+import { Button } from "@/components/general/Button";
 import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
