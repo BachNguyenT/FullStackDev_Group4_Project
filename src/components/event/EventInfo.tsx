@@ -1,12 +1,13 @@
 //import the internal files
-import { EventInfoProps } from "@/Types";
 import { Button } from "@/components/general/Button";
 import { Card, CardContent } from "@/components/general/Card";
+import ConfirmModal from "@/components/modals/ConfirmModal";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Import the icons from react-icons
 import {
   FaBarcode,
-  FaRegCalendar,
   FaRegClock,
   FaRegUser,
   FaRegEyeSlash,
@@ -53,8 +54,45 @@ function EventInfo({
   venue,
   isOrganizer,
 } : EventInfoProps) {
-  function handleDelete() {
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const navigate = useNavigate();
 
+  function handleDeleteClick() {
+    setDeleteModalOpen(true);
+  }
+
+  async function handleConfirmDelete() {
+    try {
+      const queryParams = new URLSearchParams({
+        id: eventId || "",
+      });
+
+      const response = await fetch(
+        `http://localhost:3000/delete-event?${queryParams.toString()}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include"
+        }
+      );
+
+      if (response.status == 200) {
+        navigate("/workspace/event");
+      }
+      else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else if (response.status == 404) {
+        navigate("/not-found-page");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    }
+    catch {
+      alert("Service temporarily unavailable. Please try again later.");
+    }
   }
 
   // Reusable info row
@@ -103,7 +141,7 @@ function EventInfo({
                 animated={false}
                 variant="destructive"
                 className="bg-red-500 text-white ml-4"
-                onClick={handleDelete}
+                onClick={handleDeleteClick}
               >
                 <FaTrashCan />
               </Button>
@@ -177,6 +215,18 @@ function EventInfo({
           </CardContent>
         </Card>
       </div>
+
+      {/* Delete modal */}
+      {isDeleteModalOpen && (
+        <ConfirmModal
+          title={"Delete Event"}
+          message={
+            "Are you sure you want to delete this event? This action cannot be undone."
+          }
+          onCancel={() => setDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </>
   );
 }

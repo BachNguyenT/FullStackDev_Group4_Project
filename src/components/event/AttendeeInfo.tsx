@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { fetchUserPFP } from "@/api/user-services";
-import { FetchResult } from "@/Types";
 import { FetchStatus } from "@/enum.ts";
 import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

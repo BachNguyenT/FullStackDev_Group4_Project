@@ -7,18 +7,23 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AttendeeEntry({
+  eventID,
   name,
   email,
   phoneNumber,
   id,
-  loadingSetter,
+  refreshHandler,
+  isLoading,
+  isLoadingSetter,
 }: {
+  eventID: string | undefined;
   name: string;
   email: string;
-  senderID: string;
-  phoneNumber: string;
   id: string;
-  loadingSetter: React.Dispatch<React.SetStateAction<boolean>>;
+  phoneNumber: string;
+  isLoadingSetter: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  refreshHandler : () => Promise<void>;
 }) {
   const [pfpURL, setPfpURL] = useState<string>(pfpPlaceholder);
   const avatarURLRef = useRef<string>(pfpPlaceholder);
@@ -26,7 +31,6 @@ function AttendeeEntry({
 
   async function loadPfp(abortSignal: AbortSignal) {
     const fetchResult = await fetchUserPFP(abortSignal, id);
-    console.log(fetchResult);
     if (fetchResult.status === FetchStatus.SUCCESS) {
       if (fetchResult.result) {
         setPfpURL(fetchResult.result);
@@ -37,6 +41,48 @@ function AttendeeEntry({
       alert("Session expired. Please log in again.");
       navigate("/login");
     }
+  }
+
+  async function handleOnInviteClick() {
+    isLoadingSetter(true);
+
+    try {
+      const queryParams = new URLSearchParams({
+        id: eventID || "",
+      });
+  
+      const response = await fetch(
+        `http://localhost:3000/add-attendee?${queryParams.toString()}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            attendeeID: id,
+          }),
+          credentials: "include",
+        }
+      );
+
+      
+      if (response.status === 200) {
+
+      } else if (response.status === 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else if (response.status === 404) {
+        navigate("/not-found-page");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    }
+    catch (error) {
+      alert("Service temporarily unavailable. Please try again later.");
+    }
+
+    isLoadingSetter(false);
+    refreshHandler();
   }
 
   useEffect(() => {
@@ -51,7 +97,7 @@ function AttendeeEntry({
       }
       abortController.abort(); // Cleanup function to abort the fetch request
     };
-  }, []);
+  }, [id]);
 
   return (
     <div className="py-4">
@@ -73,7 +119,8 @@ function AttendeeEntry({
 
         <button
           className="flex items-center hover:bg-purple-600 w-8 h-8 hover:text-white rounded-full p-2 cursor-pointer disabled:border-gray- disabled:bg-gray-50 disabled:text-gray-300 disabled:shadow-none "
-          disabled={true}
+          disabled={isLoading}
+          onClick={handleOnInviteClick}
         >
           <FontAwesomeIcon icon={faPaperPlane} className="mr-1" />
         </button>

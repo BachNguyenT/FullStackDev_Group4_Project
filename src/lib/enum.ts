@@ -1,15 +1,15 @@
 // Event types
 export enum EVENT_TYPE {
-  CONFERENCE = "0",
-  WORKSHOP = "1",
-  WEBINAR = "2",
-  MEETUP = "3",
-  WEDDING = "4",
-  OTHER = "5",
+  Conference = 0,
+  Workshop = 1,
+  Webinar = 2,
+  Meetup = 3,
+  Wedding = 4,
+  Other = 5,
 }
 
 // Event visibility
 export enum EVENT_VISIBILITY {
-  PRIVATE = 0,
-  PUBLIC = 1,
+  Private = 0,
+  Public = 1,
 }

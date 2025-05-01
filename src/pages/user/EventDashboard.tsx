@@ -4,7 +4,6 @@ import {
   EventInfo,
   DiscussionBoard,
 } from "@/components/event";
-import ConfirmModal from "@/components/modals/ConfirmModal";
 import { useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -19,7 +18,6 @@ function EventDashboard() {
   // Get event ID from URL parameters
   const { eventId } = useParams();
   // Interface control hooks
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [render, setRender] = useState<boolean>(false);
   // Data hooks
   const [attendeeList, setAttendeeList] = useState<any>([]);
@@ -203,17 +201,6 @@ function EventDashboard() {
             eventID={eventInfo.eventID}
             refreshHandler={loadAttendeeList}
           />
-          {/* Delete modal for event and attendee */}
-          {isDeleteModalOpen && (
-            <ConfirmModal
-              title={"Delete Event"}
-              message={
-                "Once the event is deleted all info and attendees will be removed."
-              }
-              onCancel={() => setDeleteModalOpen(false)}
-              onConfirm={() => {}}
-            />
-          )}
         </div>
       )}
     </div>

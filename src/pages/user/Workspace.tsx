@@ -76,13 +76,11 @@ function Workspace() {
               <Route
                 path="event"
                 element={
-                  <div>
-                    <Event sidebarOpen={sidebarOpen} />
-                    <Footer />{" "}
-                  </div>
+                  <Event sidebarOpen={sidebarOpen} />
               }
               />
-              {/*Browser events */}
+
+              {/*Browse events */}
               <Route
                 path="event-browser"
                 element={
@@ -107,6 +105,7 @@ function Workspace() {
               />
 
               <Route path="event/:eventId/edit" element={<EventForm />} />
+              
               <Route path="invitation" element={
                 <div>
                   <Invitation />

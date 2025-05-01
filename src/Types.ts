@@ -75,4 +75,5 @@ export type {
   AttendeeInfoProps,
   Event,
   TimeDuration,
+  FetchResult
 };

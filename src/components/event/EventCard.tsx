@@ -81,7 +81,7 @@ function EventCard({
           alt="Image"
         />
         <div className="absolute top-0 left-0 bg-white mt-[10px] ml-[10px] flex flex-col items-center rounded-sm font-semibold px-2 py-1">
-          <span className="text-gray-800 h-5">{dateTime.getDay()}</span>
+          <span className="text-gray-800 h-5">{dateTime.getDate()}</span>
           <span className="text-purple-500 text-xs">{dateTime.toLocaleString("en-US", { month: "short" }).toUpperCase()}</span>
         </div>
       </div>

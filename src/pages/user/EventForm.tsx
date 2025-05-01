@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
-
+import { useParams } from "react-router-dom";
 import { Button } from "@/components/general/Button";
 import Dropdown from "@/components/general/Dropdown";
 import DurationInput from "@/components/event/DurationInput";
 import { useNavigate } from "react-router-dom";
-
+import { fetchEventImage } from "@/api/event-services";
 import { EVENT_TYPE, EVENT_VISIBILITY } from "@/lib/enum";
 import { TimeDuration } from "@/Types";
+import { FetchStatus } from "@/enum";
+import { FetchResult } from "@/Types";
 
 const EventForm = () => {
   const eventVisibilityItems = [{ text: "Private" }, { text: "Public" }];
@@ -27,10 +29,11 @@ const EventForm = () => {
   const [eventName, setEventName] = useState<string>("");
   const [eventDateTime, setEventDateTime] = useState<string>("");
   const [eventVenue, setEventVenue] = useState<string>("");
-  const [eventType, setEventType] = useState<EVENT_TYPE>(EVENT_TYPE.CONFERENCE);
   const [eventDescription, setEventDescription] = useState<string>("");
+
+  const [eventType, setEventType] = useState<EVENT_TYPE>(EVENT_TYPE.Conference);
   const [eventVisibility, setEventVisibility] = useState<EVENT_VISIBILITY>(
-    EVENT_VISIBILITY.PRIVATE
+    EVENT_VISIBILITY.Private
   );
 
   const [eventDuration, setEventDuration] = useState<TimeDuration>({
@@ -105,15 +108,15 @@ const EventForm = () => {
       eventReminderProcessed.setHours(
         eventReminderProcessed.getHours() - eventReminder.hour
       );
-      console.log("Hours:", eventReminderProcessed.getHours() - eventReminder.hour);
+      
       eventReminderProcessed.setMinutes(
         eventReminderProcessed.getMinutes() - eventReminder.minute
       );
-      console.log("Minutes:", eventReminderProcessed.getMinutes() - eventReminder.minute);
+      
       eventReminderProcessed.setSeconds(
         eventReminderProcessed.getSeconds() - eventReminder.second
       );
-      console.log("Seconds:", eventReminderProcessed.getSeconds() - eventReminder.second);
+      
 
       const getImage = await fetch(image);
       const imageBlob = await getImage.blob();
@@ -212,7 +215,7 @@ const EventForm = () => {
           eventReminder.minute * 60 +
           eventReminder.second) * 1000;
       eventReminderProcessed.setTime(eventReminderProcessed.getTime() - reminderDurationInMs);
-      console.log(eventReminderProcessed.getTime() - reminderDurationInMs);
+      
 
       const getImage = await fetch(image);
       const imageBlob = await getImage.blob();
@@ -238,7 +241,7 @@ const EventForm = () => {
             EventDateTime: eventDateTime,
             EventDuration: eventDurationProcessed,
             EventReminderTime: eventReminderProcessed,
-            EventVisibility: eventVisibility,
+            EventVisibility: EVENT_VISIBILITY[eventVisibility],
             EventType: eventType,
             Evp: image == eventImagePlaceholder ? "" : imageHexString,
             EventDescription: eventDescription,
@@ -285,7 +288,7 @@ const EventForm = () => {
   }
 
   async function handleFetchEvent() {
-    console.log("Fetching event information...");
+    
     setIsLoading(true);
     try {
       if (eventID) {
@@ -293,7 +296,7 @@ const EventForm = () => {
           id: eventID || "",
         });
         const response = await fetch(
-          `http://localhost:3000/get-event?${queryParams.toString()}`,
+          `http://localhost:3000/get-event-info?${queryParams.toString()}`,
           {
             method: "GET",
             headers: {
@@ -302,12 +305,13 @@ const EventForm = () => {
             credentials: "include",
           }
         );
+        await loadImage(undefined);
 
         if (response.status === 200) {
           const data = await response.json();
-          console.log(data);
+          
           setEventName(data.eventName);
-          setEventDateTime(data.eventDateTime);
+          setEventDateTime(data.eventDateTime.slice(0, 16));
           setEventVenue(data.eventVenue);
           setEventType(data.eventType);
           setEventDescription(data.eventDescription);
@@ -338,7 +342,7 @@ const EventForm = () => {
             second: seconds,
             });
 
-          console.log(data);
+          
         } else if (response.status === 401) {
           alert("Session expired. Please log in again.");
         } else {
@@ -351,6 +355,37 @@ const EventForm = () => {
     }
     setIsLoading(false);
   }
+
+  function processFetchFail (fetchResult : FetchResult) {
+    if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
+      alert("Session expired. Please log in again.");
+      navigate("/login");
+    } else if (fetchResult.status === FetchStatus.NOT_FOUND) {
+      navigate("/not-found-page");
+    } else if (fetchResult.status === FetchStatus.ERROR) {
+      alert("Service temporarily unavailable. Please try again later.");
+      navigate("/workspace/event");
+    }
+  }
+
+  async function loadImage (abortSignal: AbortSignal | undefined) {
+    const eventImage = await fetchEventImage(
+      abortSignal,
+      eventID);
+
+    if (eventImage.status === FetchStatus.SUCCESS) {
+      if (eventImage.result) {
+        imageRef.current = eventImage.result;
+        setImage(eventImage.result);
+      }
+      return true;
+    } 
+    else {
+      processFetchFail(eventImage);
+      return false;
+    }
+  }
+
 
   useEffect(() => {
     handleFetchEvent();

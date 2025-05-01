@@ -3,19 +3,38 @@ import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { useState, useRef } from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { fetchUserPFP } from "@/api/user-services";
+import { FetchStatus } from "@/enum.ts";
 
-function ChatLine({ sender, senderName, message, timestamp }) {
+function ChatLine({ sender, senderName, message, timestamp } : {
+  sender: string;
+  senderName: string;
+  message: string;
+  timestamp: string;
+}) {
   const [avatarURL, setAvatarURL] = useState<string>(pfpPlaceholder);
   const avatarURLRef = useRef<string>(pfpPlaceholder);
+  const navigate = useNavigate();
 
-  async function fetchPFP(abortSignal: AbortSignal) {
-    
+  async function loadPfp(abortSignal: AbortSignal) {
+    const fetchResult = await fetchUserPFP(abortSignal, sender);
+    if (fetchResult.status === FetchStatus.SUCCESS) {
+      if (fetchResult.result) {
+        setAvatarURL(fetchResult.result);
+        avatarURLRef.current = fetchResult.result;
+      }
+    } else if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
+      console.log("Session expired. Please log in again.");
+      alert("Session expired. Please log in again.");
+      navigate("/login");
+    }
   }
 
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchPFP(abortController.signal);
+    loadPfp(abortController.signal);
 
     return () => {
       if (avatarURLRef.current != pfpPlaceholder) {

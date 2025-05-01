@@ -73,7 +73,6 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
         setMaxAttendeeCount(data.maxAttendeeCount);
         setEvents(data.events);
         setIsLoading(false);
-        console.log(data.events);
         return;
       } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
@@ -176,8 +175,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
           <div>Loading...</div>
         ) : events.length > 0 ? (
           events.map((element, index) => {
-            const date = new Date(element.Date);
-            console.log(element.Date);
+            const date = new Date(element.Date.slice(0, -1));
             return (
               <EventCard
                 key={index}

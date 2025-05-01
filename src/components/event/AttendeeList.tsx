@@ -10,18 +10,22 @@ import { deleteAttendee } from "@/api/event-services";
 import { FetchResult } from "@/Types";
 import { FetchStatus } from "@/enum.ts";
 
-function AttendeeList({ attendeeList, eventID, refreshHandler } : {
+function AttendeeList({
+  attendeeList,
+  eventID,
+  refreshHandler,
+}: {
   attendeeList: any[];
   eventID: string | undefined;
-  refreshHandler (abortSignal: AbortSignal | undefined) : Promise<boolean>;
+  refreshHandler(abortSignal: AbortSignal | undefined): Promise<boolean>;
 }) {
   const [deleteTarget, setDeleteTarget] = useState({ id: "", name: "" });
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const [isAddAttendeeModalOpen, setAddAttendeeModalOpen] = useState(false);  
+  const [isAddAttendeeModalOpen, setAddAttendeeModalOpen] = useState(false);
 
-  function processFetchFail (fetchResult : FetchResult) {
+  function processFetchFail(fetchResult: FetchResult) {
     if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
       console.log("Session expired. Please log in again.");
       alert("Session expired. Please log in again.");
@@ -34,12 +38,12 @@ function AttendeeList({ attendeeList, eventID, refreshHandler } : {
     }
   }
 
-  function handleOnDeleteClick (attendeeID : string, attendeeName : string) {
+  function handleOnDeleteClick(attendeeID: string, attendeeName: string) {
     setDeleteTarget({ id: attendeeID, name: attendeeName });
     setDeleteModalOpen(true);
-  };
+  }
 
-  async function handleOnConfirmDeleteClick (attendeeID : string) {
+  async function handleOnConfirmDeleteClick(attendeeID: string) {
     setIsLoading(true);
     const fetchResult = await deleteAttendee(undefined, eventID, attendeeID);
     console.log(fetchResult);
@@ -50,7 +54,7 @@ function AttendeeList({ attendeeList, eventID, refreshHandler } : {
     }
     setIsLoading(false);
     setDeleteModalOpen(false);
-  };
+  }
 
   return (
     <div>
@@ -60,35 +64,30 @@ function AttendeeList({ attendeeList, eventID, refreshHandler } : {
         <div className="flex flex-wrap gap-2 justify-between items-center">
           {/* Left: Show and Search */}
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search attendees..."
-                className="text-sm px-3 py-1.5 border border-gray-300 rounded-md w-52 pl-9"
-              />
-              <FontAwesomeIcon
-                icon={faMagnifyingGlass}
-                className="absolute left-3 top-2.5 text-gray-500 text-base"
-              />
-            </div>
-            <Button
-              variant="outline"
-              className="flex items-center gap-2"
-              disabled={isLoading}
-              onClick={async () => {
-                setIsLoading(true);
-                await refreshHandler(undefined);
-                setIsLoading(false);
-              }}
-            >
-              Refresh
-            </Button>
+            <div className="relative">{/* Search input field */}</div>
           </div>
 
           {/* Right: Add Attendee & Refresh */}
-          <Button animated={false} variant="default" disabled={isLoading} onClick={() => setAddAttendeeModalOpen(true)}>
+          <Button
+            animated={false}
+            variant="default"
+            disabled={isLoading}
+            onClick={() => setAddAttendeeModalOpen(true)}
+          >
             <FontAwesomeIcon icon={faPlus} className="ml-1 text-xs" />
             Add Attendee
+          </Button>
+          <Button
+            variant="outline"
+            className="flex items-center gap-2"
+            disabled={isLoading}
+            onClick={async () => {
+              setIsLoading(true);
+              await refreshHandler(undefined);
+              setIsLoading(false);
+            }}
+          >
+            Refresh
           </Button>
         </div>
 
@@ -137,7 +136,10 @@ function AttendeeList({ attendeeList, eventID, refreshHandler } : {
       {isAddAttendeeModalOpen && (
         <AttendeeAddModal
           eventID={eventID}
-          onCancel={() => {setAddAttendeeModalOpen(false); refreshHandler(undefined);}}
+          onCancel={() => {
+            setAddAttendeeModalOpen(false);
+            refreshHandler(undefined);
+          }}
         />
       )}
     </div>

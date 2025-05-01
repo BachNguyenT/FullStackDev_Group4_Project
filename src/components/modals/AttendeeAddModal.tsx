@@ -28,7 +28,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
     e.stopPropagation();
   };
 
-  const fetchInvitableAttendee = async () => {
+  async function fetchInvitableAttendee() {
     setIsLoading(true);
 
     try {
@@ -50,9 +50,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
 
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data);  
         setUserFound(data);
-
       } else if (response.status === 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
@@ -70,10 +68,6 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
   useEffect(() => {
     fetchInvitableAttendee();
   }, [debounced]);
-
-  async function handleOnInviteClick(userID : string) {
-
-  }
 
   return (
     <div className="fixed inset-0 backdrop-blur-md z-50" onClick={onCancel}>
@@ -121,13 +115,16 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
           <div className="h-80 overflow-y-auto">
             {userFound.map((user, index) => (
               <AttendeeEntry
-                key={index}
-                id={user.ID}
-                loadingSetter={setIsLoading}
-                name={user.Name}
-                email={user.Email}
-                phoneNumber={user.PhoneNumber}
-              />
+              eventID={eventID}
+              key={index}
+              id={user.ID}
+              refreshHandler={fetchInvitableAttendee}
+              isLoading={isLoading}
+              isLoadingSetter={setIsLoading}
+              name={user.Name}
+              email={user.Email}
+              phoneNumber={user.PhoneNumber}
+            />
             ))}
           </div>
         </div>
