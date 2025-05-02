@@ -95,6 +95,14 @@ type FetchResult = {
   result: any | undefined;
 }
 
+type NotificationProps = {
+  ID: string;
+  Title: string;
+  Message: string;
+  Date: Date;
+  recipientID: string;
+}
+
 export type {
   User,
   EventType,
@@ -109,4 +117,5 @@ export type {
   FetchUserPFPResponse,
   FetchResult,
   FetchStatus,
+  NotificationProps
 };
