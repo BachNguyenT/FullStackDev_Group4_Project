@@ -1,13 +1,17 @@
+// import libraries
+import {useState, useEffect, useRef } from "react";
+
+// import components
 import { EventInfoProps } from "@/Types";
-//import components and libraries
+import { Button } from "../general/Button";
+
+// import icons
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 import Calender from "@/assets/Icons/calendar.svg";
 import User from "@/assets/Icons/user-octagon.svg";
 import ID from "@/assets/Icons/card.svg";
 import Visibility from "@/assets/Icons/eye2.svg";
-import { useEffect, useRef } from "react";
-import { useState } from "react";
-import { Button } from "../general/Button";
+
 
 function EventBrowserCard({
     eventId,
@@ -18,10 +22,10 @@ function EventBrowserCard({
     eventStatus,
     attendeeCount,
     maxAttendeeCount,
-}: EventInfoProps) {
+    refreshEvents,
+}: EventInfoProps & { refreshEvents: () => void }) {
     const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
     const imageURLRef = useRef<string>(eventImagePlaceholder);
-
     async function fetchEventImage(abortSignal: AbortSignal) {
         try {
             const queryParams = new URLSearchParams({
@@ -52,6 +56,36 @@ function EventBrowserCard({
             console.error("Error fetching event image:", error);
         }
     }
+
+    async function sendJoinRequest() {
+        try {
+            const queryParams = new URLSearchParams({
+                id: eventId || "",
+            });
+            const response = await fetch(`http://localhost:3000/send-join-request?${queryParams.toString()}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                
+            });
+            if (response.status === 200) {
+                alert("Join request sent successfully!");
+                refreshEvents();
+            } else if (response.status === 400) {
+                alert("Session expired. Please log in again.");
+            } else {
+                alert("Service temporarily unavailable. Please try again later.");
+            }
+
+        }
+        catch (error) {
+            alert("Service temporarily unavailable. Please try again later.");
+        }
+    }
+
+    
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -116,6 +150,7 @@ function EventBrowserCard({
                 </div>
             </div>
             {eventStatus === "Ongoing" && (<Button
+            onClick={sendJoinRequest} // Set the trigger state
                 className="w-full h-[30px] rounded-sm bg-purple-400 text-white font-semibold text-sm hover:bg-purple-600"
             >
                 Join Request

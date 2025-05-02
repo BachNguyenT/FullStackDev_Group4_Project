@@ -1,3 +1,7 @@
+// import components
+import { DetailCardProps } from "@/Types";
+
+// import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCar,
@@ -5,7 +9,6 @@ import {
   faTshirt,
   faCloudSun, // For Weather Forecast
 } from "@fortawesome/free-solid-svg-icons";
-import { DetailCardProps } from "@/Types";
 
 function InvitationEssentials() {
   return (

@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+// import libraries
+import {useState, useEffect } from "react";
+
+// import components
 import { TimeDuration } from "@/Types";
 
 interface DurationInputProps {

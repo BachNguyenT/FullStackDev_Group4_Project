@@ -1,14 +1,18 @@
-import AttendeeInfo from "./AttendeeInfo";
-import { Button } from "@/components/general/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+// import libraries
 import { useState } from "react";
-import ConfirmModal from "@/components/modals/ConfirmModal";
 import { useNavigate } from "react-router-dom";
-import AttendeeAddModal from "../modals/AttendeeAddModal";
-import { deleteAttendee } from "@/api/event-services";
+
+// import components
 import { FetchResult } from "@/Types";
 import { FetchStatus } from "@/enum.ts";
+import { Button } from "@/components/general/Button";
+import {AttendeeAddModal,ConfirmModal} from "../modals";
+import { deleteAttendee } from "@/api/event-services";
+import AttendeeInfo from "./AttendeeInfo";
+
+// import Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 function AttendeeList({
   attendeeList,

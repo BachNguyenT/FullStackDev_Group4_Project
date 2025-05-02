@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
-import { EVENT_STATUS } from "@/lib/enum";
-import InvitationCard from "@/components/invitation/InvitationCard";
-import { Button } from "@/components/general/Button";
+// import libraries
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+// import components
+import {InvitationCard} from "@/components/invitation";
+import { Button } from "@/components/general/Button";
+
+// import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,
@@ -54,7 +58,7 @@ function Invitation() {
 
   useEffect(() => {
     const abortController = new AbortController();
-    
+
     fetchInvitations(abortController.signal);
 
     return () => {

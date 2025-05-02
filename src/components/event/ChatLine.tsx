@@ -1,11 +1,15 @@
+// import libraries
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
+// import components
+import { fetchUserPFP } from "@/api/user-services";
+import { FetchStatus } from "@/enum.ts";
+
+// import Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
-import { useState, useRef } from "react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchUserPFP } from "@/api/user-services";
-import { FetchStatus } from "@/enum.ts";
 
 function ChatLine({ sender, senderName, message, timestamp } : {
   sender: string;

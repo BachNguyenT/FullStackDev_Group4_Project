@@ -1,6 +1,9 @@
-import { Button } from "@/components/general/Button";
+// import libraries
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+// import components
+import { Button } from "@/components/general/Button";
 import JoinRequestRow from "./JoinRequestRow";
 
 interface JoinRequest {

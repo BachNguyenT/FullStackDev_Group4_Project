@@ -1,9 +1,15 @@
-import Notification from "@/assets/Icons/notification.svg";
-import NotificationBoard from "@/components/general/NotificationBoard";
-import { Button } from "@/components/general/Button";
-import { useLayoutContext } from "@/context/LayoutContext";
+// import libraries
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
+
+// import components
+import { Button } from "@/components/general/Button";
+import {NotificationBoard} from "@/components/general";
+import { useLayoutContext } from "@/context/LayoutContext";
+
+// import Icons
+import Notification from "@/assets/Icons/notification.svg";
+
 function Header({
   avatarURL,
   sidebarOpen,

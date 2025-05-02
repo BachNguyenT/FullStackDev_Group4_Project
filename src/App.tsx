@@ -1,14 +1,13 @@
-//import the libraries
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Navigate } from "react-router-dom";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import About from "./pages/info/About";
-import PrivacyPolicy from "./pages/info/PrivacyPolicy";
-import NotFoundPage from "./pages/others/NotFoundPage";
-import Workspace from "./pages/user/Workspace";
-import SessionValidator from "./route-protectors/SessionValidator";
+//import libraries
+import { BrowserRouter as Router, Route, Routes,Navigate } from "react-router-dom";
+
+// import components
+import {Login , Register} from "./pages/auth";
+import {About , PrivacyPolicy} from "./pages/info";
+import {NotFoundPage} from "./pages/others";
+import {Workspace} from "./pages/user";
 import AdminWorkspace from "./pages/admin/AdminWorkspace";
+import SessionValidator from "./route-protectors/SessionValidator";
 
 //import the components
 

@@ -1,20 +1,16 @@
+// import libraries
+import {useState, useEffect,useRef } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+
+// import components
 import { LayoutContext } from "@/context/LayoutContext";
-import { useRef } from "react";
-import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
-import Sidebar from "@/components/layout/Sidebar";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Event from "@/pages/user/Event";
-import EventBrowser from "@/pages/user/EventBrowser";
-import Invitation from "@/pages/user/Invitation";
-import Account from "@/pages/user/Account";
-import EventDashboard from "@/pages/user/EventDashboard";
-import EventForm from "@/pages/user/EventForm";
-import DashBoard from "@/pages/user/DashBoard";
+import {Header,Sidebar,Footer} from "@/components/layout";
+import {Event,EventBrowser,Invitation,Account,EventDashboard,EventForm,DashBoard} from "@/pages/user";
 import SessionValidator from "@/route-protectors/SessionValidator";
 import { fetchUserPFP } from "@/lib/api";
+
+// import icons
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
 function Workspace() {
   const [avatarURL, setAvatarURL] = useState<string>(pfpPlaceholder);

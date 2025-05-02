@@ -1,8 +1,8 @@
-//import the internal files
+//import components
 import { EventInfoProps } from "@/Types";
 import { Card, CardContent, CardTitle } from "@/components/general/Card";
 
-// Import the icons from react-icons
+// import icons
 import {
   FaBarcode,
   FaRegCalendar,

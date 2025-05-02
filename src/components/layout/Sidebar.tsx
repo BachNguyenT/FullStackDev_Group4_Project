@@ -1,13 +1,14 @@
-//import state management
+// import libraries
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+//import components 
+import { Button } from "@/components/general/Button";
 import { useLayoutContext } from "@/context/LayoutContext";
 
+// import icons
 import { faArrowAltCircleRight } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-//import components and libraries
-import { Button } from "@/components/general/Button";
-
-//import icons
 import Logo from "@/assets/Icons/app-logo.svg";
 import LogoFull from "@/assets/Icons/plan-event.svg";
 import Dashboard from "@/assets/Icons/chart-square.svg";
@@ -15,8 +16,7 @@ import Event from "@/assets/Icons/calendar.svg";
 import Invitation from "@/assets/Icons/invitation.svg";
 import Account from "@/assets/Icons/user-1.svg";
 import Arrow from "@/assets/Icons/arrow-right.svg";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+
 
 function Sidebar() {
   const { sidebarOpen } = useLayoutContext();
