@@ -67,7 +67,10 @@ function AttendeeEntry({
 
       
       if (response.status === 200) {
-
+        alert("Attendee added successfully.");
+      } else if (response.status === 400) {
+        const errorData = await response.json();
+        alert(errorData.error); // Display the error message from the backend
       } else if (response.status === 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
