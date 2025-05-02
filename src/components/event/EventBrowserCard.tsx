@@ -53,6 +53,33 @@ function EventBrowserCard({
         }
     }
 
+    async function sendJoinRequest() {
+        try {
+            const queryParams = new URLSearchParams({
+                id: eventId || "",
+            });
+            const response = await fetch(`http://localhost:3000/send-join-request?${queryParams.toString()}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                
+            });
+            if (response.status === 200) {
+                alert("Join request sent successfully!");
+            } else if (response.status === 400) {
+                alert("Session expired. Please log in again.");
+            } else {
+                alert("Service temporarily unavailable. Please try again later.");
+            }
+
+        }
+        catch (error) {
+            alert("Service temporarily unavailable. Please try again later.");
+        }
+    }
+
     useEffect(() => {
         const abortController = new AbortController();
 
@@ -116,6 +143,7 @@ function EventBrowserCard({
                 </div>
             </div>
             {eventStatus === "Ongoing" && (<Button
+            onClick={sendJoinRequest}
                 className="w-full h-[30px] rounded-sm bg-purple-400 text-white font-semibold text-sm hover:bg-purple-600"
             >
                 Join Request
