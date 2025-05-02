@@ -10,9 +10,10 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 import Loading from "../others/Loading";
-import { verifyEventAccess, fetchEventInfo, fetchEventImage, fetchEventChatLog, fetchEventAttendeeList } from "@/api/event-services.ts";
+import { verifyEventAccess, fetchJoinRequestList, fetchEventInfo, fetchEventImage, fetchEventChatLog, fetchEventAttendeeList } from "@/api/event-services.ts";
 import { FetchStatus } from "@/enum.ts";
 import { FetchResult } from "@/Types";
+import JoinRequestList  from "@/components/event/JoinRequestList.tsx";
 
 function EventDashboard() {
   // Get event ID from URL parameters
@@ -20,6 +21,7 @@ function EventDashboard() {
   // Interface control hooks
   const [render, setRender] = useState<boolean>(false);
   // Data hooks
+  const [joinRequestList, setJoinRequestList] = useState<any>([]);
   const [attendeeList, setAttendeeList] = useState<any>([]);
   const [chatLog, setChatLog] = useState<any>([]);
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
@@ -107,7 +109,6 @@ function EventDashboard() {
 
     if (eventChatlog.status === FetchStatus.SUCCESS) {
       setChatLog(eventChatlog.result);
-      console.log(eventChatlog.result); 
       return true;
     } 
     else {
@@ -127,6 +128,21 @@ function EventDashboard() {
     } 
     else {
       processFetchFail(eventAttendeeList);
+      return false;
+    }
+  }
+
+  async function loadJoinRequestList (abortSignal: AbortSignal | undefined) {
+    const joinRequestList = await fetchJoinRequestList(
+      abortSignal,
+      eventId);
+
+    if (joinRequestList.status === FetchStatus.SUCCESS) {
+      setJoinRequestList(joinRequestList.result);
+      return true;
+    } 
+    else {
+      processFetchFail(joinRequestList);
       return false;
     }
   }
@@ -152,6 +168,7 @@ function EventDashboard() {
       loadChatLog(abortController.signal);
       if(isOrganizerRef.current) {
         loadAttendeeList(abortController.signal);
+        loadJoinRequestList(abortController.signal);
       }
     }
 
@@ -190,11 +207,18 @@ function EventDashboard() {
           />
           {/* Attendee list (Only show attendee list if the user is the organizer) */}
           {eventInfo.isOrganizer && (
-            <AttendeeList
-              attendeeList={attendeeList}
-              refreshHandler={loadAttendeeList}
-              eventID={eventId}
-            />
+            <>
+              <JoinRequestList
+                joinRequestList={joinRequestList}
+                refreshHandler={async () => {await loadJoinRequestList(undefined); await loadAttendeeList(undefined);}}
+                eventID={eventId}
+              />
+              <AttendeeList
+                attendeeList={attendeeList}
+                refreshHandler={loadAttendeeList}
+                eventID={eventId}
+              />
+            </>
           )}
           {/* Discussion board */}
           <DiscussionBoard
