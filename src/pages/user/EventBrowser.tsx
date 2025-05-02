@@ -55,8 +55,12 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
       const searchParams = new URLSearchParams({
         name: debounceName,
         type: debounceType === "All" ? "" : debounceType,
-        status: statusItems.findIndex((item) => item.text === debounceStatus).toString(),
-        order: sortItems.findIndex((item) => item.text === debounceSort).toString(),
+        status: statusItems
+          .findIndex((item) => item.text === debounceStatus)
+          .toString(),
+        order: sortItems
+          .findIndex((item) => item.text === debounceSort)
+          .toString(),
       });
 
       const response = await fetch(
@@ -73,7 +77,10 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
 
       if (response.status === 200) {
         const data = await response.json();
-        if (!Array.isArray(data.events) || typeof data.maxAttendeeCount !== "number") {
+        if (
+          !Array.isArray(data.events) ||
+          typeof data.maxAttendeeCount !== "number"
+        ) {
           console.error("Invalid response format:", data);
           throw new Error("Invalid response format from server");
         }
@@ -84,7 +91,9 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
         navigate("/login");
       } else {
         const errorText = await response.text();
-        console.error(`Fetch error: Status ${response.status}, Response: ${errorText}`);
+        console.error(
+          `Fetch error: Status ${response.status}, Response: ${errorText}`
+        );
         alert("Service temporarily unavailable. Please try again later.");
         setEvents([]);
       }
@@ -108,7 +117,9 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
   return (
     <div className="p-4 sm:p-6 md:p-4 overflow-x">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl sm:text-2xl font-semibold mb-4">Browse Events</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">
+          Browse Events
+        </h2>
       </div>
 
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
@@ -140,15 +151,15 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
             items={statusItems}
             valueSetter={setEventStatusSearch}
           />
-
         </div>
       </div>
 
       <div
-        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${sidebarOpen
-          ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
-          : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
-          }`}
+        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${
+          sidebarOpen
+            ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
+            : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
+        }`}
       >
         {isLoading ? (
           <div>Loading...</div>
@@ -166,6 +177,7 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
                 visibility="Public" // Only public events are returned
                 attendeeCount={element.AttendeeCount}
                 maxAttendeeCount={maxAttendeeCount}
+                refreshEvents={() => fetchEvents(null)} // Pass the fetchEvents function as a callback
               />
             );
           })
