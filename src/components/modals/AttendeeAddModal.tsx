@@ -22,7 +22,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
   const [userFound, setUserFound] = useState<Attendee[]>([]);
   const [searchString, setSearchString] = useState<string>("");
   const navigate = useNavigate();
-  const debounced = useDebounce(searchString, 1000);
+  const debounced = useDebounce(searchString, 500);
 
   const handlePropagation = (e: React.MouseEvent) => {
     e.stopPropagation();

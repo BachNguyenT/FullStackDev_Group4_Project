@@ -1,7 +1,8 @@
-import { useEffect, useState, useRef } from "react";
-import EventCard from "@/components/event/EventCard";
+import { useEffect, useState } from "react";
+import EventBrowserCard from "@/components/event/EventBrowserCard";
 import Dropdown from "@/components/general/Dropdown";
 import { useNavigate } from "react-router-dom";
+import useDebounce from "@/hooks/useDebounce";
 
 function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
   // SortDirection: 0 = Default, 1 = Most recent, 2 = Oldest
@@ -42,26 +43,21 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [sortDirection, setSortDirection] = useState<string>("Default");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Custom debounce function
-  const debounce = (func: () => void, delay: number) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(func, delay);
-  };
+  const debounceName = useDebounce(eventNameSearch, 500);
+  const debounceType = useDebounce(eventTypeSearch, 500);
+  const debounceStatus = useDebounce(eventStatusSearch, 500);
+  const debounceSort = useDebounce(sortDirection, 500);
 
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
       const searchParams = new URLSearchParams({
-        name: eventNameSearch,
-        type: eventTypeSearch === "All" ? "" : eventTypeSearch,
-        status: statusItems.findIndex((item) => item.text === eventStatusSearch).toString(),
-        order: sortItems.findIndex((item) => item.text === sortDirection).toString(),
+        name: debounceName,
+        type: debounceType === "All" ? "" : debounceType,
+        status: statusItems.findIndex((item) => item.text === debounceStatus).toString(),
+        order: sortItems.findIndex((item) => item.text === debounceSort).toString(),
       });
-      console.log("Fetching events with params:", searchParams.toString());
 
       const response = await fetch(
         `http://localhost:3000/browse-event?${searchParams.toString()}`,
@@ -77,7 +73,6 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
 
       if (response.status === 200) {
         const data = await response.json();
-        console.log("Response data:", data);
         if (!Array.isArray(data.events) || typeof data.maxAttendeeCount !== "number") {
           console.error("Invalid response format:", data);
           throw new Error("Invalid response format from server");
@@ -85,7 +80,6 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
         setMaxAttendeeCount(data.maxAttendeeCount);
         setEvents(data.events);
       } else if (response.status === 401) {
-        console.log("Unauthorized: Redirecting to login");
         alert("Session expired. Please log in again.");
         navigate("/login");
       } else {
@@ -105,15 +99,11 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
 
   useEffect(() => {
     const abortController = new AbortController();
-    debounce(() => fetchEvents(abortController.signal), 300);
-
+    fetchEvents(abortController.signal);
     return () => {
-      abortController.abort();
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      abortController.abort(); // Cleanup function to abort the fetch request
     };
-  }, [eventNameSearch, eventTypeSearch, eventStatusSearch, sortDirection]);
+  }, [debounceName, debounceType, debounceStatus, debounceSort]);
 
   return (
     <div className="p-4 sm:p-6 md:p-4 overflow-x">
@@ -155,11 +145,10 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
       </div>
 
       <div
-        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${
-          sidebarOpen
-            ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
-            : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
-        }`}
+        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${sidebarOpen
+          ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
+          : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
+          }`}
       >
         {isLoading ? (
           <div>Loading...</div>
@@ -167,12 +156,13 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
           events.map((element, index) => {
             const date = new Date(element.Date.slice(0, -1));
             return (
-              <EventCard
+              <EventBrowserCard
                 key={index}
                 eventId={element.ID}
                 eventName={element.Name}
                 dateTime={date}
                 eventType={element.Type}
+                eventStatus={element.status}
                 visibility="Public" // Only public events are returned
                 attendeeCount={element.AttendeeCount}
                 maxAttendeeCount={maxAttendeeCount}

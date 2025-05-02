@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { EventInfoProps } from "@/Types";
 //import components and libraries
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
