@@ -1,4 +1,6 @@
 // import libraries
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // import components
 import { Button } from "@/components/general/Button";
@@ -12,8 +14,7 @@ import Calender from "@/assets/Icons/calendar.svg";
 import Visibility from "@/assets/Icons/eye2.svg";
 import Duration from "@/assets/Icons/timer.svg";
 import Venue from "@/assets/Icons/location.svg";
-import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 function InvitationCard({
   organizerName,
@@ -25,7 +26,7 @@ function InvitationCard({
   eventName,
   eventType,
   rsvpStatus,
-} : {
+}: {
   organizerName: string;
   visibility: string;
   dateTime: Date;
@@ -34,17 +35,16 @@ function InvitationCard({
   eventID: string;
   eventName: string;
   eventType: string;
-  rsvpStatus: number; 
-})  {
-  // Rsvp 1 yes, 0 no, -1 not set
+  rsvpStatus: number;
+}) {
   const [imageURL, setImageURL] = useState(eventImagePlaceholder);
   const imageURLRef = useRef(eventImagePlaceholder);
   const [rsvp, setRsvp] = useState(rsvpStatus);
+  console.log(rsvp);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
   async function handleAccept() {
-    setIsLoading(true); 
+    setIsLoading(true);
     const queryParams = new URLSearchParams({
       id: eventID || "",
     });
@@ -143,13 +143,13 @@ function InvitationCard({
       abortController.abort();
     };
   }, [eventID]);
-  
+
   return (
-    <div className="min-w-[200px] max-w-[1000px] md:max-h-[250px] flex flex-col md:flex-row bg-white col rounded-md shadow p-3 mb-3 border border-gray-200 gap-3 ">
+    <div className="w-250 md:max-h-[250px] flex justify-around md:flex-row bg-white col rounded-md shadow p-3 mb-3 border border-gray-200 gap-x-4">
       {/* Image Box */}
       <div className="relative">
         <img
-          className="w-[400px] h-full flex-initial object-cover rounded-md"
+          className="w-[400px] h-[220px] flex-initial object-cover rounded-md"
           src={imageURL}
           alt="Image"
         />
@@ -159,15 +159,15 @@ function InvitationCard({
         </div>
       </div>
 
-      {/* Event Information */}
-      <div className="flex flex-col justify-between">
+      {/* Invitation Information */}
+      <div className="flex flex-col items-center justify-between">
         <div>
-          <span className="bg-purple-300 text-xs px-2 py-1 rounded-sm text-gray-800">
+          <span className="bg-purple-600 text-xs px-2 py-1 rounded-sm text-white font-bold">
             {eventType}
           </span>
           <h2 className="text-xl font-semibold text-black my-2">{eventName}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 text-sm text-gray-700 gap-y-1">
-            <div className="flex items-center gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 text-sm text-gray-700 gap-y-4 gap-x-20">
+            <div className="flex items-start gap-2">
               <img src={Host} className="h-[18px]" />
               <div>
                 <p>{organizerName}</p>
@@ -191,21 +191,21 @@ function InvitationCard({
                 <p>{duration}</p>
               </div>
             </div>
-          </div>
-          <div className="flex items-start gap-2 text-sm text-gray-700 mt-1">
-            <img src={Venue} className="h-[18px]" />
-            <div>
-              <p>
-                {venue}
-              </p>
+            <div className="flex items-start gap-2 ">
+              <img src={Venue} className="h-[18px]" />
+              <div>
+                <p>
+                  {venue}
+                </p>
+              </div>
             </div>
           </div>
         </div>
         {/* Buttons */}
-        <div className="flex w-full gap-4 mt-2">
+        <div className="flex justify-between items-center gap-2 mt-4 w-full">
           <Button
             variant="secondary"
-            className="hover:bg-green-500 hover:text-white w-full"
+            className={`hover:bg-green-500 hover:text-white w-full ${rsvp === 1 ? 'bg-green-500 text-white' : ''}`}
             onClick={handleAccept}
             disabled={isLoading}
           >
@@ -214,7 +214,7 @@ function InvitationCard({
           </Button>
           <Button
             variant="destructive"
-            className="hover:bg-red-500 hover:text-white w-full"
+            className={`hover:bg-red-500 hover:text-white w-full ${rsvp === 0 ? 'bg-red-500 text-white' : ''}`}
             onClick={handleDecline}
             disabled={isLoading}
           >

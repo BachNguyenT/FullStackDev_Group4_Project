@@ -5,15 +5,9 @@ import { useNavigate } from "react-router-dom";
 // import components
 import {InvitationCard} from "@/components/invitation";
 import { Button } from "@/components/general/Button";
+import {Dropdown} from "@/components/general";
 
-// import icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faMagnifyingGlass,
-  faChevronDown,
-} from "@fortawesome/free-solid-svg-icons";
-import Dropdown from "@/components/general/Dropdown";
-import { abort } from "process";
+
 
 interface invitation {
   ID: string;
