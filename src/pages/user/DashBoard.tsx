@@ -1,9 +1,14 @@
+// import libraries
 import { useState, useEffect } from "react";
-import { Button } from "@/components/general/Button";
 import { useNavigate } from "react-router-dom";
-import useEvent from "@/hooks/useEvent";
-import EventCard from "@/components/event/EventCard";
-import InvitationCard from "@/components/invitation/InvitationCard";
+
+// import components
+import { Button } from "@/components/general/Button";
+import {useEvent} from "@/hooks";
+import {EventCard} from "@/components/event";
+import {InvitationCard} from "@/components/invitation";
+
+// import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -300,11 +305,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
       </div>
 
       {/* Invitations List */}
-      <div className="flex flex-col items-center">
-        {displayedInvitations.map((_, index) => (
-          <InvitationCard key={index} />
-        ))}
-      </div>
+      
     </div>
   );
 }

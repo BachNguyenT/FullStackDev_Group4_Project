@@ -1,11 +1,16 @@
+// import libraries
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@/components/general/Button";
-import EventCard from "@/components/event/EventCard";
-import Dropdown from "@/components/general/Dropdown";
 import { useNavigate } from "react-router-dom";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
-import useDebounce from "@/hooks/useDebounce";
+
+// import components
+import { Button } from "@/components/general/Button";
+import {EventCard} from "@/components/event";
+import {Dropdown} from "@/components/general";
+import {useDebounce} from "@/hooks";
+
+// import icons
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Visibility: 0 = All, 1 = Private, 2 = Public
@@ -139,7 +144,6 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
               className="ml-2 w-full outline-none text-sm"
             />
           </div>
-
           <Dropdown
             value={sortDirection}
             placeholder="Order events by:"

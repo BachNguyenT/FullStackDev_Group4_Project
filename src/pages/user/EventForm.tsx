@@ -1,14 +1,18 @@
+// import libraries
 import { useState, useEffect, useRef } from "react";
-import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
-import { Button } from "@/components/general/Button";
-import Dropdown from "@/components/general/Dropdown";
-import DurationInput from "@/components/event/DurationInput";
 import { useNavigate,useParams } from "react-router-dom";
-import { fetchEventImage } from "@/api/event-services";
+
+// import components
 import { EVENT_TYPE, EVENT_VISIBILITY } from "@/lib/enum";
-import { TimeDuration } from "@/Types";
 import { FetchStatus } from "@/enum";
-import { FetchResult } from "@/Types";
+import { Button } from "@/components/general/Button";
+import {Dropdown} from "@/components/general";
+import {DurationInput} from "@/components/event";
+import { fetchEventImage } from "@/api/event-services";
+import { TimeDuration,FetchResult } from "@/Types";
+
+// import icons
+import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 
 const EventForm = () => {
   const eventVisibilityItems = [{ text: "Private" }, { text: "Public" }];
@@ -227,7 +231,7 @@ const EventForm = () => {
           .join("");
 
       const response = await fetch(
-        `http://localhost:3000/update-event/${eventID}`,
+        `http://localhost:3000/update-event`,
         {
           method: "PUT",
           headers: {

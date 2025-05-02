@@ -1,19 +1,21 @@
-import { useState } from "react";
+// import libraries
+import { useState,useEffect,useRef} from "react";
+import { useNavigate,useParams } from "react-router-dom";
+
+// import components
 import {
   AttendeeList,
   EventInfo,
   DiscussionBoard,
+  JoinRequestList
 } from "@/components/event";
-import { useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
-import Loading from "../others/Loading";
+import {Loading} from "../others";
 import { verifyEventAccess, fetchJoinRequestList, fetchEventInfo, fetchEventImage, fetchEventChatLog, fetchEventAttendeeList } from "@/api/event-services.ts";
 import { FetchStatus } from "@/enum.ts";
 import { FetchResult } from "@/Types";
-import JoinRequestList  from "@/components/event/JoinRequestList.tsx";
+
+// import icons
+import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 
 function EventDashboard() {
   // Get event ID from URL parameters

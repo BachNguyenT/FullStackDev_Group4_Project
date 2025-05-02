@@ -1,9 +1,12 @@
+// import components 
 import { AttendeeInfoProps } from "@/Types";
 import { Button } from "@/components/general/Button";
+
+// import Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
-
 import { FaUser } from "react-icons/fa6";
+
 
 function AdminAttendeeInfo({
   id,
@@ -12,7 +15,6 @@ function AdminAttendeeInfo({
   email,
   noEvents,
   status,
-  onDelete,
 }: AttendeeInfoProps) {
   const getStatusStyle = (status: string) => {
     switch (status) {

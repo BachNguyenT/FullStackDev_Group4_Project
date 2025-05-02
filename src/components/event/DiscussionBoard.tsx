@@ -1,12 +1,15 @@
+// import libraries
+import { useState,useEffect,useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
+// import components
 import ChatLine from "./ChatLine";
 import { Button } from "@/components/general/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+// import icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useRef } from "react";
+
 
 function DiscussionBoard({
   chatLog,
