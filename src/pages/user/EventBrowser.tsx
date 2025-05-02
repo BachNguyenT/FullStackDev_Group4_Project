@@ -162,7 +162,7 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
                 eventName={element.Name}
                 dateTime={date}
                 eventType={element.Type}
-                eventStatus={element.status}
+                eventStatus={element.Status}
                 visibility="Public" // Only public events are returned
                 attendeeCount={element.AttendeeCount}
                 maxAttendeeCount={maxAttendeeCount}

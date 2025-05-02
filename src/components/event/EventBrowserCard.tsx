@@ -120,6 +120,11 @@ function EventBrowserCard({
             >
                 Join Request
             </Button>)}
+
+            {eventStatus === "Completed" &&
+                (<Button className="w-full h-[30px] rounded-sm bg-gray-400 text-white font-semibold text-sm" variant="ghost" animated={false}>
+                    Event Completed
+                </Button>)}
         </div>
     );
 }
