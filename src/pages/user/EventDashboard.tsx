@@ -107,6 +107,7 @@ function EventDashboard() {
 
     if (eventChatlog.status === FetchStatus.SUCCESS) {
       setChatLog(eventChatlog.result);
+      console.log(eventChatlog.result); 
       return true;
     } 
     else {
@@ -199,7 +200,7 @@ function EventDashboard() {
           <DiscussionBoard
             chatLog={chatLog}
             eventID={eventInfo.eventID}
-            refreshHandler={loadAttendeeList}
+            refreshHandler={loadChatLog}
           />
         </div>
       )}

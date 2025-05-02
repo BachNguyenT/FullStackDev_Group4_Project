@@ -38,9 +38,9 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [events, setEvents] = useState<Event[]>([]);
   const [maxAttendeeCount, setMaxAttendeeCount] = useState<number>(0);
   const [eventNameSearch, setEventNameSearch] = useState<string>("");
-  const [eventVisibilitySearch, setEventVisibilitySearch] = useState<number>(0);
-  const [sortDirection, setSortDirection] = useState<number>(0);
-  const [eventStatusSearch, setEventStatusSearch] = useState<number>(0);
+  const [eventVisibilitySearch, setEventVisibilitySearch] = useState<string>("All");
+  const [sortDirection, setSortDirection] = useState<string>("Default");
+  const [eventStatusSearch, setEventStatusSearch] = useState<string>("All");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -51,9 +51,9 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
     try {
       const searchParams = new URLSearchParams({
         name: eventNameSearch,
-        status: eventStatusSearch.toString(),
-        visibility: eventVisibilitySearch.toString(),
-        order: sortDirection.toString(),
+        status: statusItems.findIndex((item) => item.text === eventStatusSearch).toString(),
+        visibility: visibilityItems.findIndex((item) => item.text === eventVisibilitySearch).toString(),
+        order: sortItems.findIndex((item) => item.text === sortDirection).toString(),
       });
 
       const response = await fetch(
