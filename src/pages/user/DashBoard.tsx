@@ -300,11 +300,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
       </div>
 
       {/* Invitations List */}
-      <div className="flex flex-col items-center">
-        {displayedInvitations.map((_, index) => (
-          <InvitationCard key={index} />
-        ))}
-      </div>
+      
     </div>
   );
 }

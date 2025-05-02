@@ -139,7 +139,6 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
               className="ml-2 w-full outline-none text-sm"
             />
           </div>
-
           <Dropdown
             value={sortDirection}
             placeholder="Order events by:"

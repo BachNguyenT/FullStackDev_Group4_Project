@@ -13,3 +13,8 @@ export enum EVENT_VISIBILITY {
   Private = 0,
   Public = 1,
 }
+
+export enum EVENT_STATUS {
+  Ongoing = 0,
+  Completed = 1,
+}
