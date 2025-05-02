@@ -3,6 +3,7 @@ import { Button } from "@/components/general/Button";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { FetchUserPFPResponse } from "@/Types";
 
 
 function Account({ pfp }: { pfp: string }) {
@@ -36,7 +37,7 @@ function Account({ pfp }: { pfp: string }) {
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchAvatar(abortController.signal);
+    fetchAvatar(abortController.signal, undefined);
     handleDisplayUserInformation(); // Call the function here to fetch user data
 
     return () => {
@@ -47,32 +48,62 @@ function Account({ pfp }: { pfp: string }) {
     };
   }, []);
 
-  async function fetchAvatar(abortSignal: AbortSignal) {
+  async function fetchAvatar(
+    abortSignal: AbortSignal,
+    userID: string | undefined
+  ): Promise<FetchUserPFPResponse> {
     try {
-      const response = await fetch("http://localhost:3000/get-user-pfp", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        signal: abortSignal,
+      const searchParams = new URLSearchParams({
+        id: userID ? userID : "#SENDER#",
       });
-
+  
+      const response = await fetch(
+        `http://localhost:3000/get-user-pfp?${searchParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
+  
+      const responsePackage = await response.json();
+  
       if (response.status === 200) {
-        const blob = await response.blob();
-        const objectURL = URL.createObjectURL(blob);
-        imageURLRef.current = objectURL;
-        setAvatar(objectURL);
-      } else if (response.status === 401) {
-        alert("Session expired. Please log in again.");
+        let imageURL = undefined;
+  
+        if (responsePackage.imageBlob.length > 0) {
+          const byteArray = new Uint8Array(responsePackage.imageBlob);
+          const blob = new Blob([byteArray]);
+          imageURL = URL.createObjectURL(blob);
+          setAvatar(imageURL); // Update the avatar state here
+          imageURLRef.current = imageURL; // Update the ref
+        }
+  
+        return {
+          status: response.status,
+          debugCode: responsePackage.debugCode,
+          imageURL: imageURL,
+        };
       } else {
-        alert("Service temporarily unavailable. Please try again later.");
+        console.error(`Error fetching avatar: ${response.status}`);
+        return {
+          status: response.status,
+          debugCode: responsePackage.debugCode,
+          imageURL: undefined,
+        };
       }
     } catch (error) {
-      alert("Service temporarily unavailable. Please try again later.");
+      console.error("Error in fetchAvatar:", error);
+      return {
+        status: 500,
+        debugCode: "FEx001",
+        imageURL: undefined,
+      };
     }
   }
-
   async function handleDisplayUserInformation() {
     try {
       const response = await fetch(
@@ -116,7 +147,7 @@ function Account({ pfp }: { pfp: string }) {
       Username: userName,
     };
 
-    fetch(`http://localhost:3000/update-user/${id}`, {
+    fetch(`http://localhost:3000/update-user`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -234,7 +265,7 @@ function Account({ pfp }: { pfp: string }) {
           return response.text().then((text) => {
             if (text === "0x000") {
               alert("Password changed successfully.");
-              setPassword("");
+              setPassword(newPassword);
               setNewPassword("");
             } else if (text === "0x001") {
               alert("Session expired. Please log in again.");
