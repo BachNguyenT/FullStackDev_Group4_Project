@@ -5,6 +5,7 @@ import EventCard from "@/components/event/EventCard";
 import Dropdown from "@/components/general/Dropdown";
 import { useNavigate } from "react-router-dom";
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import useDebounce from "@/hooks/useDebounce";
 
 function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Visibility: 0 = All, 1 = Private, 2 = Public
@@ -44,16 +45,21 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  
+  const debounceName = useDebounce(eventNameSearch, 500);
+  const debounceStatus = useDebounce(eventStatusSearch, 500);
+  const debounceSort = useDebounce(sortDirection, 500);
+  const debounceVisibility = useDebounce(eventVisibilitySearch, 500);
+
+
 
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
       const searchParams = new URLSearchParams({
-        name: eventNameSearch,
-        status: statusItems.findIndex((item) => item.text === eventStatusSearch).toString(),
-        visibility: visibilityItems.findIndex((item) => item.text === eventVisibilitySearch).toString(),
-        order: sortItems.findIndex((item) => item.text === sortDirection).toString(),
+        name: debounceName,
+        status: statusItems.findIndex((item) => item.text === debounceStatus).toString(),
+        visibility: visibilityItems.findIndex((item) => item.text === debounceVisibility).toString(),
+        order: sortItems.findIndex((item) => item.text === debounceSort).toString(),
       });
 
       const response = await fetch(
@@ -81,13 +87,13 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
       } else {
         alert("Service temporarily unavailable. Please try again later.");
         setIsLoading(false);
-        setEvents([]);  
+        setEvents([]);
         return;
       }
     } catch {
       alert("Service temporarily unavailable. Please try again later.");
       setIsLoading(false);
-      setEvents([]);  
+      setEvents([]);
       return;
     }
   }
@@ -100,7 +106,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
     return () => {
       abortController.abort(); // Clean up the fetch request on component unmount
     };
-  }, []);
+  }, [debounceName, debounceStatus, debounceSort, debounceVisibility]);
 
   return (
     <div className="p-4 sm:p-6 md:p-4 overflow-x">
@@ -152,24 +158,15 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
             valueSetter={setEventVisibilitySearch}
             value={eventVisibilitySearch}
           />
-          <Button
-            animated={false}
-            variant="ghost"
-            className="border border-gray-300 shadow-sm"
-            onClick={() => fetchEvents(null)}
-          >
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </Button>
         </div>
       </div>
 
       {/* Event Cards Grid */}
       <div
-        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${
-          sidebarOpen
+        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${sidebarOpen
             ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
             : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
-        }`}
+          }`}
       >
         {isLoading ? (
           <div>Loading...</div>
