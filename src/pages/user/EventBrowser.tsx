@@ -1,8 +1,11 @@
+// import libraries
 import { useEffect, useState } from "react";
-import EventBrowserCard from "@/components/event/EventBrowserCard";
-import Dropdown from "@/components/general/Dropdown";
 import { useNavigate } from "react-router-dom";
-import useDebounce from "@/hooks/useDebounce";
+
+// import components
+import {EventBrowserCard} from "@/components/event";
+import {Dropdown} from "@/components/general";
+import {useDebounce} from "@/hooks";
 
 function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
   // SortDirection: 0 = Default, 1 = Most recent, 2 = Oldest

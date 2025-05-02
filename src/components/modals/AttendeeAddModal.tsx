@@ -1,9 +1,14 @@
-import AttendeeEntry from "@/components/event/AccountSearch";
+// import libraries
+import { useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+
+// import components
+import {AccountSearch} from "@/components/event";
+import {useDebounce} from "@/hooks";
+
+// import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useDebounce from "@/hooks/useDebounce";
 
 interface ConfirmModalProps {
   eventID: string | undefined;
@@ -114,7 +119,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
           {/* search result area */}
           <div className="h-80 overflow-y-auto">
             {userFound.map((user, index) => (
-              <AttendeeEntry
+              <AccountSearch
               eventID={eventID}
               key={index}
               id={user.ID}

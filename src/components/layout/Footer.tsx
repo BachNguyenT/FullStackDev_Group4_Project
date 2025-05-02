@@ -1,3 +1,4 @@
+// import components
 import { Button } from "@/components/general/Button";
 
 function Footer() {

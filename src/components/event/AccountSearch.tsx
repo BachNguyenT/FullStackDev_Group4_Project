@@ -1,10 +1,15 @@
+// import libraries
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+// import components
+import { fetchUserPFP } from "@/api/user-services";
+import { FetchStatus } from "@/enum";
+
+// import Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
-import { fetchUserPFP } from "@/api/user-services";
-import { FetchStatus } from "@/enum";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 function AttendeeEntry({
   eventID,

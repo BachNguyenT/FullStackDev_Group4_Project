@@ -1,13 +1,13 @@
-import { useState } from "react";
+// import libraries
+import { useState,useEffect,useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
+// import components
 import { fetchUserPFP } from "@/api/user-services";
 import { FetchStatus } from "@/enum.ts";
 import { Button } from "@/components/general/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRemove } from "@fortawesome/free-solid-svg-icons";
-import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
+// import icons
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
 function JoinRequestRow({
