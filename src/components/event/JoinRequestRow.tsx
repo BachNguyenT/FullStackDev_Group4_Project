@@ -10,11 +10,16 @@ import { useEffect } from "react";
 
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
-function JoinRequestRow({ id, name, onAcceptHandler, onDeclineHandler } : {
+function JoinRequestRow({
+  id,
+  name,
+  onAcceptHandler,
+  onDeclineHandler,
+}: {
   id: string;
   name: string;
   onAcceptHandler: (id: string) => Promise<void>;
-  onDeclineHandler: (id: string) => Promise<void>; 
+  onDeclineHandler: (id: string) => Promise<void>;
 }) {
   const [pfpURL, setPfpURL] = useState<string>(pfpPlaceholder);
   const avatarURLRef = useRef<string>(pfpPlaceholder);
@@ -58,15 +63,15 @@ function JoinRequestRow({ id, name, onAcceptHandler, onDeclineHandler } : {
         />
         <span>{name}</span>
       </td>
-    
 
       <td className="px-4 py-3">
         <Button
           variant="destructive"
-          className="hover:bg-red-500 hover:text-white"
-          onClick={async () => {await onAcceptHandler(id);}}
+          className="hover:bg-green-500 hover:text-white"
+          onClick={async () => {
+            await onAcceptHandler(id);
+          }}
         >
-        <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs"/>
           Accept
         </Button>
       </td>
@@ -75,9 +80,10 @@ function JoinRequestRow({ id, name, onAcceptHandler, onDeclineHandler } : {
         <Button
           variant="destructive"
           className="hover:bg-red-500 hover:text-white"
-          onClick={async () => {await onDeclineHandler(id);}}
+          onClick={async () => {
+            await onDeclineHandler(id);
+          }}
         >
-          <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs"/>
           Decline
         </Button>
       </td>
