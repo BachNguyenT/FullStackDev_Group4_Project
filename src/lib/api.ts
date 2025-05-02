@@ -1,10 +1,10 @@
 // FEx001: indicate error comming from the front end
-import { fetchUserPFPResponse } from "@/Types";
+import { FetchUserPFPResponse } from "@/Types";
 
 async function fetchUserPFP(
   abortSignal: AbortSignal,
   userID: string | undefined
-) : Promise<fetchUserPFPResponse> {
+) : Promise<FetchUserPFPResponse> {
   try {
     const searchParams = new URLSearchParams({
       id: userID ? userID : "#SENDER#",

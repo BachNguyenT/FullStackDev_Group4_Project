@@ -329,6 +329,57 @@ async function deleteAttendee(
   }
 }
 
+async function fetchJoinRequestList(
+  abortSignal: AbortSignal | undefined,
+  eventId: string | undefined
+): Promise<FetchResult> {
+  try {
+    const queryParams = new URLSearchParams({
+      id: eventId || "",
+    });
+
+    const response = await fetch(
+      `http://localhost:3000/get-join-requests?${queryParams.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal: abortSignal,
+      }
+    );
+
+    if (response.status == 200) {
+      const data = await response.json();
+      return {
+        status: FetchStatus.SUCCESS,
+        result: data,
+      };
+    } else if (response.status == 401) {
+      return {
+        status: FetchStatus.UNAUTHORIZED,
+        result: undefined,
+      };
+    } else if (response.status == 404) {
+      return {
+        status: FetchStatus.NOT_FOUND,
+        result: undefined,
+      };
+    } else {
+      return {
+        status: FetchStatus.ERROR,
+        result: undefined,
+      };
+    }
+  } catch (error) {
+    return {
+      status: FetchStatus.ERROR,
+      result: undefined,
+    };
+  }
+}
+
 export {
   verifyEventAccess,
   fetchEventInfo,
@@ -336,4 +387,5 @@ export {
   fetchEventAttendeeList,
   fetchEventChatLog,
   deleteAttendee,
+  fetchJoinRequestList,
 };

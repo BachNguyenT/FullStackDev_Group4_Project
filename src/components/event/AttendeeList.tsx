@@ -46,7 +46,6 @@ function AttendeeList({
   async function handleOnConfirmDeleteClick(attendeeID: string) {
     setIsLoading(true);
     const fetchResult = await deleteAttendee(undefined, eventID, attendeeID);
-    console.log(fetchResult);
     if (fetchResult.status === FetchStatus.SUCCESS) {
       refreshHandler(undefined);
     } else {

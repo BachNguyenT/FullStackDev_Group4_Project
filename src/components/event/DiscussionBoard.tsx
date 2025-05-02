@@ -52,7 +52,7 @@ function DiscussionBoard({
 
       if (response.status == 200) {
         setMessage("");
-        refreshHandler(null);
+        refreshHandler(undefined);
       } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
@@ -82,7 +82,7 @@ function DiscussionBoard({
             className="flex items-center gap-2"
             onClick={async () => {
               setIsLoading(true);
-              await refreshHandler(null);
+              await refreshHandler(undefined);
               setIsLoading(false);
             }}
             disabled={isLoading}
