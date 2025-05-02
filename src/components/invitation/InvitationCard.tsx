@@ -25,7 +25,17 @@ function InvitationCard({
   eventName,
   eventType,
   rsvpStatus,
-}) {
+} : {
+  organizerName: string;
+  visibility: string;
+  dateTime: Date;
+  duration: string;
+  venue: string;
+  eventID: string;
+  eventName: string;
+  eventType: string;
+  rsvpStatus: number; 
+})  {
   // Rsvp 1 yes, 0 no, -1 not set
   const [imageURL, setImageURL] = useState(eventImagePlaceholder);
   const imageURLRef = useRef(eventImagePlaceholder);

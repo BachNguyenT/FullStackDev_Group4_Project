@@ -15,11 +15,23 @@ import {
 import Dropdown from "@/components/general/Dropdown";
 import { abort } from "process";
 
+interface invitation {
+  ID: string;
+  Name: string;
+  Type: string;
+  Date: string;
+  Duration: string;
+  Venue: string;
+  IsPrivate: boolean;
+  OrganizerName: string;
+  Rsvp: number; // -1 not set, 0 no, 1 yes
+}
+
 const statusOptions = [{ text: "Ongoing" }, { text: "Completed" }];
 
 function Invitation() {
   const [statusFilter, setStatusFilter] = useState<string>("Ongoing");
-  const [invitations, setInvitations] = useState([]);
+  const [invitations, setInvitations] = useState<invitation[]>([]);
   const navigate = useNavigate();
 
   async function fetchInvitations(AbortSignal : AbortSignal | undefined) {

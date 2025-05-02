@@ -21,7 +21,7 @@ function EventCard({
   visibility,
   attendeeCount,
   maxAttendeeCount,
-}: EventInfoProps) {
+} : EventInfoProps) {
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
   const imageURLRef = useRef<string>(eventImagePlaceholder);
   const navigate = useNavigate();
