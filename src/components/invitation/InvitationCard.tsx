@@ -1,4 +1,9 @@
+// import libraries
+
+// import components
 import { Button } from "@/components/general/Button";
+
+// import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";

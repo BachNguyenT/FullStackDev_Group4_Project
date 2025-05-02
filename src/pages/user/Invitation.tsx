@@ -1,8 +1,11 @@
+// import libraries
 import { useState } from "react";
 
-import InvitationCard from "@/components/invitation/InvitationCard";
+// import components
+import {InvitationCard} from "@/components/invitation";
 import { Button } from "@/components/general/Button";
 
+// import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,

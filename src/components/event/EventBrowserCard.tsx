@@ -1,13 +1,16 @@
+// import libraries
+import {useState, useEffect, useRef } from "react";
+
+// import components
 import { EventInfoProps } from "@/Types";
-//import components and libraries
+import { Button } from "../general/Button";
+
+// import icons
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
 import Calender from "@/assets/Icons/calendar.svg";
 import User from "@/assets/Icons/user-octagon.svg";
 import ID from "@/assets/Icons/card.svg";
 import Visibility from "@/assets/Icons/eye2.svg";
-import { useEffect, useRef } from "react";
-import { useState } from "react";
-import { Button } from "../general/Button";
 
 
 function EventBrowserCard({

@@ -1,9 +1,12 @@
-//import the internal files
+// import libraries 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+// import components
 import { Button } from "@/components/general/Button";
 import { Card, CardContent } from "@/components/general/Card";
 import ConfirmModal from "@/components/modals/ConfirmModal";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 // Import the icons from react-icons
 import {

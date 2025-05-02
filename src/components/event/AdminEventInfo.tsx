@@ -1,7 +1,10 @@
+// import components
+import { Event } from "@/Types";
 import { Button } from "@/components/general/Button";
+
+// import Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
-import { Event } from "@/Types";
 
 function AdminEventInfo({
   id,

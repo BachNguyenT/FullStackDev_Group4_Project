@@ -1,9 +1,14 @@
+// import libraries
 import { useState, useEffect, useRef } from "react";
+
+// import components
 import { Button } from "@/components/general/Button";
+import { FetchUserPFPResponse } from "@/Types";
+
+// import icons
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { FetchUserPFPResponse } from "@/Types";
 
 
 function Account({ pfp }: { pfp: string }) {

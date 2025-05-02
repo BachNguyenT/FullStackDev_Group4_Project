@@ -1,7 +1,12 @@
+// import libraries
+import { useState } from "react";
+
+// import components
 import { Button } from "@/components/general/Button";
+
+// import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 
 interface ConfirmModalProps {
   title: string;
