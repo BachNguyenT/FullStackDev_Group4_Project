@@ -1,9 +1,9 @@
 import Notification from "@/assets/Icons/notification.svg";
-
+import NotificationBoard from "@/components/general/NotificationBoard";
 import { Button } from "@/components/general/Button";
 import { useLayoutContext } from "@/context/LayoutContext";
 import { useNavigate } from "react-router-dom";
-
+import { useState, useRef } from "react";
 function Header({
   avatarURL,
   sidebarOpen,
@@ -13,7 +13,19 @@ function Header({
 }) {
   const navigate = useNavigate();
   const { toggleSidebar } = useLayoutContext();
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const handleMouseEnter = () => {
+    clearTimeout(timeoutRef.current as NodeJS.Timeout | undefined);
+    setNotificationOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setNotificationOpen(false);
+    }, 500);
+  };
   return (
     <div className="flex items-center m-[16px] transition-all duration-300">
       <button
@@ -35,16 +47,21 @@ function Header({
         </svg>
       </button>
       <span
-        className={`justify-end flex flex-row gap-4 ${
-          sidebarOpen ? "w-0 md:w-full" : "w-full"
-        }`}
+        className={`justify-end flex flex-row gap-4 ${sidebarOpen ? "w-0 md:w-full" : "w-full"
+          }`}
       >
-        <Button size="icon" variant="ghost">
-          <div className="w-full h-full flex items-center justify-center text-white font-semibold ">
-            <img src={Notification} />
-          </div>
-        </Button>
+        <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          <Button size="icon" variant="ghost">
+            <div className="w-full h-full flex items-center justify-center text-white font-semibold ">
+              <img src={Notification} />
+            </div>
+          </Button>
 
+          {notificationOpen && (
+            <div className="absolute top-16 right-4 z-50">
+              <NotificationBoard />
+            </div>)}
+        </div>
         {/* Avatar Circle */}
         <Button
           size="icon"
