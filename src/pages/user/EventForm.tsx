@@ -231,7 +231,7 @@ const EventForm = () => {
           .join("");
 
       const response = await fetch(
-        `http://localhost:3000/update-event/${eventID}`,
+        `http://localhost:3000/update-event`,
         {
           method: "PUT",
           headers: {
