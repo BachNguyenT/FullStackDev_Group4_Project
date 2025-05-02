@@ -58,7 +58,7 @@ function NotificationBoard() {
     );
 }
 
-function Notification({ ID, Title, Message, Date: NotificationDate }: NotificationProps) {
+function Notification({ Title, Message, Date: NotificationDate }: NotificationProps) {
     return (
         <div className="border-b border-gray-200 py-2">
             <h3 className="text-lg font-medium">{Title}</h3>
