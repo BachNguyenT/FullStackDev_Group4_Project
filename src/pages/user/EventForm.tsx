@@ -107,6 +107,7 @@ const EventForm = () => {
     if (isValid) {
       // Process data to send to the server
       const eventDurationProcessed = `${eventDuration.hour}h ${eventDuration.minute}m ${eventDuration.second}s`;
+      
       const eventReminderProcessed = new Date(eventDate);
       eventReminderProcessed.setHours(
         eventReminderProcessed.getHours() - eventReminder.hour
@@ -142,7 +143,7 @@ const EventForm = () => {
           EventVenue: eventVenue,
           EventDateTime: eventDateTime,
           EventDuration: eventDurationProcessed,
-          EventReminderTime: eventReminderProcessed,
+          EventReminderTime: formatDateToInput(eventReminderProcessed),
           EventVisibility: eventVisibility,
           EventType: eventType,
           Evp: image == eventImagePlaceholder ? "" : imageHexString,
@@ -230,8 +231,12 @@ const EventForm = () => {
           .map((byte) => byte.toString(16).padStart(2, "0"))
           .join("");
 
+      const queryParams = new URLSearchParams({
+        id: eventID || "",
+      });
+
       const response = await fetch(
-        `http://localhost:3000/update-event`,
+        `http://localhost:3000/update-event?${queryParams.toString()}`,
         {
           method: "PUT",
           headers: {
@@ -243,7 +248,7 @@ const EventForm = () => {
             EventVenue: eventVenue,
             EventDateTime: eventDateTime,
             EventDuration: eventDurationProcessed,
-            EventReminderTime: eventReminderProcessed,
+            EventReminderTime: formatDateToInput(eventReminderProcessed),
             EventVisibility: EVENT_VISIBILITY[eventVisibility],
             EventType: eventType,
             Evp: image == eventImagePlaceholder ? "" : imageHexString,
@@ -290,6 +295,16 @@ const EventForm = () => {
     }
   }
 
+  function formatDateToInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+  
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
   async function handleFetchEvent() {
     
     setIsLoading(true);
@@ -314,7 +329,7 @@ const EventForm = () => {
           const data = await response.json();
           
           setEventName(data.eventName);
-          setEventDateTime(data.eventDateTime.slice(0, 16));
+          setEventDateTime(formatDateToInput(new Date(data.eventDateTime)));
           setEventVenue(data.eventVenue);
           setEventType(data.eventType);
           setEventDescription(data.eventDescription);

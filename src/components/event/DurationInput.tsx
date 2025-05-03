@@ -48,15 +48,12 @@ const DurationInput: React.FC<DurationInputProps> = ({
     let secondCache = second;
 
     if (!validateNumber(hour, 0)) {
-      console.log("Invalid hour input, resetting to 0");
       hourCache = 0;
     }
     if (!validateNumber(minute, 0, 59)) {
-      console.log("Invalid minute input, resetting to 0");
       minuteCache = 0;
     }
     if (!validateNumber(second, 0, 59)) {
-      console.log("Invalid second input, resetting to 0");
       secondCache = 0;
     }
 
@@ -92,7 +89,7 @@ const DurationInput: React.FC<DurationInputProps> = ({
           placeholder="Hour..."
           className="border-2 border-gray-300 rounded-md p-2 w-full font-light text-sm"
           disabled={isValidating}
-          value={hour}
+          value={hour.toString()}
         />
         <div>:</div>
         <input
@@ -112,11 +109,8 @@ const DurationInput: React.FC<DurationInputProps> = ({
         {/* Second input */}
         <input
           onChange={(e) => {
-            if (Number.isNaN(e.target.value)) {
-              setSecond(0);
-            } else {
-              setSecond(parseInt(e.target.value, 10));
-            }
+            const value = parseInt(e.target.value, 10);
+            setSecond(Number.isNaN(value) ? 0 : value);
           }}
           type="number"
           min={0}

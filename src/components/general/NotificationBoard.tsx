@@ -24,8 +24,6 @@ function NotificationBoard() {
                     setNotifications(data || []); // Assuming the backend sends an array of notifications
                 } else if (response.status === 401) {
                     setError("Unauthorized: Please log in to view notifications.");
-                } else if (response.status === 404) {
-                    setError("No notifications found.");
                 } else {
                     setError("Failed to fetch notifications. Please try again later.");
                 }
@@ -63,11 +61,9 @@ function Notification({ Title, Message, Date: NotificationDate }: NotificationPr
         <div className="border-b border-gray-200 py-2">
             <h3 className="text-lg font-medium">{Title}</h3>
             <p className="text-sm text-gray-600">
-                <strong>Hello,</strong>
             </p>
             <p className="text-sm text-gray-600">{Message}</p>
             <p className="text-sm text-gray-600">
-                <strong>Thank you very much!</strong>
             </p>
             <p className="text-xs text-gray-400 mt-2">{new Date(NotificationDate).toLocaleDateString()}</p>
         </div>

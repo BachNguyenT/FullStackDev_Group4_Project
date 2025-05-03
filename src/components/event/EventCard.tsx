@@ -3,7 +3,6 @@ import {useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // import components
-import { EventInfoProps } from "@/Types";
 import { Button } from "../general/Button";
 
 // import icons
@@ -21,7 +20,15 @@ function EventCard({
   visibility,
   attendeeCount,
   maxAttendeeCount,
-} : EventInfoProps) {
+} : {
+  eventId: string;
+  eventName: string;
+  dateTime: Date;
+  eventType: string;
+  visibility: string;
+  attendeeCount: number;
+  maxAttendeeCount: number;
+}) {
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
   const imageURLRef = useRef<string>(eventImagePlaceholder);
   const navigate = useNavigate();

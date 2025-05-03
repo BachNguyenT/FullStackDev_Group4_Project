@@ -176,7 +176,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
           <div>Loading...</div>
         ) : events.length > 0 ? (
           events.map((element, index) => {
-            const date = new Date(element.Date.slice(0, -1));
+            const date = new Date(element.Date);
             return (
               <EventCard
                 key={index}
