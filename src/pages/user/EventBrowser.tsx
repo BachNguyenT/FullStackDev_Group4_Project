@@ -3,9 +3,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // import components
-import {EventBrowserCard} from "@/components/event";
-import {Dropdown} from "@/components/general";
-import {useDebounce} from "@/hooks";
+import { EventBrowserCard } from "@/components/event";
+import { Dropdown } from "@/components/general";
+import { useDebounce } from "@/hooks";
+
+// import icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
   // SortDirection: 0 = Default, 1 = Most recent, 2 = Oldest
@@ -35,7 +39,7 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
     Date: string;
     Type: string;
     IsPrivate: boolean;
-    AttendeeCount: number; 
+    AttendeeCount: number;
     Status: string;
   }
 
@@ -128,13 +132,19 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
 
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-sm md:w-full lg:w-auto">
-          <div className="h-[36px] items-center border border-gray-300 rounded-md p-1 bg-white shadow-sm focus-within:border-gray-600">
+          <div className="relative h-[36px] items-center border border-gray-300 rounded-md p-1 bg-white shadow-sm focus-within:border-gray-600">
             <input
               onChange={(e) => setEventNameSearch(e.target.value)}
               type="text"
               placeholder="Search Events..."
               className="ml-2 w-full outline-none text-sm"
             />
+            {isLoading && (
+              <FontAwesomeIcon
+                icon={faSpinner}
+                className="h-4 w-4 text-gray-400 animate-spin absolute right-2 top-[10px]"
+              />
+            )}
           </div>
 
           <Dropdown
@@ -159,11 +169,10 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
       </div>
 
       <div
-        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${
-          sidebarOpen
-            ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
-            : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
-        }`}
+        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${sidebarOpen
+          ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
+          : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
+          }`}
       >
         {isLoading ? (
           <div>Loading...</div>

@@ -1,85 +1,142 @@
-import { useState } from "react";
-import { ChevronDown, Filter, Search, Trash, User } from "lucide-react";
+// import libraries
+import { useState, useEffect } from "react";
 import type { ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
 
+// import components
+import { Button } from "@/components/general/Button";
+import { ConfirmModal } from "@/components/modals";
+import { useDebounce } from "@/hooks";
+
+// import Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faSearch,
+  faUserSlash,
+  faSpinner
+} from "@fortawesome/free-solid-svg-icons";
 
 interface UserData {
-  id: string;
-  name: string;
-  email: string;
-  eventsCount: number;
-  status: "active" | "banned";
+  ID: string;
+  Name: string;
+  Email: string;
+  PhoneNumber: string;
+  OrganizedEventCount: number;
   avatar?: string;
 }
 
-export default function AdminViewUsers({
-  sidebarOpen,
-}: {
-  sidebarOpen: boolean;
-}): ReactElement {
-  const [searchQuery, setSearchQuery] = useState<string>("");
+function AdminViewUsers(): ReactElement {
+  const [searchName, setSearchName] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [users, setUsers] = useState<UserData[]>([]);
+  const [reloadFlag, setReloadFlag] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteID, setDeleteID] = useState<string>("");
+  const navigate = useNavigate();
+  function handleDeleteClick(id: string) {
+    setDeleteID(id);
+    setDeleteModalOpen(true);
+  }
 
-  // Mock data for users
-  const users: UserData[] = [
-    {
-      id: "0000001",
-      name: "Lebron James",
-      email: "youremail+test1@gmail.com",
-      eventsCount: 8,
-      status: "active",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: "0000002",
-      name: "Ashton Hall",
-      email: "youremail+test2@gmail.com",
-      eventsCount: 6,
-      status: "banned",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    {
-      id: "0000003",
-      name: "Darian Jason Watkins Jr.",
-      email: "youremail+test3@gmail.com",
-      eventsCount: 7,
-      status: "active",
-    },
-  ];
+  const debouncedSearchName = useDebounce(searchName, 300);
+
+  async function fetchUsers() {
+    setIsLoading(true);
+    try {
+      const queryParams = new URLSearchParams({
+        searchString: debouncedSearchName || "",
+      });
+
+      const response = await fetch(
+        `http://localhost:3000/get-all-user?${queryParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setUsers(data);
+      } else if (response.status === 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else if (response.status === 404) {
+        navigate("/not-found-page");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+    setIsLoading(false);
+  };
+
+  async function handleConfirmDelete() {
+    try {
+      const queryParams = new URLSearchParams({
+        id: deleteID || "",
+      });
+      const response = await fetch(
+        `http://localhost:3000/admin-delete-user?${queryParams.toString()}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include"
+        }
+      );
+
+      if (response.status == 200) {
+        setDeleteModalOpen(false);
+        setReloadFlag(prev => !prev);
+      }
+      else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else if (response.status == 404) {
+        navigate("/not-found-pageAdmin");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    } catch {
+      alert("Service temporarily unavailable. Please try again later.");
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers();
+  }, [debouncedSearchName, reloadFlag]);
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex bg-gray-50">
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold">Users</h1>
+
           </div>
 
           {/* Filters and Search */}
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="relative inline-block">
-                <button className="flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <span>Show 10</span>
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </button>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FontAwesomeIcon icon={faSearch} className="h-4 w-4 text-gray-400" />
               </div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Search className="h-4 w-4 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="Search users..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              <button className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                <Filter className="h-4 w-4" />
-                <span>Filter</span>
-              </button>
+              <input
+                type="text"
+                className="block w-full py-2 pl-10 pr-3 text-sm border border-gray-300 rounded-md bg-white shadow-sm focus-within:border-gray-600"
+                placeholder="Search users..."
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+              />
+              {isLoading && (<FontAwesomeIcon icon={faSpinner} className="absolute right-3 top-2.5 text-gray-500 animate-spin" />)}
             </div>
           </div>
 
@@ -111,13 +168,13 @@ export default function AdminViewUsers({
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      No. Events
+                      Phone Number
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Status
+                      No. Events
                     </th>
                     <th
                       scope="col"
@@ -129,53 +186,54 @@ export default function AdminViewUsers({
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {users.map((user) => (
-                    <tr key={user.id}>
+                    <tr key={user.ID}
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onClick={() => {
+                        navigate(`/admin/user/${user.ID}`);
+                      }}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.id}
+                        {user.ID}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           {user.avatar ? (
                             <img
                               src={user.avatar || "/placeholder.svg"}
-                              alt={`${user.name} avatar`}
+                              alt={`${user.Name} avatar`}
                               className="h-8 w-8 rounded-full mr-3"
                             />
                           ) : (
                             <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                              <User className="h-4 w-4 text-gray-500" />
+                              <FontAwesomeIcon icon={faUser} className="h-4 w-4 text-gray-500" />
                             </div>
                           )}
                           <span className="text-sm font-medium text-gray-900">
-                            {user.name}
+                            {user.Name}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.email}
+                        {user.Email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.eventsCount}
+                        {user.PhoneNumber}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                            user.status === "active"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {user.status === "active" ? "Active" : "Banned"}
-                        </span>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.OrganizedEventCount}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center space-x-3">
-                          <button
-                            className="text-gray-400 hover:text-gray-500 cursor-pointer"
-                            onClick={(e) => e.stopPropagation()}
+                          <Button
+                            className="w-8 h-8  text-white bg-red-500 "
+                            animated={false}
+                            size="icon"
+                            onClick={(e) => {
+                              handleDeleteClick(user.ID);
+                              e.stopPropagation();
+                            }}
                           >
-                            <Trash />
-                          </button>
+                            <FontAwesomeIcon icon={faUserSlash} className="h-4 w-4" />
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -186,6 +244,18 @@ export default function AdminViewUsers({
           </div>
         </main>
       </div>
+      {/* Delete modal */}
+      {isDeleteModalOpen && (
+        <ConfirmModal
+          title={"Ban User"}
+          message={
+            `Are you sure you want to ban user ${deleteID} from the system? This action cannot be undone.`
+          }
+          onCancel={() => setDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 }
+export default AdminViewUsers;

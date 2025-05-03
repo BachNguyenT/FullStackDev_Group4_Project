@@ -1,7 +1,21 @@
+// import libraries and components
 import { useState, useEffect } from "react";
-import { ChevronDown, Edit, Eye, LogOut, Trash, User } from "lucide-react";
 import type { ReactElement } from "react";
 import { Link, useParams } from "react-router-dom";
+
+// import components
+import { Button } from "@/components/general/Button";
+
+// import Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronDown,
+  faPen,         // for Edit
+  faEye,
+  faUserSlash, 
+  faTrash,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Define types for our data and components
 interface UserProfile {
@@ -30,11 +44,7 @@ interface NavItemProps {
   active?: boolean;
 }
 
-export default function AdminViewUserInfo({
-  sidebarOpen,
-}: {
-  sidebarOpen: boolean;
-}): ReactElement {
+export default function AdminViewUserInfo(): ReactElement {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -143,6 +153,13 @@ export default function AdminViewUserInfo({
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6">
+          <div className="mb-6 flex items-center justify-between">
+            <h1 className="text-2xl font-semibold">User Profile</h1>
+            <Button variant="destructive" className="hover:bg-red-500 hover:text-white">
+              <FontAwesomeIcon icon={faUserSlash} className="h-4 w-4" />
+              Ban User
+            </Button>
+          </div>
           {/* User Profile Section */}
           <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
             <div className="flex items-start">
@@ -156,7 +173,10 @@ export default function AdminViewUserInfo({
                   />
                 ) : (
                   <div className="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center">
-                    <User className="h-10 w-10 text-gray-500" />
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      className="h-10 w-10 text-gray-400"
+                    />
                   </div>
                 )}
                 <div className="mt-2 text-center text-sm text-gray-500">
@@ -190,13 +210,12 @@ export default function AdminViewUserInfo({
                   <div className="text-sm text-gray-500">Status:</div>
                   <div className="font-medium">
                     <span
-                      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                        user.status === "active"
-                          ? "bg-green-100 text-green-800"
-                          : user.status === "banned"
+                      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${user.status === "active"
+                        ? "bg-green-100 text-green-800"
+                        : user.status === "banned"
                           ? "bg-red-100 text-red-800"
                           : "bg-yellow-100 text-yellow-800"
-                      }`}
+                        }`}
                     >
                       {user.status.charAt(0).toUpperCase() +
                         user.status.slice(1)}
@@ -207,19 +226,28 @@ export default function AdminViewUserInfo({
             </div>
           </div>
 
-          {/* Hosted Events Section */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="border-b border-gray-200 mt-6">
+            <div className="mb-6 flex items-center justify-between">
               <h2 className="text-lg font-medium">Hosted events</h2>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Sort:</span>
                 <div className="relative inline-block">
-                  <button className="flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm">
+                  <Button
+                    variant="secondary"
+                    animated={false}
+                  >
                     <span>{sortOption}</span>
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </button>
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className="ml-2 h-4 w-4"
+                    />
+                  </Button>
                 </div>
               </div>
+            </div>
+            {/* Hosted Events Section */}
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+
             </div>
 
             {/* Events Table */}
@@ -277,13 +305,12 @@ export default function AdminViewUserInfo({
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {event.date}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-5 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
-                            event.status === "ongoing"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                          className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${event.status === "ongoing"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                            }`}
                         >
                           {event.status === "ongoing" ? "Ongoing" : "Completed"}
                         </span>
@@ -293,24 +320,36 @@ export default function AdminViewUserInfo({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center space-x-3">
-                          <button
-                            className="text-gray-400 hover:text-gray-500"
+                          <Button
+                            variant="secondary"
+                            className="hover:bg-purple-500 hover:text-white"
                             aria-label="View event details"
                           >
-                            <Eye className="h-5 w-5" />
-                          </button>
-                          <button
-                            className="text-gray-400 hover:text-gray-500"
+                            <FontAwesomeIcon
+                              icon={faEye}
+                              className="h-6 w-6"
+                            />
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            className="hover:bg-blue-500 hover:text-white"
                             aria-label="Edit event"
                           >
-                            <Edit className="h-5 w-5" />
-                          </button>
-                          <button
-                            className="text-gray-400 hover:text-red-500"
+                            <FontAwesomeIcon
+                              icon={faPen}
+                              className="h-6 w-6"
+                            />
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            className="hover:bg-red-500 hover:text-white"
                             aria-label="Delete event"
                           >
-                            <Trash className="h-5 w-5" />
-                          </button>
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              className="h-6 w-6"
+                            />
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -340,9 +379,8 @@ function NavItem({ label, icon, active = false }: NavItemProps): ReactElement {
       case "users":
         return (
           <div
-            className={`w-5 h-5 rounded ${
-              active ? "bg-purple-200" : "border border-gray-300"
-            } flex items-center justify-center`}
+            className={`w-5 h-5 rounded ${active ? "bg-purple-200" : "border border-gray-300"
+              } flex items-center justify-center`}
           >
             <User className="h-3 w-3 text-gray-400" />
           </div>
@@ -358,11 +396,10 @@ function NavItem({ label, icon, active = false }: NavItemProps): ReactElement {
 
   return (
     <div
-      className={`flex items-center space-x-3 rounded-lg px-3 py-2 ${
-        active
-          ? "bg-purple-100 text-purple-600"
-          : "text-gray-700 hover:bg-gray-100"
-      }`}
+      className={`flex items-center space-x-3 rounded-lg px-3 py-2 ${active
+        ? "bg-purple-100 text-purple-600"
+        : "text-gray-700 hover:bg-gray-100"
+        }`}
     >
       {getIcon(icon)}
       <span className="text-sm font-medium">{label}</span>

@@ -1,17 +1,16 @@
+// import libraries
+import { useEffect, useState, useRef } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+
+// import components
 import { LayoutContext } from "@/context/LayoutContext";
-import { useRef } from "react";
+import { AdminSidebar, AdminHeader, Footer } from "@/components/layout";
+import { AdminAccount, AdminDashboard, AdminEvent, AdminEventDashboard, AdminViewUsers, AdminViewUserInfo } from "@/pages/admin";
+import { fetchUserPFP } from "@/lib/api";
+
+// import icons
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
-import Sidebar from "@/components/layout/Sidebar";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Account from "@/pages/user/Account";
-import AdminDashboard from "@/pages/admin/AdminDashboard";
-import AdminEvent from "@/pages/admin/AdminEvent";
-import AdminEventDashboard from "@/pages/admin/AdminEventDashboard";
-import AdminViewUsers from "@/pages/admin/AdminViewUsers";
-import AdminViewUserInfo from "./AdminViewUserInfo";
 
 function AdminWorkspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -23,47 +22,24 @@ function AdminWorkspace() {
     setSidebarOpen((prevState) => !prevState);
   }
 
-  async function fetchPFP(abortSignal: AbortSignal) {
-    // Call API
-    try {
-      const response = await fetch("http://localhost:3000/get-user-pfp", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
-
-      // Handle response
-      if (response.status == 200) {
-        const blob = await response.blob();
-        const objectURL = URL.createObjectURL(blob);
-        avatarURLRef.current = objectURL;
-        setAvatarURL(objectURL);
-        return;
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-        return;
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        return;
-      }
-    } catch {
-      // Handle API call error
-      alert("Service temporarily unavailable. Please try again later.");
-      return;
-    }
-  }
-
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchPFP(abortController.signal);
+    fetchUserPFP(abortController.signal, undefined).then((response) => {
+      if (response.status == 200) {
+        avatarURLRef.current = response.imageURL
+          ? response.imageURL
+          : pfpPlaceholder;
+        setAvatarURL(response.imageURL ? response.imageURL : pfpPlaceholder);
+      } else if (response.status == 401) {
+        navigate("/login");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    });
 
     return () => {
-      if (avatarURLRef.current != userDummyPFP) {
+      if (avatarURLRef.current != pfpPlaceholder) {
         URL.revokeObjectURL(avatarURLRef.current);
       }
       abortController.abort();
@@ -73,13 +49,12 @@ function AdminWorkspace() {
   return (
     <LayoutContext.Provider value={{ sidebarOpen, toggleSidebar }}>
       <div className="w-screen h-screen flex overflow-hidden">
-        <Sidebar />
+        <AdminSidebar />
         <div
-          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
-            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
-          }`}
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+            }`}
         >
-          <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
+          <AdminHeader avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
           <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the admin workspace */}
@@ -87,18 +62,27 @@ function AdminWorkspace() {
                 path=""
                 element={
                   <div>
-                    <AdminDashboard sidebarOpen={sidebarOpen} /> <Footer />{" "}
+                    <AdminDashboard /> <Footer />{" "}
                   </div>
                 }
               />
               {/* Resolve invalid path */}
-              <Route path="*" element={<Navigate to="/not-found-page" />} />
+              <Route path="*" element={<Navigate to="/not-found-pageAdmin" />} />
               {/* Show all events */}
               <Route
                 path="event"
                 element={
                   <div>
-                    <AdminEvent sidebarOpen={sidebarOpen} />
+                    <AdminEvent />
+                    <Footer />{" "}
+                  </div>
+                }
+              />
+              <Route
+                path="event/:eventId"
+                element={
+                  <div>
+                    <AdminEventDashboard />
                     <Footer />{" "}
                   </div>
                 }
@@ -108,7 +92,7 @@ function AdminWorkspace() {
                 path="user"
                 element={
                   <div>
-                    <AdminViewUsers sidebarOpen={sidebarOpen} />
+                    <AdminViewUsers />
                     <Footer />{" "}
                   </div>
                 }
@@ -116,19 +100,11 @@ function AdminWorkspace() {
               {/* Dashboard of a specific user */}
               <Route
                 path="user/:userId"
-                element={<AdminViewUserInfo sidebarOpen={sidebarOpen} />}
+                element={<AdminViewUserInfo />}
               />
 
-              {/* <Route
-                path="invitation"
-                element={
-                  <div>
-                    <Invitation />
-                    <Footer />{" "}
-                  </div>
-                }
-              /> */}
-              <Route path="account" element={<Account pfp={avatarURL} />} />
+
+              <Route path="account" element={<AdminAccount pfp={avatarURL} />} />
             </Routes>
             <div className="mt-auto "></div>
           </div>

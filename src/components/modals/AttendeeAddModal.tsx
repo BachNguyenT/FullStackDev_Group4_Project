@@ -104,7 +104,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
             {isLoading && (
               <FontAwesomeIcon
                 icon={faSpinner}
-                className="absolute left-98 top-9.5 text-gray-500 text-base spin"
+                className="absolute left-98 top-9.5 text-gray-500 text-base animate-spin"
               />
             )}
             <FontAwesomeIcon

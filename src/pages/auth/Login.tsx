@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/general/Button";
 import LoginImage from "@/assets/Pictures/LoginImage.png";
 const LOGIN_SUCCESS_TARGET = "/workspace"; // Define the target URL for successful login\
-
+const ADMIN_SUCCESS_TARGET = "/admin"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
@@ -48,8 +48,8 @@ function Login() {
   const handlePasswordBlur = () => {
     setPCheck(validatePassword(password));
   };
-  
-  const handleKeyDown =  (e: React.KeyboardEvent<HTMLInputElement>) => {
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !isLoading) {
       handleLogin();
     }
@@ -91,7 +91,13 @@ function Login() {
 
       // Handle response
       if (authRequestResponse.status == 200) {
-        navigate(LOGIN_SUCCESS_TARGET);
+        const data = await authRequestResponse.json();
+        if (data.type === "Admin") {
+          navigate(ADMIN_SUCCESS_TARGET); // admin dashboard
+        } else {
+          navigate(LOGIN_SUCCESS_TARGET); // default user dashboard
+        }
+
       } else if (authRequestResponse.status == 401) {
         setError("Invalid username or password.");
         setLoading(false);
@@ -193,7 +199,7 @@ function Login() {
               {usernameCheck}
             </p>
           )}
-          
+
           <input
             type="password"
             placeholder="Enter Password"

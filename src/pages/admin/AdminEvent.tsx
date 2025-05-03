@@ -1,77 +1,154 @@
-import { useState } from "react";
-import {
-  ChevronDown,
-  Filter,
-  MoreVertical,
-  Search,
-  User,
-  Trash,
-} from "lucide-react";
+// import libraries
+import { useState, useEffect } from "react";
 import type { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 
+// import components
+import { Button } from "@/components/general/Button";
+import { useDebounce } from "@/hooks";
+import { Dropdown } from "@/components/general";
+import { ConfirmModal } from "@/components/modals";
+
+// import Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSearch,
+  faTrash,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
+
 // Define types for our data and components
 interface Event {
-  id: string;
-  name: string;
-  hostId: string;
-  date: string;
-  attendees: number;
-  status: "ongoing" | "completed";
+  ID: string;
+  Name: string;
+  Organizer: string;
+  Date: string;
+  AttendeeCount: number;
+  Status: string;
 }
 
-interface NavItemProps {
-  label: string;
-  icon: string;
-  active?: boolean;
-}
-
-export default function AdminEvent({
-  sidebarOpen,
-}: {
-  sidebarOpen: boolean;
-}): ReactElement {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const navigate = useNavigate();
-
-  // Mock data for events
-  const events: Event[] = [
-    {
-      id: "0000001",
-      name: "A&B's wedding",
-      hostId: "A",
-      date: "14/02/2024, 14:00",
-      attendees: 100,
-      status: "ongoing",
-    },
-    {
-      id: "0000002",
-      name: "Morning routine seminar",
-      hostId: "Ashton Hall",
-      date: "14/02/2024, 14:00",
-      attendees: 200,
-      status: "ongoing",
-    },
-    {
-      id: "0000003",
-      name: "Business meeting",
-      hostId: "Lebron James",
-      date: "14/02/2024, 14:00",
-      attendees: 20,
-      status: "ongoing",
-    },
-    {
-      id: "0000003",
-      name: "D&E's Wedding",
-      hostId: "D",
-      date: "14/02/2024, 14:00",
-      attendees: 10,
-      status: "completed",
-    },
+function AdminEvent(): ReactElement {
+  const sortItems = [
+    { text: "Default" },
+    { text: "Most Recent" },
+    { text: "Oldest" },
   ];
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [eventNameSearch, setEventNameSearch] = useState<string>("");
+  const [maxAttendeeCount, setMaxAttendeeCount] = useState<number>(0);
+  const [sortDirection, setSortDirection] = useState<string>("Default");
+  const debounceName = useDebounce(eventNameSearch, 500);
+  const debounceSort = useDebounce(sortDirection, 500);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteID, setDeleteID] = useState<string>("");
+  const [reloadFlag, setReloadFlag] = useState(false);
+  const navigate = useNavigate();
+  function handleDeleteClick(id: string) {
+    setDeleteID(id);
+    setDeleteModalOpen(true);
+  }
+
+  async function handleConfirmDelete() {
+    try {
+      const queryParams = new URLSearchParams({
+        id: deleteID || "",
+      });
+
+      const response = await fetch(
+        `http://localhost:3000/admin-delete-event?${queryParams.toString()}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include"
+        }
+      );
+
+      if (response.status == 200) {
+        setDeleteModalOpen(false);
+        setReloadFlag(prev => !prev);
+      }
+      else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else if (response.status == 404) {
+        navigate("/not-found-pageAdmin");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    }
+    catch {
+      alert("Service temporarily unavailable. Please try again later.");
+    }
+  }
+
+
+  async function fetchEvents(abortSignal: AbortSignal | null) {
+    setIsLoading(true);
+    try {
+      const searchParams = new URLSearchParams({
+        name: debounceName,
+        order: sortItems
+          .findIndex((item) => item.text === debounceSort)
+          .toString(),
+      });
+
+      const response = await fetch(
+        `http://localhost:3000/get-events?${searchParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        if (
+          !Array.isArray(data.events) ||
+          typeof data.maxAttendeeCount !== "number"
+        ) {
+          console.error("Invalid response format:", data);
+          throw new Error("Invalid response format from server");
+        }
+        setMaxAttendeeCount(data.maxAttendeeCount);
+        setEvents(data.events);
+      } else if (response.status === 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else {
+        const errorText = await response.text();
+        console.error(
+          `Fetch error: Status ${response.status}, Response: ${errorText}`
+        );
+        alert("Service temporarily unavailable. Please try again later.");
+        setEvents([]);
+      }
+    } catch (error) {
+      console.error("Fetch events failed:", error);
+      alert("Service temporarily unavailable. Please try again later.");
+      setEvents([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    fetchEvents(abortController.signal);
+    return () => {
+      abortController.abort(); // Cleanup function to abort the fetch request
+    };
+  }, [debounceName, debounceSort, reloadFlag]);
+
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex bg-gray-50">
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6">
@@ -80,41 +157,28 @@ export default function AdminEvent({
           </div>
 
           {/* Filters and Search */}
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="relative inline-block">
-                <button className="flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <span>Show 10</span>
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </button>
+          <div className="flex justify-between items-center mb-4">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FontAwesomeIcon icon={faSearch} className="h-4 w-4 text-gray-400" />
               </div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Search className="h-4 w-4 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="Search users..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              <button className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                <Filter className="h-4 w-4" />
-                <span>Filter</span>
-              </button>
+              <input
+                type="text"
+                className="block w-full py-2 pl-10 pr-3 text-sm border border-gray-300 rounded-md bg-white shadow-sm focus-within:border-gray-600"
+                placeholder="Search events..."
+                value={eventNameSearch}
+                onChange={(e) => setEventNameSearch(e.target.value)}
+              />
+              {isLoading && (<FontAwesomeIcon icon={faSpinner} className="absolute right-3 top-2.5 text-gray-500 animate-spin" />)}
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Sort:</span>
-              <div className="relative inline-block">
-                <button className="flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <span>Most Recent</span>
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </button>
-              </div>
-            </div>
+            <Dropdown
+              value={sortDirection}
+              placeholder="Order events by:"
+              items={sortItems}
+              valueSetter={setSortDirection}
+            />
           </div>
+
 
           {/* Events Table */}
           <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
@@ -167,46 +231,52 @@ export default function AdminEvent({
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {events.map((event, index) => (
+                  {events.map((event) => (
                     <tr
-                      key={index}
+                      key={event.ID}
                       className="hover:bg-gray-50 cursor-pointer"
-                      onClick={() => navigate("/event/" + event.id)}
+                      onClick={() => {
+                        navigate(`/admin/event/${event.ID}`);
+                      }}
                     >
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.id}
+                        {event.ID}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {event.name}
+                        {event.Name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.hostId}
+                        {event.Organizer}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.date}
+                        {event.Date.slice(0, -1)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.attendees}
+                        {event.AttendeeCount} / {maxAttendeeCount}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                            event.status === "ongoing"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${event.Status === "Ongoing"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                            }`}
                         >
-                          {event.status === "ongoing" ? "Ongoing" : "Completed"}
+                          {event.Status === "Ongoing" ? "Ongoing" : "Completed"}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center space-x-3">
-                          <button
-                            className="text-gray-400 hover:text-gray-500 cursor-pointer"
-                            onClick={(e) => e.stopPropagation()}
+                          <Button
+                            className="w-8 h-8  text-white bg-red-500 "
+                            animated={false}
+                            size="icon"
+                            onClick={(e) => {
+                              handleDeleteClick(event.ID);
+                              e.stopPropagation();
+                            }}
                           >
-                            <Trash />
-                          </button>
+                            <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -217,53 +287,19 @@ export default function AdminEvent({
           </div>
         </main>
       </div>
+      {/* Delete modal */}
+      {isDeleteModalOpen && (
+        <ConfirmModal
+          title={"Delete Event"}
+          message={
+            `Are you sure you want to delete event ${deleteID}? This action cannot be undone.`
+          }
+          onCancel={() => setDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 }
 
-// Navigation Item Component
-function NavItem({ label, icon, active = false }: NavItemProps): ReactElement {
-  const getIcon = (iconName: string): ReactElement | null => {
-    switch (iconName) {
-      case "dashboard":
-        return (
-          <div className="w-5 h-5 rounded border border-gray-300 flex items-center justify-center">
-            <div className="w-3 h-3 bg-gray-300 rounded-sm"></div>
-          </div>
-        );
-      case "events":
-        return (
-          <div
-            className={`w-5 h-5 rounded ${
-              active ? "bg-purple-200" : "border border-gray-300"
-            }`}
-          ></div>
-        );
-      case "users":
-        return (
-          <div className="w-5 h-5 rounded border border-gray-300 flex items-center justify-center">
-            <User className="h-3 w-3 text-gray-400" />
-          </div>
-        );
-      case "account":
-        return (
-          <div className="w-5 h-5 rounded-full border border-gray-300"></div>
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div
-      className={`flex items-center space-x-3 rounded-lg px-3 py-2 ${
-        active
-          ? "bg-purple-100 text-purple-600"
-          : "text-gray-700 hover:bg-gray-100"
-      }`}
-    >
-      {getIcon(icon)}
-      <span className="text-sm font-medium">{label}</span>
-    </div>
-  );
-}
+export default AdminEvent;

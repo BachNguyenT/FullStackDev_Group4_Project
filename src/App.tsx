@@ -6,7 +6,7 @@ import {Login , Register} from "./pages/auth";
 import {About , PrivacyPolicy} from "./pages/info";
 import {NotFoundPage} from "./pages/others";
 import {Workspace} from "./pages/user";
-import AdminWorkspace from "./pages/admin/AdminWorkspace";
+import {AdminWorkspace} from "./pages/admin";
 import SessionValidator from "./route-protectors/SessionValidator";
 
 //import the components
@@ -26,6 +26,10 @@ function App() {
         <Route
           path="/not-found-page"
           element={<NotFoundPage returnTo="/workspace" />}
+        />
+        <Route
+          path="/not-found-pageAdmin"
+          element={<NotFoundPage returnTo="/admin" />}
         />
 
         {/* Workspace Routes */}

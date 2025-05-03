@@ -12,12 +12,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
-function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler } : {
+function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler,isEdit = true } : {
   id: string;
   name: string;
   status: string;
   invitationDate: string;
   onDeleteHandler: (id: string, name: string) => void;
+  isEdit: boolean;
 }) {
   const [pfpURL, setPfpURL] = useState<string>(pfpPlaceholder);
   const avatarURLRef = useRef<string>(pfpPlaceholder);
@@ -78,7 +79,7 @@ function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler } : {
   return (
     <tr className="border-t  border-gray-300">
       <td className="px-4 py-3">{id}</td>
-      <td className="pl-32 py-3 flex items-center justify-start gap-2">
+      <td className="pl-3 py-3 flex items-center justify-start gap-2">
         <img
           src={pfpURL}
           alt={name}
@@ -103,7 +104,7 @@ function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler } : {
         </span>
       </td>
 
-      <td className="px-4 py-3">
+      {isEdit && (<td className="px-4 py-3">
         <Button
           variant="destructive"
           className="hover:bg-red-500 hover:text-white"
@@ -112,7 +113,7 @@ function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler } : {
           <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs"/>
           Remove
         </Button>
-      </td>
+      </td>)}
     </tr>
   );
 }
