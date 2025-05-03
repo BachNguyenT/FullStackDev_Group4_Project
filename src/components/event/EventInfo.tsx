@@ -8,18 +8,20 @@ import { Card, CardContent } from "@/components/general/Card";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 
 
-// Import the icons from react-icons
+// import  icons 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  FaBarcode,
-  FaRegClock,
-  FaRegUser,
-  FaRegEyeSlash,
-  FaGitAlt,
-  FaRegMap,
-  FaRegCircleCheck,
-  FaPenToSquare,
-  FaTrashCan,
-} from "react-icons/fa6";
+  faCommentDots,
+  faBarcode,
+  faClock,
+  faUser,
+  faEyeSlash,
+  faCodeBranch,
+  faMap,
+  faCircleCheck,
+  faPenToSquare,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
 
 const getStatusStyle = (status: string) => {
   switch (status) {
@@ -42,7 +44,7 @@ function EventInfo({
   description,
   venue,
   isOrganizer,
-} : {
+}: {
   eventId: string;
   eventName: string;
   imageURL: string;
@@ -135,7 +137,7 @@ function EventInfo({
                 animated={false}
                 variant="secondary"
               >
-                <FaPenToSquare className="mr-2" />
+                <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
                 Edit
               </Button>
               <Button
@@ -144,7 +146,7 @@ function EventInfo({
                 className="bg-red-500 text-white ml-4"
                 onClick={handleDeleteClick}
               >
-                <FaTrashCan />
+                <FontAwesomeIcon icon={faTrashCan} />
               </Button>
             </div>
           )}
@@ -165,24 +167,24 @@ function EventInfo({
               {/* 3 columns of details */}
               <div className="grid gap-4">
                 <InfoItem
-                  icon={<FaBarcode />}
+                  icon={<FontAwesomeIcon icon={faCommentDots} />}
                   label="Event ID"
                   value={eventId}
                 />
                 <InfoItem
-                  icon={<FaRegClock />}
+                  icon={<FontAwesomeIcon icon={faBarcode} />}
                   label="Date & Time"
                   value={dateTime}
                 />
               </div>
               <div className="grid gap-4">
                 <InfoItem
-                  icon={<FaRegClock />}
+                  icon={<FontAwesomeIcon icon={faClock} />}
                   label="Duration"
                   value={duration}
                 />
                 <InfoItem
-                  icon={<FaRegUser />}
+                  icon={<FontAwesomeIcon icon={faUser} />}
                   label="Event type"
                   value={eventType}
                 />
@@ -190,12 +192,12 @@ function EventInfo({
               {/* visibility */}
               <div className="grid gap-4">
                 <InfoItem
-                  icon={<FaRegEyeSlash />}
+                  icon={<FontAwesomeIcon icon={faEyeSlash} />}
                   label="Visibility"
                   value={visibility}
                 />
                 <InfoItem
-                  icon={<FaRegCircleCheck />}
+                  icon={<FontAwesomeIcon icon={faCircleCheck} />}
                   label="Status"
                   value={status}
                 />
@@ -203,12 +205,12 @@ function EventInfo({
             </div>
 
             <InfoItem
-              icon={<FaGitAlt />}
+              icon={<FontAwesomeIcon icon={faCodeBranch} />}
               label="Description"
               value={description}
             />
             <InfoItem
-              icon={<FaRegMap />}
+              icon={<FontAwesomeIcon icon={faMap} />}
               label="Venue"
               value={venue}
             />

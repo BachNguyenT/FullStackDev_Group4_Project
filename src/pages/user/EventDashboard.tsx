@@ -1,6 +1,6 @@
 // import libraries
-import { useState,useEffect,useRef} from "react";
-import { useNavigate,useParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 // import components
 import {
@@ -9,7 +9,7 @@ import {
   DiscussionBoard,
   JoinRequestList
 } from "@/components/event";
-import {Loading} from "../others";
+import { Loading } from "../others";
 import { verifyEventAccess, fetchJoinRequestList, fetchEventInfo, fetchEventImage, fetchEventChatLog, fetchEventAttendeeList } from "@/api/event-services.ts";
 import { FetchStatus } from "@/enum.ts";
 import { FetchResult } from "@/Types";
@@ -45,9 +45,8 @@ function EventDashboard() {
   const navigate = useNavigate();
 
   // Data fetching functions
-  function processFetchFail (fetchResult : FetchResult) {
+  function processFetchFail(fetchResult: FetchResult) {
     if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
-      console.log("Session expired. Please log in again.");
       alert("Session expired. Please log in again.");
       navigate("/login");
     } else if (fetchResult.status === FetchStatus.NOT_FOUND) {
@@ -58,19 +57,18 @@ function EventDashboard() {
     }
   }
 
-  async function checkAccess (abortSignal: AbortSignal | undefined) {
+  async function checkAccess(abortSignal: AbortSignal | undefined) {
     const verificationResult = await verifyEventAccess(abortSignal, eventId);
-      if (verificationResult.status === FetchStatus.SUCCESS) {
-        return true;
-      }
-      else  {
-        console.log(verificationResult.status);
-        processFetchFail(verificationResult);
-        return false;
-      }
+    if (verificationResult.status === FetchStatus.SUCCESS) {
+      return true;
+    }
+    else {
+      processFetchFail(verificationResult);
+      return false;
+    }
   }
 
-  async function loadInfo (abortSignal: AbortSignal | undefined) {
+  async function loadInfo(abortSignal: AbortSignal | undefined) {
     const eventInfo = await fetchEventInfo(
       abortSignal,
       eventId);
@@ -79,14 +77,14 @@ function EventDashboard() {
       isOrganizerRef.current = eventInfo.result.isOrganizer;
       setEventInfo(eventInfo.result);
       return true;
-    } 
+    }
     else {
       processFetchFail(eventInfo);
       return false;
     }
   }
 
-  async function loadImage (abortSignal: AbortSignal | undefined) {
+  async function loadImage(abortSignal: AbortSignal | undefined) {
     const eventImage = await fetchEventImage(
       abortSignal,
       eventId);
@@ -97,14 +95,14 @@ function EventDashboard() {
         setImageURL(eventImage.result);
       }
       return true;
-    } 
+    }
     else {
       processFetchFail(eventImage);
       return false;
     }
   }
 
-  async function loadChatLog (abortSignal: AbortSignal | undefined) {
+  async function loadChatLog(abortSignal: AbortSignal | undefined) {
     const eventChatlog = await fetchEventChatLog(
       abortSignal,
       eventId);
@@ -112,14 +110,14 @@ function EventDashboard() {
     if (eventChatlog.status === FetchStatus.SUCCESS) {
       setChatLog(eventChatlog.result);
       return true;
-    } 
+    }
     else {
       processFetchFail(eventChatlog);
       return false;
     }
   }
 
-  async function loadAttendeeList (abortSignal: AbortSignal | undefined) {
+  async function loadAttendeeList(abortSignal: AbortSignal | undefined) {
     const eventAttendeeList = await fetchEventAttendeeList(
       abortSignal,
       eventId);
@@ -127,14 +125,14 @@ function EventDashboard() {
     if (eventAttendeeList.status === FetchStatus.SUCCESS) {
       setAttendeeList(eventAttendeeList.result);
       return true;
-    } 
+    }
     else {
       processFetchFail(eventAttendeeList);
       return false;
     }
   }
 
-  async function loadJoinRequestList (abortSignal: AbortSignal | undefined) {
+  async function loadJoinRequestList(abortSignal: AbortSignal | undefined) {
     const joinRequestList = await fetchJoinRequestList(
       abortSignal,
       eventId);
@@ -142,7 +140,7 @@ function EventDashboard() {
     if (joinRequestList.status === FetchStatus.SUCCESS) {
       setJoinRequestList(joinRequestList.result);
       return true;
-    } 
+    }
     else {
       processFetchFail(joinRequestList);
       return false;
@@ -157,7 +155,7 @@ function EventDashboard() {
       if (!(await checkAccess(abortController.signal))) {
         return;
       }
-      
+
       if (!(await loadInfo(abortController.signal))) {
         return;
       }
@@ -168,7 +166,7 @@ function EventDashboard() {
       // Fetch other data (fetch asynchonously to improve loading time)
       loadImage(abortController.signal);
       loadChatLog(abortController.signal);
-      if(isOrganizerRef.current) {
+      if (isOrganizerRef.current) {
         loadAttendeeList(abortController.signal);
         loadJoinRequestList(abortController.signal);
       }
@@ -212,7 +210,7 @@ function EventDashboard() {
             <>
               <JoinRequestList
                 joinRequestList={joinRequestList}
-                refreshHandler={async () => {await loadJoinRequestList(undefined); await loadAttendeeList(undefined);}}
+                refreshHandler={async () => { await loadJoinRequestList(undefined); await loadAttendeeList(undefined); }}
                 eventID={eventId}
               />
               <AttendeeList

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/general/Button";
 import JoinRequestRow from "./JoinRequestRow";
 
+
+
 interface JoinRequest {
   UserID: string;
   Name: string;
@@ -28,7 +30,7 @@ function JoinRequestList({
       const searchParams = new URLSearchParams({
         id: eventID || "",
       });
-  
+
       const response = await fetch(
         `http://localhost:3000/accept-join-request?${searchParams.toString()}`,
         {
@@ -42,7 +44,7 @@ function JoinRequestList({
           credentials: "include",
         }
       );
-  
+
       if (response.status == 200) {
         refreshHandler(undefined);
       } else if (response.status == 401) {
@@ -67,7 +69,7 @@ function JoinRequestList({
       const searchParams = new URLSearchParams({
         id: eventID || "",
       });
-  
+
       const response = await fetch(
         `http://localhost:3000/decline-join-request?${searchParams.toString()}`,
         {
@@ -81,7 +83,7 @@ function JoinRequestList({
           credentials: "include",
         }
       );
-  
+
       if (response.status == 200) {
         refreshHandler(undefined);
       } else if (response.status == 401) {
@@ -132,8 +134,7 @@ function JoinRequestList({
               <tr className="text-center">
                 <th className="py-3 px-4 font-medium ">User ID</th>
                 <th className="py-3 px-4 font-medium ">Name</th>
-                <th className="py-3 px-4 font-medium "></th>
-                <th className="py-3 px-4 font-medium "></th>
+                <th className="py-3 px-4 font-medium ">Action</th>
               </tr>
             </thead>
             <tbody className="text-center">

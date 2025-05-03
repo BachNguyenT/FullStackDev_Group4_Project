@@ -4,8 +4,7 @@ import { Button } from "@/components/general/Button";
 
 // import Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FaUser } from "react-icons/fa6";
+import { faEye, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 
 
 function AdminAttendeeInfo({
@@ -41,7 +40,7 @@ function AdminAttendeeInfo({
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-gray-500">
-            <FaUser />
+            <FontAwesomeIcon icon={faUser} className="text-lg" />
           </div>
         )}
         <span>{name}</span>

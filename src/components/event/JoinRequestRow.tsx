@@ -1,5 +1,5 @@
 // import libraries
-import { useState,useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // import components
@@ -8,6 +8,8 @@ import { FetchStatus } from "@/enum.ts";
 import { Button } from "@/components/general/Button";
 
 // import icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRemove, faCheck } from "@fortawesome/free-solid-svg-icons";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
 function JoinRequestRow({
@@ -65,27 +67,28 @@ function JoinRequestRow({
       </td>
 
       <td className="px-4 py-3">
-        <Button
-          variant="destructive"
-          className="hover:bg-green-500 hover:text-white"
-          onClick={async () => {
-            await onAcceptHandler(id);
-          }}
-        >
-          Accept
-        </Button>
-      </td>
-
-      <td className="px-4 py-3">
-        <Button
-          variant="destructive"
-          className="hover:bg-red-500 hover:text-white"
-          onClick={async () => {
-            await onDeclineHandler(id);
-          }}
-        >
-          Decline
-        </Button>
+        <div className="flex items-center justify-center gap-4">
+          <Button
+            variant="destructive"
+            className="hover:bg-green-500 hover:text-white "
+            onClick={async () => {
+              await onAcceptHandler(id);
+            }}
+          >
+            <FontAwesomeIcon icon={faCheck} />
+            Accept
+          </Button>
+          <Button
+            variant="destructive"
+            className="hover:bg-red-500 hover:text-white"
+            onClick={async () => {
+              await onDeclineHandler(id);
+            }}
+          >
+            <FontAwesomeIcon icon={faRemove} />
+            Decline
+          </Button>
+        </div>
       </td>
     </tr>
   );
