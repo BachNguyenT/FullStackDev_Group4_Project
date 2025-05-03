@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 // import components
 import { Button } from "@/components/general/Button";
-import {EventCard} from "@/components/event";
-import {Dropdown} from "@/components/general";
-import {useDebounce} from "@/hooks";
+import { EventCard } from "@/components/event";
+import { Dropdown } from "@/components/general";
+import { useDebounce } from "@/hooks";
 
 // import icons
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -44,7 +44,8 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [events, setEvents] = useState<Event[]>([]);
   const [maxAttendeeCount, setMaxAttendeeCount] = useState<number>(0);
   const [eventNameSearch, setEventNameSearch] = useState<string>("");
-  const [eventVisibilitySearch, setEventVisibilitySearch] = useState<string>("All");
+  const [eventVisibilitySearch, setEventVisibilitySearch] =
+    useState<string>("All");
   const [sortDirection, setSortDirection] = useState<string>("Default");
   const [eventStatusSearch, setEventStatusSearch] = useState<string>("All");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -55,16 +56,20 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   const debounceSort = useDebounce(sortDirection, 500);
   const debounceVisibility = useDebounce(eventVisibilitySearch, 500);
 
-
-
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
     try {
       const searchParams = new URLSearchParams({
         name: debounceName,
-        status: statusItems.findIndex((item) => item.text === debounceStatus).toString(),
-        visibility: visibilityItems.findIndex((item) => item.text === debounceVisibility).toString(),
-        order: sortItems.findIndex((item) => item.text === debounceSort).toString(),
+        status: statusItems
+          .findIndex((item) => item.text === debounceStatus)
+          .toString(),
+        visibility: visibilityItems
+          .findIndex((item) => item.text === debounceVisibility)
+          .toString(),
+        order: sortItems
+          .findIndex((item) => item.text === debounceSort)
+          .toString(),
       });
 
       const response = await fetch(
@@ -103,6 +108,47 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
     }
   }
 
+  const abortController = new AbortController();
+
+  async function checkMaxEventHosted(): Promise<boolean> {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/check-max-event-hosted",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortController.signal,
+        }
+      );
+
+      if (response.status === 200) {
+        return true; // Allow navigation
+      } else if (response.status === 400) {
+        alert("You have reached your event hosting limit.");
+        return false; // Block navigation
+      } else {
+        alert("Failed to do this action. Please try again later.");
+        return false; // Block navigation
+      }
+    } catch (err) {
+      if (!abortController.signal.aborted) {
+        alert("An error occurred while trying to create a new event.");
+      }
+      return false; // Block navigation
+    }
+  }
+
+  // Updated Button onClick Handler
+  const handleAddEventClick = async () => {
+    const canProceed = await checkMaxEventHosted();
+    if (canProceed) {
+      navigate("/workspace/event/create");
+    }
+  };
+
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -122,9 +168,9 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
         {/* Add new event */}
         <span>
           <Button
-            to="/workspace/event/create"
             className="mb-2"
             animated={false}
+            onClick={handleAddEventClick}
           >
             <FontAwesomeIcon icon={faPlus} className="ml-2" />
             Add New Event
@@ -167,10 +213,11 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
 
       {/* Event Cards Grid */}
       <div
-        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${sidebarOpen
+        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${
+          sidebarOpen
             ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
             : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
-          }`}
+        }`}
       >
         {isLoading ? (
           <div>Loading...</div>
