@@ -171,7 +171,7 @@ function Account({ pfp }: { pfp: string }) {
           alert("Service temporarily unavailable. Please try again later.");
         }
       })
-      .catch((error) => {
+      .catch(() => {
         alert("Service temporarily unavailable. Please try again later.");
       });
   };
@@ -228,7 +228,7 @@ function Account({ pfp }: { pfp: string }) {
             alert("Service temporarily unavailable. Please try again later.");
           }
         })
-        .catch((error) => {
+        .catch(() => {
           alert("Service temporarily unavailable. Please try again later.");
         });
     };
@@ -306,7 +306,7 @@ function Account({ pfp }: { pfp: string }) {
           alert("Service temporarily unavailable. Please try again later.");
         }
       })
-      .catch((error) => {
+      .catch(() => {
         alert("Service temporarily unavailable. Please try again later.");
       });
   };

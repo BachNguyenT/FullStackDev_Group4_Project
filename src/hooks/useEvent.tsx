@@ -1,6 +1,14 @@
 // import libraries
 import { useMemo } from "react";
-const useEvent = (events: Array<object>, sidebarOpen: boolean) => {
+interface Event {
+  ID: string;
+  Name: string;
+  Type: string;
+  Date: string;
+  IsPrivate : string;
+  AtendeeCount : number;
+}
+const useEvent = (events: Array<Event>, sidebarOpen: boolean) => {
   const showMore = useMemo(() => {
     return events.length > (sidebarOpen ? 3 : 4);
   }, [events, sidebarOpen]);

@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/general/Button";
 import {useEvent} from "@/hooks";
 import {EventCard} from "@/components/event";
-import {InvitationCard} from "@/components/invitation";
 
 // import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,10 +14,10 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   const [events, setEvents] = useState([]);
   const [maxAttendeeCount, setMaxAttendeeCount] = useState(0);
-  const [eventNameSearch, setEventNameSearch] = useState("");
-  const [eventVisibilitySearch, setEventVisibilitySearch] = useState(0);
-  const [sortDirection, setSortDirection] = useState(0);
-  const [eventStatusSearch, setEventStatusSearch] = useState(0);
+  const [eventNameSearch] = useState("");
+  const [eventVisibilitySearch] = useState(0);
+  const [sortDirection] = useState(0);
+  const [eventStatusSearch] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hostedEvents, setHostedEvents] = useState<{ label: string; value: number }[]>([]);
   const [joinedEvents, setJoinedEvents] = useState<{ label: string; value: number }[]>([]);
@@ -158,9 +157,6 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
     sidebarOpen
   );
 
-  const invitations = Array(4).fill(null);
-  const { showMore: showMoreInvitation, displayedItems: displayedInvitations } =
-    useEvent(invitations, sidebarOpen);
 
   // Calculate totals for display
   const totalHosted = hostedEvents.reduce((sum, item) => sum + item.value, 0);
@@ -275,7 +271,6 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
                 visibility={element.IsPrivate ? "Private" : "Public"}
                 attendeeCount={element.AtendeeCount}
                 maxAttendeeCount={maxAttendeeCount}
-                className="w-full sm:w-[300px] md:w-[280px] lg:w-[260px] xl:w-[240px] rounded-xl overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
               />
             );
           })
@@ -283,29 +278,6 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
           <div>No events found.</div>
         )}
       </div>
-
-      <div className="flex items-center justify-between mb-4 mt-12">
-        <h3 className="text-lg font-semibold mb-4">Pending invitations</h3>
-        {showMoreInvitation && (
-          <div className="flex items-center justify-center align-item-center group">
-            <Button
-              variant="link"
-              to="/invitation"
-              animated={false}
-              className="text-purple-600 p-2"
-            >
-              View More
-            </Button>
-            <FontAwesomeIcon
-              icon={faArrowRight}
-              className="text-purple-600 transition-transform duration-300 transform group-hover:translate-x-1"
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Invitations List */}
-      
     </div>
   );
 }

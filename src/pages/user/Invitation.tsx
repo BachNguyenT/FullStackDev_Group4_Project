@@ -18,7 +18,7 @@ interface invitation {
   Venue: string;
   IsPrivate: boolean;
   OrganizerName: string;
-  Rsvp: number; // -1 not set, 0 no, 1 yes
+  Rsvp: string; // -1 not set, 0 no, 1 yes
 }
 
 const statusOptions = [{ text: "Ongoing" }, { text: "Completed" }];
@@ -28,7 +28,7 @@ function Invitation() {
   const [invitations, setInvitations] = useState<invitation[]>([]);
   const navigate = useNavigate();
 
-  async function fetchInvitations(AbortSignal : AbortSignal | undefined) {
+  async function fetchInvitations(abortSignal: AbortSignal | undefined) {
     try {
       const queryParams = new URLSearchParams({
         statusFilter: statusFilter,
@@ -42,6 +42,7 @@ function Invitation() {
             "Content-Type": "application/json",
           },
           credentials: "include",
+          signal: abortSignal,
         }
       );
 

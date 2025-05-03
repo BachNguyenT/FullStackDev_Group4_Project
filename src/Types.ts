@@ -30,7 +30,6 @@ type Event = {
   HostID: string;
   date: string;
   attendees: number;
-  status: "Accepted" | "Declined" | "Pending";
 };
 
 interface EventInfoProps {

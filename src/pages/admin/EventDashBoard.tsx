@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Button } from "@/components/general/Button";
 
 import { EventInfo } from "@/components/event";
 import AttendeeInfo from "@/components/event/AttendeeInfo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { ConfirmModal } from "@/components/modals";
 const attendeeData = [
   {
@@ -40,7 +39,7 @@ function EventDashboard() {
     item: string;
   } | null>(null);
 
-  const handleDeleteEvent = (item) => {
+  const handleDeleteEvent = (item : string) => {
     setDeleteTarget({ type: "event", item });
     setDeleteModalOpen(true);
   };
@@ -58,7 +57,7 @@ function EventDashboard() {
   };
   return (
     <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
-      <EventInfo isEdit={false} onDelete={handleDeleteEvent} />
+      <EventInfo onDelete={handleDeleteEvent} />
       <div className="space-y-4">
         {/* Header row with filter/search/add */}
         <h1 className="text-2xl font-semibold mb-4 mt-8 ">Attendees</h1>

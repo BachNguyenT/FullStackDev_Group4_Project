@@ -42,7 +42,19 @@ function EventInfo({
   description,
   venue,
   isOrganizer,
-} : EventInfoProps) {
+} : {
+  eventId: string;
+  eventName: string;
+  imageURL: string;
+  eventType: string;
+  visibility: string;
+  dateTime: string;
+  duration: string;
+  status: string;
+  description: string;
+  venue: string;
+  isOrganizer: boolean;
+}) {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
 

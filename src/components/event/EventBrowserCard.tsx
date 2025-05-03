@@ -2,7 +2,6 @@
 import {useState, useEffect, useRef } from "react";
 
 // import components
-import { EventInfoProps } from "@/Types";
 import { Button } from "../general/Button";
 
 // import icons
@@ -23,7 +22,17 @@ function EventBrowserCard({
     attendeeCount,
     maxAttendeeCount,
     refreshEvents,
-}: EventInfoProps & { refreshEvents: () => void }) {
+}: {
+    eventId: string;
+    eventName: string;
+    dateTime: Date;
+    eventType: string;
+    visibility: string;
+    eventStatus: string;
+    attendeeCount: number;
+    maxAttendeeCount: number;
+    refreshEvents: () => Promise<void>;
+}) {
     const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
     const imageURLRef = useRef<string>(eventImagePlaceholder);
     async function fetchEventImage(abortSignal: AbortSignal) {

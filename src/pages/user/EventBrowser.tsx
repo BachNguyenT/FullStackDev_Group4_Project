@@ -35,7 +35,8 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
     Date: string;
     Type: string;
     IsPrivate: boolean;
-    AttendeeCount: number; // Fixed typo from AtendeeCount
+    AttendeeCount: number; 
+    Status: string;
   }
 
   const [events, setEvents] = useState<Event[]>([]);

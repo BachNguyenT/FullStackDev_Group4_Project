@@ -1,5 +1,4 @@
 //import components
-import { EventInfoProps } from "@/Types";
 import { Card, CardContent, CardTitle } from "@/components/general/Card";
 
 // import icons
@@ -17,7 +16,6 @@ import {
 function InvitationInfo({
   eventId,
   eventName,
-  imageURL,
   createdOn,
   eventType,
   visibility,
@@ -26,7 +24,18 @@ function InvitationInfo({
   status,
   description,
   venue,
-}: EventInfoProps) {
+}: {
+  eventId: string;
+  eventName: string;
+  createdOn: string;
+  eventType: string;
+  visibility: string;
+  dateTime: string;
+  duration: string;
+  status: string;
+  description: string;
+  venue: string;
+} ) {
   return (
     <>
       <h1 className="text-2xl font-semibold mb-4">

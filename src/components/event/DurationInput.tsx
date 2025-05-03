@@ -22,7 +22,7 @@ const DurationInput: React.FC<DurationInputProps> = ({
   const [hour, setHour] = useState<number>(0);
   const [minute, setMinute] = useState<number>(0);
   const [second, setSecond] = useState<number>(0);
-  const [isValidating, setIsValidating] = useState<boolean>(false);
+  const [isValidating, _] = useState<boolean>(false);
 
   useEffect(() => {
     setHour(value.hour);
