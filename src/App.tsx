@@ -42,9 +42,9 @@ function App() {
         <Route
           path="/admin/*"
           element={
-            <SessionValidator>
+            // <SessionValidator>
               <AdminWorkspace />
-            </SessionValidator>
+            // </SessionValidator>
           }
         />
 

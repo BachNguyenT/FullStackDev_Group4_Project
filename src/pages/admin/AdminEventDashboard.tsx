@@ -1,223 +1,131 @@
+// import libraries
 import { useState } from "react";
-import {
-  AttendeeList,
-  EventInfo,
-  DiscussionBoard,
-} from "@/components/event";
-import ConfirmModal from "@/components/modals/ConfirmModal";
-import { useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
-import Loading from "../others/Loading";
-import { verifyEventAccess, fetchEventInfo, fetchEventImage, fetchEventChatLog, fetchEventAttendeeList } from "@/api/event-services.ts";
-import { FetchStatus } from "@/enum.ts";
-import { FetchResult } from "@/Types";
 
-function EventDashboard() {
-  // Get event ID from URL parameters
-  const { eventId } = useParams();
-  // Interface control hooks
+// import components
+import { EventInfo } from "@/components/event";
+import AttendeeInfo from "@/components/event/AttendeeInfo";
+
+// import icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { ConfirmModal } from "@/components/modals";
+const attendeeData = [
+  {
+    id: "0000001",
+    name: "Lebron James",
+    imageUrl: "https://i.pravatar.cc/150?img=1",
+    invitationDate: "19/03/2026",
+    replyDate: "20/03/2026",
+    status: "Accepted",
+  },
+  {
+    id: "0000002",
+    name: "Ashton Hall",
+    imageUrl: "https://i.pravatar.cc/150?img=2",
+    invitationDate: "19/03/2026",
+    replyDate: "20/03/2026",
+    status: "Declined",
+  },
+  {
+    id: "0000003",
+    name: "Darren Jason Watkins Jr.",
+    imageUrl: "",
+    invitationDate: "19/03/2026",
+    replyDate: "20/03/2026",
+    status: "Pending",
+  },
+];
+const handleOnDeleteClick = (id: string) => {
+  console.log("Delete attendee with ID:", id);
+}
+
+function AdminEventDashboard() {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [render, setRender] = useState<boolean>(false);
-  // Data hooks
-  const [attendeeList, setAttendeeList] = useState<any>([]);
-  const [chatLog, setChatLog] = useState<any>([]);
-  const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
-  const imageURLRef = useRef<string>(eventImagePlaceholder);
-  const [eventInfo, setEventInfo] = useState({
-    eventName: "Loading...",
-    eventID: "Loading...",
-    eventDateTime: "Loading...",
-    eventDuration: "Loading...",
-    eventType: "Loading...",
-    eventStatus: "Loading...",
-    eventVisibility: "Loading...",
-    eventDescription: "Loading...",
-    eventVenue: "Loading...",
-    isOrganizer: false,
-  });
-  const isOrganizerRef = useRef<boolean>(false);
-  // Navigate hook
-  const navigate = useNavigate();
+  const [deleteTarget, setDeleteTarget] = useState<{
+    type: "event" | "attendee";
+    item: string;
+  } | null>(null);
 
-  // Data fetching functions
-  function processFetchFail (fetchResult : FetchResult) {
-    if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
-      console.log("Session expired. Please log in again.");
-      alert("Session expired. Please log in again.");
-      navigate("/login");
-    } else if (fetchResult.status === FetchStatus.NOT_FOUND) {
-      navigate("/not-found-page");
-    } else if (fetchResult.status === FetchStatus.ERROR) {
-      alert("Service temporarily unavailable. Please try again later.");
-      navigate("/workspace/event");
-    }
-  }
+  const handleDeleteEvent = (item: string) => {
+    setDeleteTarget({ type: "event", item });
+    setDeleteModalOpen(true);
+  };
 
-  async function checkAccess (abortSignal: AbortSignal | undefined) {
-    const verificationResult = await verifyEventAccess(abortSignal, eventId);
-      if (verificationResult.status === FetchStatus.SUCCESS) {
-        return true;
-      }
-      else  {
-        console.log(verificationResult.status);
-        processFetchFail(verificationResult);
-        return false;
-      }
-  }
-
-  async function loadInfo (abortSignal: AbortSignal | undefined) {
-    const eventInfo = await fetchEventInfo(
-      abortSignal,
-      eventId);
-
-    if (eventInfo.status === FetchStatus.SUCCESS) {
-      isOrganizerRef.current = eventInfo.result.isOrganizer;
-      setEventInfo(eventInfo.result);
-      return true;
-    } 
-    else {
-      processFetchFail(eventInfo);
-      return false;
-    }
-  }
-
-  async function loadImage (abortSignal: AbortSignal | undefined) {
-    const eventImage = await fetchEventImage(
-      abortSignal,
-      eventId);
-
-    if (eventImage.status === FetchStatus.SUCCESS) {
-      if (eventImage.result) {
-        imageURLRef.current = eventImage.result;
-        setImageURL(eventImage.result);
-      }
-      return true;
-    } 
-    else {
-      processFetchFail(eventImage);
-      return false;
-    }
-  }
-
-  async function loadChatLog (abortSignal: AbortSignal | undefined) {
-    const eventChatlog = await fetchEventChatLog(
-      abortSignal,
-      eventId);
-
-    if (eventChatlog.status === FetchStatus.SUCCESS) {
-      setChatLog(eventChatlog.result);
-      return true;
-    } 
-    else {
-      processFetchFail(eventChatlog);
-      return false;
-    }
-  }
-
-  async function loadAttendeeList (abortSignal: AbortSignal | undefined) {
-    const eventAttendeeList = await fetchEventAttendeeList(
-      abortSignal,
-      eventId);
-
-    if (eventAttendeeList.status === FetchStatus.SUCCESS) {
-      setAttendeeList(eventAttendeeList.result);
-      return true;
-    } 
-    else {
-      processFetchFail(eventAttendeeList);
-      return false;
-    }
-  }
-
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    async function onMount() {
-      // Check access privileges and load event info
-      if (!(await checkAccess(abortController.signal))) {
-        return;
-      }
-      
-      if (!(await loadInfo(abortController.signal))) {
-        return;
-      }
-
-      // Close loading screen
-      setRender(true);
-
-      // Fetch other data (fetch asynchonously to improve loading time)
-      loadImage(abortController.signal);
-      loadChatLog(abortController.signal);
-      if(isOrganizerRef.current) {
-        loadAttendeeList(abortController.signal);
+  const handleDelete = () => {
+    // Handle the delete action here
+    if (deleteTarget) {
+      if (deleteTarget.type === "event") {
+        console.log("Event", deleteTarget.item);
+      } else {
+        console.log(deleteTarget.item);
       }
     }
-
-    onMount();
-
-    return () => {
-      // Clean up image URL on unmount
-      if (imageURLRef.current !== eventImagePlaceholder) {
-        URL.revokeObjectURL(imageURLRef.current); // Clean up the image URL object
-      }
-
-      // Abort any ongoing fetch requests
-      abortController.abort();
-    };
-  }, []);
-
+    setDeleteModalOpen(false);
+  };
   return (
-    <div>
-      {!render ? (
-        <Loading />
-      ) : (
-        <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
-          {/* Event info and image */}
-          <EventInfo
-            imageURL={imageURL}
-            eventId={eventInfo.eventID}
-            eventName={eventInfo.eventName}
-            eventType={eventInfo.eventType}
-            visibility={eventInfo.eventVisibility}
-            dateTime={eventInfo.eventDateTime}
-            duration={eventInfo.eventDuration}
-            status={eventInfo.eventStatus}
-            description={eventInfo.eventDescription}
-            venue={eventInfo.eventVenue}
-            isOrganizer={eventInfo.isOrganizer}
-          />
-          {/* Attendee list (Only show attendee list if the user is the organizer) */}
-          {eventInfo.isOrganizer && (
-            <AttendeeList
-              attendeeList={attendeeList}
-              refreshHandler={loadAttendeeList}
-              eventID={eventId}
+    <div className="p-4 sm:p-6 md:p-4 bg-gray-50">
+      <EventInfo onDelete={handleDeleteEvent} />
+      <div className="space-y-4">
+        {/* Header row with filter/search/add */}
+        <h1 className="text-2xl font-semibold mb-4 mt-8 ">Attendees</h1>
+        <div className="flex flex-wrap gap-2 justify-between items-center">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search attendees..."
+              className="text-sm px-3 py-1.5 border border-gray-300 rounded-md w-52 pl-9"
             />
-          )}
-          {/* Discussion board */}
-          <DiscussionBoard
-            chatLog={chatLog}
-            eventID={eventInfo.eventID}
-            refreshHandler={loadAttendeeList}
-          />
-          {/* Delete modal for event and attendee */}
-          {isDeleteModalOpen && (
-            <ConfirmModal
-              title={"Delete Event"}
-              message={
-                "Once the event is deleted all info and attendees will be removed."
-              }
-              onCancel={() => setDeleteModalOpen(false)}
-              onConfirm={() => {}}
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              className="absolute left-3 top-2.5 text-gray-500 text-base"
             />
-          )}
+          </div>
         </div>
+        {/* Table */}
+        <div className="overflow-auto border border-gray-300 rounded-md">
+          <table className="min-w-full text-sm">
+            <thead className="bg-muted text-muted-foreground text-left">
+              <tr>
+                <th className="py-3 px-4 font-medium">User ID</th>
+                <th className="py-3 px-4 font-medium">Name</th>
+                <th className="py-3 px-4 font-medium">Invitation date</th>
+                <th className="py-3 px-4 font-medium">RSVP Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {attendeeData.map((attendee, key) => (
+                <AttendeeInfo
+                  key={key}
+                  id={attendee.attendeeID}
+                  name={attendee.attendeeName}
+                  status={attendee.rsvp}
+                  invitationDate={attendee.date}
+                  onDeleteHandler={handleOnDeleteClick}
+                  isEdit={false}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Delete modal for event and attendee */}
+      {isDeleteModalOpen && deleteTarget && (
+        <ConfirmModal
+          title={
+            deleteTarget.type === "event" ? "Delete Event" : "Delete Attendee"
+          }
+          message={
+            deleteTarget.type === "event"
+              ? "Once the event is deleted all info and attendees will be removed."
+              : "Are you sure you want to delete this attendee? This action cannot be undone."
+          }
+          onCancel={() => setDeleteModalOpen(false)}
+          onConfirm={handleDelete}
+        />
       )}
     </div>
   );
 }
 
-export default EventDashboard;
+export default AdminEventDashboard;

@@ -1,14 +1,21 @@
-import { useState } from "react";
-import {
-  ChevronDown,
-  Filter,
-  MoreVertical,
-  Search,
-  User,
-  Trash,
-} from "lucide-react";
+// import libraries
+import { useState, useEffect } from "react";
 import type { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
+
+// import components
+import { Button } from "@/components/general/Button";
+import { useDebounce } from "@/hooks";
+import { Dropdown } from "@/components/general";
+
+// import Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronDown,
+  faUser,
+  faSearch,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Define types for our data and components
 interface Event {
@@ -26,49 +33,118 @@ interface NavItemProps {
   active?: boolean;
 }
 
-export default function AdminEvent({
-  sidebarOpen,
-}: {
-  sidebarOpen: boolean;
-}): ReactElement {
-  const [searchQuery, setSearchQuery] = useState<string>("");
+function AdminEvent(): ReactElement {
+  const sortItems = [
+    { text: "Default" },
+    { text: "Most Recent" },
+    { text: "Oldest" },
+  ];
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [eventNameSearch, setEventNameSearch] = useState<string>("");
+  const [sortDirection, setSortDirection] = useState<string>("Default");
+  const debounceName = useDebounce(eventNameSearch, 500);
+  const debounceSort = useDebounce(sortDirection, 500);
+
+
+  async function fetchEvents(abortSignal: AbortSignal | null) {
+    setIsLoading(true);
+    try {
+      const searchParams = new URLSearchParams({
+        name: debounceName,
+        order: sortItems
+          .findIndex((item) => item.text === debounceSort)
+          .toString(),
+      });
+
+      const response = await fetch(
+        `http://localhost:3000/get-events?${searchParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          signal: abortSignal,
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        if (
+          !Array.isArray(data.events) ||
+          typeof data.maxAttendeeCount !== "number"
+        ) {
+          console.error("Invalid response format:", data);
+          throw new Error("Invalid response format from server");
+        }
+        setMaxAttendeeCount(data.maxAttendeeCount);
+        setEvents(data.events);
+      } else if (response.status === 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else {
+        const errorText = await response.text();
+        console.error(
+          `Fetch error: Status ${response.status}, Response: ${errorText}`
+        );
+        alert("Service temporarily unavailable. Please try again later.");
+        setEvents([]);
+      }
+    } catch (error) {
+      console.error("Fetch events failed:", error);
+      alert("Service temporarily unavailable. Please try again later.");
+      setEvents([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    fetchEvents(abortController.signal);
+    return () => {
+      abortController.abort(); // Cleanup function to abort the fetch request
+    };
+  }, [debounceName, debounceSort]);
+
   const navigate = useNavigate();
 
-  // Mock data for events
-  const events: Event[] = [
-    {
-      id: "0000001",
-      name: "A&B's wedding",
-      hostId: "A",
-      date: "14/02/2024, 14:00",
-      attendees: 100,
-      status: "ongoing",
-    },
-    {
-      id: "0000002",
-      name: "Morning routine seminar",
-      hostId: "Ashton Hall",
-      date: "14/02/2024, 14:00",
-      attendees: 200,
-      status: "ongoing",
-    },
-    {
-      id: "0000003",
-      name: "Business meeting",
-      hostId: "Lebron James",
-      date: "14/02/2024, 14:00",
-      attendees: 20,
-      status: "ongoing",
-    },
-    {
-      id: "0000003",
-      name: "D&E's Wedding",
-      hostId: "D",
-      date: "14/02/2024, 14:00",
-      attendees: 10,
-      status: "completed",
-    },
-  ];
+  // // Mock data for events
+  // const events: Event[] = [
+  //   {
+  //     id: "0000001",
+  //     name: "A&B's wedding",
+  //     hostId: "A",
+  //     date: "14/02/2024, 14:00",
+  //     attendees: 100,
+  //     status: "ongoing",
+  //   },
+  //   {
+  //     id: "0000002",
+  //     name: "Morning routine seminar",
+  //     hostId: "Ashton Hall",
+  //     date: "14/02/2024, 14:00",
+  //     attendees: 200,
+  //     status: "ongoing",
+  //   },
+  //   {
+  //     id: "0000003",
+  //     name: "Business meeting",
+  //     hostId: "Lebron James",
+  //     date: "14/02/2024, 14:00",
+  //     attendees: 20,
+  //     status: "ongoing",
+  //   },
+  //   {
+  //     id: "0000003",
+  //     name: "D&E's Wedding",
+  //     hostId: "D",
+  //     date: "14/02/2024, 14:00",
+  //     attendees: 10,
+  //     status: "completed",
+  //   },
+  // ];
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -82,38 +158,35 @@ export default function AdminEvent({
           {/* Filters and Search */}
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="relative inline-block">
-                <button className="flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <span>Show 10</span>
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </button>
-              </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Search className="h-4 w-4 text-gray-400" />
+                  <FontAwesomeIcon icon={faSearch} className="h-4 w-4 text-gray-400" />
                 </div>
                 <input
                   type="text"
-                  className="block w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-3 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="Search users..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="block w-full py-2 pl-10 pr-3 text-sm border border-gray-300 rounded-md bg-white shadow-sm focus-within:border-gray-600"
+                  placeholder="Search events..."
+                  value={eventNameSearch}
+                  onChange={(e) => setEventNameSearch(e.target.value)}
                 />
               </div>
-              <button className="flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                <Filter className="h-4 w-4" />
-                <span>Filter</span>
-              </button>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Sort:</span>
               <div className="relative inline-block">
-                <button className="flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
-                  <span>Most Recent</span>
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </button>
+                <Button
+                  variant="secondary"
+                  animated={false}
+                >
+                  <span>Show 10</span>
+                  <FontAwesomeIcon icon={faChevronDown} className="ml-2 h-4 w-4" />
+                </Button>
               </div>
+              <Dropdown
+                value={sortDirection}
+                placeholder="Order events by:"
+                items={sortItems}
+                valueSetter={setSortDirection}
+              />
             </div>
+
           </div>
 
           {/* Events Table */}
@@ -190,23 +263,24 @@ export default function AdminEvent({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                            event.status === "ongoing"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${event.status === "ongoing"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                            }`}
                         >
                           {event.status === "ongoing" ? "Ongoing" : "Completed"}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center space-x-3">
-                          <button
-                            className="text-gray-400 hover:text-gray-500 cursor-pointer"
+                          <Button
+                            className="w-8 h-8  text-white bg-red-500 "
+                            animated={false}
+                            size="icon"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <Trash />
-                          </button>
+                            <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -221,49 +295,4 @@ export default function AdminEvent({
   );
 }
 
-// Navigation Item Component
-function NavItem({ label, icon, active = false }: NavItemProps): ReactElement {
-  const getIcon = (iconName: string): ReactElement | null => {
-    switch (iconName) {
-      case "dashboard":
-        return (
-          <div className="w-5 h-5 rounded border border-gray-300 flex items-center justify-center">
-            <div className="w-3 h-3 bg-gray-300 rounded-sm"></div>
-          </div>
-        );
-      case "events":
-        return (
-          <div
-            className={`w-5 h-5 rounded ${
-              active ? "bg-purple-200" : "border border-gray-300"
-            }`}
-          ></div>
-        );
-      case "users":
-        return (
-          <div className="w-5 h-5 rounded border border-gray-300 flex items-center justify-center">
-            <User className="h-3 w-3 text-gray-400" />
-          </div>
-        );
-      case "account":
-        return (
-          <div className="w-5 h-5 rounded-full border border-gray-300"></div>
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div
-      className={`flex items-center space-x-3 rounded-lg px-3 py-2 ${
-        active
-          ? "bg-purple-100 text-purple-600"
-          : "text-gray-700 hover:bg-gray-100"
-      }`}
-    >
-      {getIcon(icon)}
-      <span className="text-sm font-medium">{label}</span>
-    </div>
-  );
-}
+export default AdminEvent;

@@ -1,7 +1,7 @@
 import { StatusBarProps, UserRowProps } from "@/Types";
 import { User } from "lucide-react";
 
-export default function Dashboard({ sidebarOpen }: { sidebarOpen: boolean }) {
+export default function Dashboard() {
   function StatusBar({ label, percentage, color }: StatusBarProps) {
     return (
       <div className="flex items-center justify-between">

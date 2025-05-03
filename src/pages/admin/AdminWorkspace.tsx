@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { LayoutContext } from "@/context/LayoutContext";
 import { useRef } from "react";
 import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
-import Sidebar from "@/components/layout/Sidebar";
-import Header from "@/components/layout/Header";
+import AdminSidebar from "@/components/layout/AdminSidebar";
+import AdminHeader from "@/components/layout/AdminHeader";
 import Footer from "@/components/layout/Footer";
-import Account from "@/pages/user/Account";
+import AdminAccount from "@/pages/admin/AdminAccount";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminEvent from "@/pages/admin/AdminEvent";
 import AdminEventDashboard from "@/pages/admin/AdminEventDashboard";
@@ -73,13 +73,12 @@ function AdminWorkspace() {
   return (
     <LayoutContext.Provider value={{ sidebarOpen, toggleSidebar }}>
       <div className="w-screen h-screen flex overflow-hidden">
-        <Sidebar />
+        <AdminSidebar />
         <div
-          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
-            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
-          }`}
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+            }`}
         >
-          <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
+          <AdminHeader avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
           <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the admin workspace */}
@@ -87,7 +86,7 @@ function AdminWorkspace() {
                 path=""
                 element={
                   <div>
-                    <AdminDashboard sidebarOpen={sidebarOpen} /> <Footer />{" "}
+                    <AdminDashboard /> <Footer />{" "}
                   </div>
                 }
               />
@@ -98,7 +97,16 @@ function AdminWorkspace() {
                 path="event"
                 element={
                   <div>
-                    <AdminEvent sidebarOpen={sidebarOpen} />
+                    <AdminEvent />
+                    <Footer />{" "}
+                  </div>
+                }
+              />
+              <Route
+                path="event/:eventId"
+                element={
+                  <div>
+                    <AdminEventDashboard />
                     <Footer />{" "}
                   </div>
                 }
@@ -108,7 +116,7 @@ function AdminWorkspace() {
                 path="user"
                 element={
                   <div>
-                    <AdminViewUsers sidebarOpen={sidebarOpen} />
+                    <AdminViewUsers />
                     <Footer />{" "}
                   </div>
                 }
@@ -116,19 +124,11 @@ function AdminWorkspace() {
               {/* Dashboard of a specific user */}
               <Route
                 path="user/:userId"
-                element={<AdminViewUserInfo sidebarOpen={sidebarOpen} />}
+                element={<AdminViewUserInfo />}
               />
 
-              {/* <Route
-                path="invitation"
-                element={
-                  <div>
-                    <Invitation />
-                    <Footer />{" "}
-                  </div>
-                }
-              /> */}
-              <Route path="account" element={<Account pfp={avatarURL} />} />
+
+              <Route path="account" element={<AdminAccount pfp={avatarURL} />} />
             </Routes>
             <div className="mt-auto "></div>
           </div>
