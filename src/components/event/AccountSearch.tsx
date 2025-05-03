@@ -70,8 +70,9 @@ function AttendeeEntry({
         }
       );
 
-      
-      if (response.status === 400) {
+      if (response.status === 200) {
+      }
+      else if (response.status === 400) {
         const errorData = await response.json();
         alert(errorData.error); // Display the error message from the backend
       } else if (response.status === 401) {
