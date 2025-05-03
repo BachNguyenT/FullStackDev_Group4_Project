@@ -50,7 +50,7 @@ function NotificationBoard() {
                     <Notification key={notification.ID} {...notification} />
                 ))
             ) : (
-                !error && <p className="text-gray-500">No notifications available.</p>
+                !error && <p className="text-gray-500">You do not have any notification yet!</p>
             )}
         </div>
     );
