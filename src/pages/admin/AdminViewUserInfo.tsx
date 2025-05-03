@@ -12,7 +12,7 @@ import {
   faChevronDown,
   faPen,         // for Edit
   faEye,
-  faUserSlash, // for LogOut
+  faUserSlash, 
   faTrash,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";

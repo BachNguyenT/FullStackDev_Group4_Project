@@ -7,30 +7,24 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/general/Button";
 import { useDebounce } from "@/hooks";
 import { Dropdown } from "@/components/general";
+import { ConfirmModal } from "@/components/modals";
 
 // import Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChevronDown,
-  faUser,
   faSearch,
   faTrash,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Define types for our data and components
 interface Event {
-  id: string;
-  name: string;
-  hostId: string;
-  date: string;
-  attendees: number;
-  status: "ongoing" | "completed";
-}
-
-interface NavItemProps {
-  label: string;
-  icon: string;
-  active?: boolean;
+  ID: string;
+  Name: string;
+  Organizer: string;
+  Date: string;
+  AttendeeCount: number;
+  Status: string;
 }
 
 function AdminEvent(): ReactElement {
@@ -42,9 +36,53 @@ function AdminEvent(): ReactElement {
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [eventNameSearch, setEventNameSearch] = useState<string>("");
+  const [maxAttendeeCount, setMaxAttendeeCount] = useState<number>(0);
   const [sortDirection, setSortDirection] = useState<string>("Default");
   const debounceName = useDebounce(eventNameSearch, 500);
   const debounceSort = useDebounce(sortDirection, 500);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteID, setDeleteID] = useState<string>("");
+  const [reloadFlag, setReloadFlag] = useState(false);
+  const navigate = useNavigate();
+  function handleDeleteClick(id: string) {
+    setDeleteID(id);
+    setDeleteModalOpen(true);
+  }
+
+  async function handleConfirmDelete() {
+    try {
+      const queryParams = new URLSearchParams({
+        id: deleteID || "",
+      });
+
+      const response = await fetch(
+        `http://localhost:3000/admin-delete-event?${queryParams.toString()}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include"
+        }
+      );
+
+      if (response.status == 200) {
+        setDeleteModalOpen(false);
+        setReloadFlag(prev => !prev);
+      }
+      else if (response.status == 401) {
+        alert("Session expired. Please log in again.");
+        navigate("/login");
+      } else if (response.status == 404) {
+        navigate("/not-found-pageAdmin");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    }
+    catch {
+      alert("Service temporarily unavailable. Please try again later.");
+    }
+  }
 
 
   async function fetchEvents(abortSignal: AbortSignal | null) {
@@ -106,48 +144,11 @@ function AdminEvent(): ReactElement {
     return () => {
       abortController.abort(); // Cleanup function to abort the fetch request
     };
-  }, [debounceName, debounceSort]);
+  }, [debounceName, debounceSort, reloadFlag]);
 
-  const navigate = useNavigate();
-
-  // // Mock data for events
-  // const events: Event[] = [
-  //   {
-  //     id: "0000001",
-  //     name: "A&B's wedding",
-  //     hostId: "A",
-  //     date: "14/02/2024, 14:00",
-  //     attendees: 100,
-  //     status: "ongoing",
-  //   },
-  //   {
-  //     id: "0000002",
-  //     name: "Morning routine seminar",
-  //     hostId: "Ashton Hall",
-  //     date: "14/02/2024, 14:00",
-  //     attendees: 200,
-  //     status: "ongoing",
-  //   },
-  //   {
-  //     id: "0000003",
-  //     name: "Business meeting",
-  //     hostId: "Lebron James",
-  //     date: "14/02/2024, 14:00",
-  //     attendees: 20,
-  //     status: "ongoing",
-  //   },
-  //   {
-  //     id: "0000003",
-  //     name: "D&E's Wedding",
-  //     hostId: "D",
-  //     date: "14/02/2024, 14:00",
-  //     attendees: 10,
-  //     status: "completed",
-  //   },
-  // ];
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex bg-gray-50">
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6">
@@ -156,38 +157,28 @@ function AdminEvent(): ReactElement {
           </div>
 
           {/* Filters and Search */}
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <FontAwesomeIcon icon={faSearch} className="h-4 w-4 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  className="block w-full py-2 pl-10 pr-3 text-sm border border-gray-300 rounded-md bg-white shadow-sm focus-within:border-gray-600"
-                  placeholder="Search events..."
-                  value={eventNameSearch}
-                  onChange={(e) => setEventNameSearch(e.target.value)}
-                />
+          <div className="flex justify-between items-center mb-4">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FontAwesomeIcon icon={faSearch} className="h-4 w-4 text-gray-400" />
               </div>
-              <div className="relative inline-block">
-                <Button
-                  variant="secondary"
-                  animated={false}
-                >
-                  <span>Show 10</span>
-                  <FontAwesomeIcon icon={faChevronDown} className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-              <Dropdown
-                value={sortDirection}
-                placeholder="Order events by:"
-                items={sortItems}
-                valueSetter={setSortDirection}
+              <input
+                type="text"
+                className="block w-full py-2 pl-10 pr-3 text-sm border border-gray-300 rounded-md bg-white shadow-sm focus-within:border-gray-600"
+                placeholder="Search events..."
+                value={eventNameSearch}
+                onChange={(e) => setEventNameSearch(e.target.value)}
               />
+              {isLoading && (<FontAwesomeIcon icon={faSpinner} className="absolute right-3 top-2.5 text-gray-500 animate-spin" />)}
             </div>
-
+            <Dropdown
+              value={sortDirection}
+              placeholder="Order events by:"
+              items={sortItems}
+              valueSetter={setSortDirection}
+            />
           </div>
+
 
           {/* Events Table */}
           <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
@@ -240,35 +231,37 @@ function AdminEvent(): ReactElement {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {events.map((event, index) => (
+                  {events.map((event) => (
                     <tr
-                      key={index}
+                      key={event.ID}
                       className="hover:bg-gray-50 cursor-pointer"
-                      onClick={() => navigate("/event/" + event.id)}
+                      onClick={() => {
+                        navigate(`/admin/event/${event.ID}`);
+                      }}
                     >
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.id}
+                        {event.ID}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {event.name}
+                        {event.Name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.hostId}
+                        {event.Organizer}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.date}
+                        {event.Date.slice(0, -1)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.attendees}
+                        {event.AttendeeCount} / {maxAttendeeCount}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${event.status === "ongoing"
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${event.Status === "Ongoing"
                             ? "bg-green-100 text-green-800"
                             : "bg-gray-100 text-gray-800"
                             }`}
                         >
-                          {event.status === "ongoing" ? "Ongoing" : "Completed"}
+                          {event.Status === "Ongoing" ? "Ongoing" : "Completed"}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -277,7 +270,10 @@ function AdminEvent(): ReactElement {
                             className="w-8 h-8  text-white bg-red-500 "
                             animated={false}
                             size="icon"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                              handleDeleteClick(event.ID);
+                              e.stopPropagation();
+                            }}
                           >
                             <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
                           </Button>
@@ -291,6 +287,17 @@ function AdminEvent(): ReactElement {
           </div>
         </main>
       </div>
+      {/* Delete modal */}
+      {isDeleteModalOpen && (
+        <ConfirmModal
+          title={"Delete Event"}
+          message={
+            `Are you sure you want to delete event ${deleteID}? This action cannot be undone.`
+          }
+          onCancel={() => setDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 }

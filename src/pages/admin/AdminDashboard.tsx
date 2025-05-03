@@ -58,7 +58,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex bg-gray-50">
       {/* Main Content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Dashboard Content */}

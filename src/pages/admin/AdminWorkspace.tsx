@@ -1,17 +1,16 @@
+// import libraries
+import { useEffect, useState, useRef } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+
+// import components
 import { LayoutContext } from "@/context/LayoutContext";
-import { useRef } from "react";
+import { AdminSidebar, AdminHeader, Footer } from "@/components/layout";
+import { AdminAccount, AdminDashboard, AdminEvent, AdminEventDashboard, AdminViewUsers, AdminViewUserInfo } from "@/pages/admin";
+import { fetchUserPFP } from "@/lib/api";
+
+// import icons
+import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import userDummyPFP from "@/assets/Icons/avatar-placeholder.svg";
-import AdminSidebar from "@/components/layout/AdminSidebar";
-import AdminHeader from "@/components/layout/AdminHeader";
-import Footer from "@/components/layout/Footer";
-import AdminAccount from "@/pages/admin/AdminAccount";
-import AdminDashboard from "@/pages/admin/AdminDashboard";
-import AdminEvent from "@/pages/admin/AdminEvent";
-import AdminEventDashboard from "@/pages/admin/AdminEventDashboard";
-import AdminViewUsers from "@/pages/admin/AdminViewUsers";
-import AdminViewUserInfo from "./AdminViewUserInfo";
 
 function AdminWorkspace() {
   const [avatarURL, setAvatarURL] = useState<string>(userDummyPFP);
@@ -23,47 +22,24 @@ function AdminWorkspace() {
     setSidebarOpen((prevState) => !prevState);
   }
 
-  async function fetchPFP(abortSignal: AbortSignal) {
-    // Call API
-    try {
-      const response = await fetch("http://localhost:3000/get-user-pfp", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        signal: abortSignal,
-      });
-
-      // Handle response
-      if (response.status == 200) {
-        const blob = await response.blob();
-        const objectURL = URL.createObjectURL(blob);
-        avatarURLRef.current = objectURL;
-        setAvatarURL(objectURL);
-        return;
-      } else if (response.status == 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-        return;
-      } else {
-        alert("Service temporarily unavailable. Please try again later.");
-        return;
-      }
-    } catch {
-      // Handle API call error
-      alert("Service temporarily unavailable. Please try again later.");
-      return;
-    }
-  }
-
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetchPFP(abortController.signal);
+    fetchUserPFP(abortController.signal, undefined).then((response) => {
+      if (response.status == 200) {
+        avatarURLRef.current = response.imageURL
+          ? response.imageURL
+          : pfpPlaceholder;
+        setAvatarURL(response.imageURL ? response.imageURL : pfpPlaceholder);
+      } else if (response.status == 401) {
+        navigate("/login");
+      } else {
+        alert("Service temporarily unavailable. Please try again later.");
+      }
+    });
 
     return () => {
-      if (avatarURLRef.current != userDummyPFP) {
+      if (avatarURLRef.current != pfpPlaceholder) {
         URL.revokeObjectURL(avatarURLRef.current);
       }
       abortController.abort();
@@ -91,7 +67,7 @@ function AdminWorkspace() {
                 }
               />
               {/* Resolve invalid path */}
-              <Route path="*" element={<Navigate to="/not-found-page" />} />
+              <Route path="*" element={<Navigate to="/not-found-pageAdmin" />} />
               {/* Show all events */}
               <Route
                 path="event"
