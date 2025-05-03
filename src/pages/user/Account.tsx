@@ -10,7 +10,6 @@ import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
-
 function Account({ pfp }: { pfp: string }) {
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -27,18 +26,26 @@ function Account({ pfp }: { pfp: string }) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-
   const [passwordMessage, setPasswordMessage] = useState(false);
   const [newPasswordMessage, setNewPasswordMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
 
   const handleFocus = () => {
     setPasswordMessage(false); // Clear any previous error messages
     setNewPasswordMessage(false); // Clear any previous error messages
     setErrorMessage(""); // Clear any previous error messages
-  }
+  };
 
+  function formatDateToInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+  
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+  
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -61,7 +68,7 @@ function Account({ pfp }: { pfp: string }) {
       const searchParams = new URLSearchParams({
         id: userID ? userID : "#SENDER#",
       });
-  
+
       const response = await fetch(
         `http://localhost:3000/get-user-pfp?${searchParams.toString()}`,
         {
@@ -73,12 +80,12 @@ function Account({ pfp }: { pfp: string }) {
           signal: abortSignal,
         }
       );
-  
+
       const responsePackage = await response.json();
-  
+
       if (response.status === 200) {
         let imageURL = undefined;
-  
+
         if (responsePackage.imageBlob.length > 0) {
           const byteArray = new Uint8Array(responsePackage.imageBlob);
           const blob = new Blob([byteArray]);
@@ -86,7 +93,7 @@ function Account({ pfp }: { pfp: string }) {
           setAvatar(imageURL); // Update the avatar state here
           imageURLRef.current = imageURL; // Update the ref
         }
-  
+
         return {
           status: response.status,
           debugCode: responsePackage.debugCode,
@@ -111,16 +118,13 @@ function Account({ pfp }: { pfp: string }) {
   }
   async function handleDisplayUserInformation() {
     try {
-      const response = await fetch(
-        "http://localhost:3000/get-user",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      const response = await fetch("http://localhost:3000/get-user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
       if (response.status === 200) {
         const data = await response.json();
@@ -128,8 +132,8 @@ function Account({ pfp }: { pfp: string }) {
         setName(data.Name);
         setPhone(data.PhoneNumber);
         setEmail(data.Email);
-        const rawDate = new Date(data.Birthday);
-        const formattedDate = rawDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
+        const rawDate = formatDateToInput(new Date(data.Birthday));
+        const formattedDate = rawDate.split("T")[0]; // 'YYYY-MM-DD'
         setBirthday(formattedDate);
 
         setUserName(data.Username);
@@ -144,18 +148,20 @@ function Account({ pfp }: { pfp: string }) {
   }
 
   const handleSave = () => {
+    const formattedBirthday = birthday ? new Date(birthday).toISOString().split("T")[0] : null; // Format as YYYY-MM-DD
+  
     const updatedUser = {
       Name: name,
       PhoneNumber: phone,
       Email: email,
-      Birthday: birthday,
+      Birthday: formattedBirthday, // Use the formatted date
       Username: userName,
     };
-
+  
     fetch(`http://localhost:3000/update-user`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       credentials: "include",
       body: JSON.stringify(updatedUser),
@@ -213,7 +219,7 @@ function Account({ pfp }: { pfp: string }) {
       fetch("http://localhost:3000/update-user-pfp", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         credentials: "include",
         body: JSON.stringify({ Pfp: base64String }),
@@ -260,7 +266,7 @@ function Account({ pfp }: { pfp: string }) {
     fetch("http://localhost:3000/update-user-password", {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       credentials: "include",
       body: JSON.stringify(passwordData),
@@ -424,10 +430,10 @@ function Account({ pfp }: { pfp: string }) {
                       Birthday:
                     </label>
                     <input
-                      readOnly={!isEditing}
+                      readOnly={!isEditing} // Prevent manual typing when not editing
                       onChange={(e) => setBirthday(e.target.value)}
                       id="birthday"
-                      type="birthday"
+                      type="date" // Use "date" type to enable the calendar picker
                       value={birthday}
                       className="border-2 border-gray-300 text-gray-400 rounded-md p-2 mb-4 w-full font-light text-sm"
                     />
@@ -466,8 +472,11 @@ function Account({ pfp }: { pfp: string }) {
               id="currentPassword"
               value={password}
               type="password"
-              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${passwordMessage ? 'border-red-500 text-gray-700' : 'border-gray-300 text-gray-700'
-                }`}
+              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${
+                passwordMessage
+                  ? "border-red-500 text-gray-700"
+                  : "border-gray-300 text-gray-700"
+              }`}
               onFocus={handleFocus}
               placeholder="Enter your password"
             />
@@ -484,15 +493,23 @@ function Account({ pfp }: { pfp: string }) {
               id="newPassword"
               value={newPassword}
               type="password" // Keep as password type for security
-              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${newPasswordMessage ? 'border-red-500 text-gray-700' : 'border-gray-300 text-gray-700'
-                }`}
+              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${
+                newPasswordMessage
+                  ? "border-red-500 text-gray-700"
+                  : "border-gray-300 text-gray-700"
+              }`}
               onFocus={handleFocus}
               placeholder="Enter your new password"
             />
           </div>
         </div>
         <div className="flex items-center mb-4">
-          {errorMessage && <FontAwesomeIcon icon={faExclamationTriangle} className="text-red-600 mr-2" />}
+          {errorMessage && (
+            <FontAwesomeIcon
+              icon={faExclamationTriangle}
+              className="text-red-600 mr-2"
+            />
+          )}
           <div className="text-red-600">{errorMessage}</div>
         </div>
         <h3 className="text-base font-medium">Password Requirements:</h3>
