@@ -35,14 +35,14 @@ function InvitationCard({
   eventID: string;
   eventName: string;
   eventType: string;
-  rsvpStatus: number;
+  rsvpStatus: string;
 }) {
   const [imageURL, setImageURL] = useState(eventImagePlaceholder);
   const imageURLRef = useRef(eventImagePlaceholder);
   const [rsvp, setRsvp] = useState(rsvpStatus);
-  console.log(rsvp);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  
   async function handleAccept() {
     setIsLoading(true);
     const queryParams = new URLSearchParams({
@@ -61,7 +61,7 @@ function InvitationCard({
     );
 
     if (response.status === 200) {
-      setRsvp(1);
+      setRsvp("1");
     } else if (response.status === 401) {
       alert("Session expired. Please log in again.");
       navigate("/login");
@@ -89,7 +89,7 @@ function InvitationCard({
     );
 
     if (response.status === 200) {
-      setRsvp(0);
+      setRsvp("0");
     } else if (response.status === 401) {
       alert("Session expired. Please log in again.");
       navigate("/login");
@@ -205,7 +205,7 @@ function InvitationCard({
         <div className="flex justify-between items-center gap-2 mt-4 w-full">
           <Button
             variant="secondary"
-            className={`hover:bg-green-500 hover:text-white w-full ${rsvp === 1 ? 'bg-green-500 text-white' : ''}`}
+            className={`hover:bg-green-500 hover:text-white w-full ${rsvp == "1" ? 'bg-green-500 text-white' : ''}`}
             onClick={handleAccept}
             disabled={isLoading}
           >
@@ -214,7 +214,7 @@ function InvitationCard({
           </Button>
           <Button
             variant="destructive"
-            className={`hover:bg-red-500 hover:text-white w-full ${rsvp === 0 ? 'bg-red-500 text-white' : ''}`}
+            className={`hover:bg-red-500 hover:text-white w-full ${rsvp == "0" ? 'bg-red-500 text-white' : ''}`}
             onClick={handleDecline}
             disabled={isLoading}
           >
