@@ -112,49 +112,53 @@ function Login() {
     }
   }
 
-  async function checkSession() {
-    setLoading(true);
-
-    // Call API
-    try {
-      const checkRequestResponse = await fetch(
-        "http://localhost:3000/verify-session",
-        {
+  useEffect(() => {
+    async function verifySession() {
+      setLoading(true);
+  
+      try {
+        // First, check if the session belongs to an admin
+        const adminResponse = await fetch("http://localhost:3000/verify-admin-session", {
           method: "GET",
           credentials: "include",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
+        });
+  
+        if (adminResponse.status === 200) {
+          const resultCode = await adminResponse.text();
+          if (resultCode === "0x000") {
+            navigate(ADMIN_SUCCESS_TARGET); // Redirect to admin UI
+            return;
+          }
         }
-      );
-
-      // Handle response
-      if (checkRequestResponse.status == 200) {
-        const resultCode = await checkRequestResponse.text();
-        if (resultCode === "0x000") {
-          navigate(LOGIN_SUCCESS_TARGET);
-          return;
-        } else if (resultCode === "0x001") {
-          setLoading(false);
-          return;
-        } else {
-          setLoading(false);
-          return;
+  
+        // If not an admin, check for a regular user session
+        const userResponse = await fetch("http://localhost:3000/verify-session", {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (userResponse.status === 200) {
+          const resultCode = await userResponse.text();
+          if (resultCode === "0x000") {
+            navigate(LOGIN_SUCCESS_TARGET); // Redirect to user UI
+            return;
+          }
         }
-      } else {
-        setLoading(false);
-        return;
+  
+        setLoading(false); // No valid session found
+      } catch {
+        setLoading(false); // Handle API fetch error
       }
-    } catch {
-      // Handle API fetch error
-      setLoading(false);
-      return;
     }
-  }
-
-  useEffect(() => {
-    checkSession();
-  }, []);
+  
+    verifySession();
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 to-purple-400 flex items-center justify-center">
