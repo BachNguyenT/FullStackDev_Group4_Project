@@ -44,6 +44,7 @@ function EventInfo({
   description,
   venue,
   isOrganizer,
+  isEdit = false,
 }: {
   eventId: string;
   eventName: string;
@@ -56,6 +57,7 @@ function EventInfo({
   description: string;
   venue: string;
   isOrganizer: boolean;
+  isEdit?: boolean;
 }) {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -70,8 +72,10 @@ function EventInfo({
         id: eventId || "",
       });
 
-      const response = await fetch(
-        `http://localhost:3000/delete-event?${queryParams.toString()}`,
+      const deleteUrl = isEdit
+        ? `http://localhost:3000/admin-delete-event?${queryParams.toString()}`
+        : `http://localhost:3000/delete-event?${queryParams.toString()}`;
+      const response = await fetch(deleteUrl,
         {
           method: "DELETE",
           headers: {
@@ -82,13 +86,19 @@ function EventInfo({
       );
 
       if (response.status == 200) {
-        navigate("/workspace/event");
+        const navigateUrl = isEdit
+          ? `/admin/event`
+          : `/workspace/event`;
+        navigate(navigateUrl);
       }
       else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
       } else if (response.status == 404) {
-        navigate("/not-found-page");
+        const pageNotFound = isEdit
+          ? `/not-found-pageAdmin`
+          : `/not-found-page`;
+        navigate(pageNotFound);
       } else {
         alert("Service temporarily unavailable. Please try again later.");
       }
@@ -130,26 +140,24 @@ function EventInfo({
           {eventName || "AB Wedding"}
         </h1>
         <div className="flex-end">
-          {isOrganizer && (
-            <div>
-              <Button
-                to={`/workspace/event/${eventId}/edit`}
-                animated={false}
-                variant="secondary"
-              >
-                <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
-                Edit
-              </Button>
-              <Button
-                animated={false}
-                variant="destructive"
-                className="bg-red-500 text-white ml-4"
-                onClick={handleDeleteClick}
-              >
-                <FontAwesomeIcon icon={faTrashCan} />
-              </Button>
-            </div>
-          )}
+          <div>
+            {isOrganizer && (<Button
+              to={`/workspace/event/${eventId}/edit`}
+              animated={false}
+              variant="secondary"
+            >
+              <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
+              Edit
+            </Button>)}
+            {(isOrganizer || isEdit) && (<Button
+              animated={false}
+              variant="destructive"
+              className="bg-red-500 text-white ml-4"
+              onClick={handleDeleteClick}
+            >
+              <FontAwesomeIcon icon={faTrashCan} />
+            </Button>)}
+          </div>
         </div>
       </div>
       <div className="">
