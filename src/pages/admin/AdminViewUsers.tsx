@@ -11,7 +11,6 @@ import { useDebounce } from "@/hooks";
 // import Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faUser,
   faSearch,
   faUserSlash,
   faSpinner
