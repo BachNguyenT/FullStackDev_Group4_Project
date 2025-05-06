@@ -15,13 +15,11 @@ import Dashboard from "@/assets/Icons/chart-square.svg";
 import Users from "@/assets/Icons/users.svg";
 import Event from "@/assets/Icons/calendar.svg";
 import Account from "@/assets/Icons/user-1.svg";
-import Arrow from "@/assets/Icons/arrow-right.svg";
-
+import Setting from "@/assets/Icons/wrench.svg";
 
 function AdminSidebar() {
   const { sidebarOpen } = useLayoutContext();
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [eventsOpen, setEventsOpen] = useState(false);
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -32,7 +30,7 @@ function AdminSidebar() {
 
     setLoading(true);
     try {
-      let response = await fetch("http://localhost:3000/logout", {
+      const response = await fetch("http://localhost:3000/logout", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -128,6 +126,17 @@ function AdminSidebar() {
             >
               <img src={Account} alt="Logo" className="w-[24px] h-[24px]" />
               {sidebarOpen && <span className="ml-1 text-base">Account</span>}
+            </Button>
+          </li>
+          <li>
+            <Button
+              variant="sidebar"
+              onClick={() => navigate("/admin/global-setting")}
+              className="w-full h-[50px] my-2 flex items-center justify-start gap-3 px-4 py-2 "
+              animated={false}
+            >
+              <img src={Setting} alt="Logo" className="w-[24px] h-[24px]" />
+              {sidebarOpen && <span className="ml-1 text-base">Global Setting</span>}
             </Button>
           </li>
         </ul>

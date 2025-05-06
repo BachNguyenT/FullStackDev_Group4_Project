@@ -78,6 +78,7 @@ type StatusBarProps = {
 type UserRowProps = {
   id: string;
   name: string;
+  username: string;
   events: number;
   image?: string;
   showDefaultAvatar?: boolean;

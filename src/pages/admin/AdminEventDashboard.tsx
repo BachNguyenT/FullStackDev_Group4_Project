@@ -202,6 +202,13 @@ function AdminEventDashboard() {
               </tr>
             </thead>
             <tbody>
+              {attendeeList.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="text-center py-4 text-gray-500">
+                    No attendees found.
+                  </td>
+                </tr>
+              )}
               {attendeeList.map((attendee, key) => (
                 <AttendeeInfo
                   key={key}

@@ -34,8 +34,7 @@ function AdminEvent(): ReactElement {
     { text: "Oldest" },
   ];
 
-  const [maxEventHosted, setMaxEventHosted] = useState<number>(0);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [eventNameSearch, setEventNameSearch] = useState<string>("");
@@ -138,82 +137,9 @@ function AdminEvent(): ReactElement {
     }
   }
 
-  // Fetch max event hosted
-  async function fetchMaxEventHosted(signal: AbortSignal | null) {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/get-max-event-hosted`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          signal,
-        }
-      );
 
-      const data = await response.json();
-      console.log("fetchMaxEventHosted response:", data);
-      if (response.status === 200 && data.totalEvents !== undefined) {
-        const total = parseInt(data.totalEvents, 10);
-        if (!isNaN(total)) {
-          setMaxEventHosted(total);
-        } else {
-          console.error("Invalid totalEvents value:", data.totalEvents);
-          setMaxEventHosted(0);
-        }
-      } else if (response.status === 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-      } else {
-        console.error(
-          "Failed to fetch max event hosted:",
-          response.status,
-          data
-        );
-        alert("Failed to fetch max event hosted. Please try again later.");
-        setMaxEventHosted(0);
-      }
-    } catch (error) {
-      console.error("Error fetching event count:", error);
-      alert("Service temporarily unavailable. Please try again later.");
-      setMaxEventHosted(0);
-    }
-  }
 
-  // Update max event hosted
-  async function updateMaxEventHosted() {
-    if (maxEventHosted < 0) {
-      alert("Max event hosted cannot be negative.");
-      return;
-    }
 
-    try {
-      const response = await fetch(
-        `http://localhost:3000/update-max-event-hosted`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ maxEventHosted }),
-        }
-      );
-
-      const data = await response.json();
-      if (response.status === 200 && data.debugCode === "0x000") {
-        alert("Max event hosted updated successfully.");
-        setIsEditing(false);
-        fetchMaxEventHosted(null);
-      } else if (response.status === 401) {
-        alert("Session expired. Please log in again.");
-        navigate("/login");
-      } else {
-        alert("Failed to update max event hosted. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error updating max event hosted:", error);
-      alert("An error occurred while updating. Please try again.");
-    }
-  }
 
   // Fetch events
   useEffect(() => {
@@ -224,14 +150,7 @@ function AdminEvent(): ReactElement {
     };
   }, [debounceName, debounceSort, reloadFlag]);
 
-  // Fetch max event hosted
-  useEffect(() => {
-    const abortController = new AbortController();
-    fetchMaxEventHosted(abortController.signal);
-    return () => {
-      abortController.abort();
-    };
-  }, []); // Empty dependencies to run once on mount
+
 
   return (
     <div className="flex bg-gray-50">
@@ -265,49 +184,6 @@ function AdminEvent(): ReactElement {
                 />
               )}
             </div>
-            <div className="flex items-center space-x-2">
-              <p>Max Events Hosted/1 User</p>
-              <input
-                type="number"
-                min="0"
-                className="block w-24 py-2 px-3 text-sm border border-gray-300 rounded-md bg-white shadow-sm focus-within:border-gray-600"
-                value={maxEventHosted}
-                disabled={!isEditing}
-                onChange={(e) => {
-                  const value = parseInt(e.target.value, 10);
-                  setMaxEventHosted(isNaN(value) ? 0 : value);
-                }}
-              />
-              {isEditing ? (
-                <>
-                  <Button
-                    className="text-white bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-md text-sm"
-                    animated={false}
-                    onClick={updateMaxEventHosted} // Call the updated function
-                  >
-                    Update
-                  </Button>
-                  <Button
-                    className="text-white bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-md text-sm"
-                    animated={false}
-                    onClick={() => {
-                      setIsEditing(false); // Cancel editing
-                      fetchMaxEventHosted(null); // Reset input value by fetching from backend
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  className="text-white bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-md text-sm"
-                  animated={false}
-                  onClick={() => setIsEditing(true)} // Enable editing mode
-                >
-                  Edit
-                </Button>
-              )}
-            </div>
             <Dropdown
               value={sortDirection}
               placeholder="Order events by:"
@@ -315,7 +191,6 @@ function AdminEvent(): ReactElement {
               valueSetter={setSortDirection}
             />
           </div>
-
           {/* Events Table */}
           <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
             <div className="overflow-x-auto">
@@ -378,7 +253,7 @@ function AdminEvent(): ReactElement {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {event.ID}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {event.Name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -396,11 +271,10 @@ function AdminEvent(): ReactElement {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                            event.Status === "Ongoing"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${event.Status === "Ongoing"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                            }`}
                         >
                           {event.Status === "Ongoing" ? "Ongoing" : "Completed"}
                         </span>

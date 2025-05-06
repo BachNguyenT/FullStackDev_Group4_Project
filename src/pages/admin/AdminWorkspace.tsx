@@ -5,7 +5,7 @@ import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 // import components
 import { LayoutContext } from "@/context/LayoutContext";
 import { AdminSidebar, AdminHeader, Footer } from "@/components/layout";
-import { AdminAccount, AdminDashboard, AdminEvent, AdminEventDashboard, AdminViewUsers, AdminViewUserInfo } from "@/pages/admin";
+import { AdminAccount, AdminDashboard, AdminEvent, AdminEventDashboard, AdminViewUsers, AdminViewUserInfo,AdminGlobalSetting } from "@/pages/admin";
 import { fetchUserPFP } from "@/lib/api";
 
 // import icons
@@ -105,6 +105,8 @@ function AdminWorkspace() {
 
 
               <Route path="account" element={<AdminAccount pfp={avatarURL} />} />
+
+              <Route path="global-setting" element={<AdminGlobalSetting />} />
             </Routes>
             <div className="mt-auto "></div>
           </div>
