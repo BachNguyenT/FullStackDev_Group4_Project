@@ -196,17 +196,6 @@ function AdminViewUsers(): ReactElement {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          {user.avatar ? (
-                            <img
-                              src={user.avatar || "/placeholder.svg"}
-                              alt={`${user.Name} avatar`}
-                              className="h-8 w-8 rounded-full mr-3"
-                            />
-                          ) : (
-                            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                              <FontAwesomeIcon icon={faUser} className="h-4 w-4 text-gray-500" />
-                            </div>
-                          )}
                           <span className="text-sm font-medium text-gray-900">
                             {user.Name}
                           </span>
