@@ -21,10 +21,10 @@ import {
 interface Event {
   ID: string;
   Name: string;
-  Organizer: string;
   Date: string;
   AttendeeCount: number;
   Status: string;
+  OrganizerName: string;
 }
 
 function AdminEvent(): ReactElement {
@@ -96,7 +96,7 @@ function AdminEvent(): ReactElement {
       });
 
       const response = await fetch(
-        `http://localhost:3000/get-events?${searchParams.toString()}`,
+        `http://localhost:3000/admin-get-events?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {
@@ -202,7 +202,7 @@ function AdminEvent(): ReactElement {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Host ID
+                      Host Name
                     </th>
                     <th
                       scope="col"
@@ -246,10 +246,14 @@ function AdminEvent(): ReactElement {
                         {event.Name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.Organizer}
+                        {event.OrganizerName}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.Date.slice(0, -1)}
+                        {new Date(event.Date).toLocaleString("en-UK", {
+                          hour12: true,
+                          dateStyle: "long",
+                          timeStyle: "short",
+                        })}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {event.AttendeeCount} / {maxAttendeeCount}
