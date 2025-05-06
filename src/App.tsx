@@ -8,6 +8,7 @@ import {NotFoundPage} from "./pages/others";
 import {Workspace} from "./pages/user";
 import {AdminWorkspace} from "./pages/admin";
 import SessionValidator from "./route-protectors/SessionValidator";
+import SessionAdminValidator from "./route-protectors/SessionAdminValidator";
 
 //import the components
 
@@ -46,9 +47,9 @@ function App() {
         <Route
           path="/admin/*"
           element={
-            <SessionValidator>
+            <SessionAdminValidator>
               <AdminWorkspace />
-            </SessionValidator>
+            </SessionAdminValidator>
           }
         />
 
