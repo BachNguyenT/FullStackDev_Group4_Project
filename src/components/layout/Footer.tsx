@@ -32,7 +32,6 @@ function Footer() {
               About Us
             </Button>
             <Button
-              to="/services"
               variant="link"
               size="sm"
               className="text-gray-100 hover:text-yellow-300 p-0 text-left"
@@ -48,7 +47,6 @@ function Footer() {
               Privacy Policy
             </Button>
             <Button
-              to="/contact"
               variant="link"
               size="sm"
               className="text-gray-100 hover:text-yellow-300 p-0 text-left"
