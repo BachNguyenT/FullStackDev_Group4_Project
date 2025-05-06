@@ -1,9 +1,13 @@
-import { StatusBarProps, UserRowProps } from "@/Types";
-import { User } from "lucide-react";
+// import libraries
 import { useState, useEffect } from "react";
+
+// import components
+import { StatusBarProps, UserRowProps } from "@/Types";
 import { Button } from "@/components/general/Button";
+
+// import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function Dashboard() {
   const [totalUser, setTotalUser] = useState(0);
@@ -198,7 +202,7 @@ export default function Dashboard() {
               <img src={image} alt={name} className="h-8 w-8 rounded-full" />
             ) : showDefaultAvatar ? (
               <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <User className="h-4 w-4 text-gray-500" />
+                <FontAwesomeIcon icon={faUser} className="h-4 w-4 text-gray-500" />
               </div>
             ) : (
               <img
@@ -408,7 +412,10 @@ export default function Dashboard() {
                             />
                           ) : (
                             <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                              <User className="h-4 w-4 text-gray-500" />
+                              <FontAwesomeIcon
+                                icon={faUser}
+                                className="h-4 w-4 text-gray-500"
+                              />
                             </div>
                           )}
                           <span>{event.id}</span>

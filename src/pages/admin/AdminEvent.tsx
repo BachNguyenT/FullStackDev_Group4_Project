@@ -245,7 +245,7 @@ function AdminEvent(): ReactElement {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {event.ID}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {event.Name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
