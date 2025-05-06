@@ -1,5 +1,7 @@
 // import libraries
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 // import components
 import { StatusBarProps, UserRowProps } from "@/Types";
@@ -9,9 +11,10 @@ import { Button } from "@/components/general/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faUser } from "@fortawesome/free-solid-svg-icons";
 
-export default function Dashboard() {
+function AdminDashboard() {
   const [totalUser, setTotalUser] = useState(0);
   const [totalEvent, setTotalEvent] = useState(0);
+  const navigate = useNavigate();
   const [rsvpData, setRsvpData] = useState<{ label: string; value: number }[]>(
     []
   );
@@ -20,14 +23,14 @@ export default function Dashboard() {
     { label: string; value: number }[]
   >([]);
   const [productiveUsers, setProductiveUsers] = useState<
-    { id: string; name: string; eventCount: number; pfp: string }[]
+    { id: string; name: string; eventCount: number; pfp: string, username: string }[]
   >([]);
   const [typicalEvents, setTypicalEvents] = useState<
     {
-      id: string;
-      name: string;
-      organizer: string;
-      eventCount: number;
+      ID: string;
+      Name: string;
+      OrganizerName: string;
+      AttendeeCount: number;
       avatar: string | null;
     }[]
   >([]);
@@ -190,12 +193,13 @@ export default function Dashboard() {
   function UserRow({
     id,
     name,
+    username,
     events,
     image,
     showDefaultAvatar = false,
   }: UserRowProps) {
     return (
-      <tr className="border-b border-gray-200">
+      <tr className="border-b border-gray-200 hover:bg-gray-50" onClick={() => navigate(`/admin/user/${id}`)}>
         <td className="py-4 text-sm">
           <div className="flex items-center space-x-3">
             {image ? (
@@ -211,7 +215,7 @@ export default function Dashboard() {
                 className="h-8 w-8 rounded-full"
               />
             )}
-            <span>{id}</span>
+            <span>{username}</span>
           </div>
         </td>
         <td className="py-4 text-sm">{name}</td>
@@ -341,7 +345,7 @@ export default function Dashboard() {
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="pb-2 text-left text-sm font-medium text-gray-500">
-                      User ID
+                      Username
                     </th>
                     <th className="pb-2 text-left text-sm font-medium text-gray-500">
                       Name
@@ -356,6 +360,7 @@ export default function Dashboard() {
                     <UserRow
                       key={user.id}
                       id={user.id}
+                      username={user.username}
                       name={user.name}
                       events={user.eventCount}
                       image={user.pfp}
@@ -389,25 +394,25 @@ export default function Dashboard() {
                 <thead>
                   <tr className="border-b border-gray-200">
                     <th className="pb-2 text-left text-sm font-medium text-gray-500">
-                      Event ID
+                      Event Name
                     </th>
                     <th className="pb-2 text-left text-sm font-medium text-gray-500">
                       Event Organizer
                     </th>
                     <th className="pb-2 text-right text-sm font-medium text-gray-500">
-                      Total event created
+                      Total attendees
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {typicalEvents.map((event) => (
-                    <tr key={event.id} className="border-b border-gray-200">
+                  {typicalEvents.map((event, id) => (
+                    <tr key={id} className="border-b border-gray-200 hover:bg-gray-50" onClick = {()=> navigate(`/admin/event/${event.ID}`)}>
                       <td className="py-4 text-sm">
                         <div className="flex items-center space-x-3">
                           {event.avatar ? (
                             <img
                               src={event.avatar}
-                              alt={event.name}
+                              alt={event.Name}
                               className="h-8 w-8 rounded-full"
                             />
                           ) : (
@@ -418,12 +423,12 @@ export default function Dashboard() {
                               />
                             </div>
                           )}
-                          <span>{event.id}</span>
+                          <span>{event.Name}</span>
                         </div>
                       </td>
-                      <td className="py-4 text-sm">{event.organizer}</td>
+                      <td className="py-4 text-sm">{event.OrganizerName}</td>
                       <td className="py-4 text-right text-sm">
-                        {event.eventCount}
+                        {event.AttendeeCount}
                       </td>
                     </tr>
                   ))}
@@ -451,3 +456,4 @@ export default function Dashboard() {
     </div>
   );
 }
+export default AdminDashboard;
