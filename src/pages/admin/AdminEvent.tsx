@@ -62,15 +62,14 @@ function AdminEvent(): ReactElement {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include"
+          credentials: "include",
         }
       );
 
       if (response.status == 200) {
         setDeleteModalOpen(false);
-        setReloadFlag(prev => !prev);
-      }
-      else if (response.status == 401) {
+        setReloadFlag((prev) => !prev);
+      } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
       } else if (response.status == 404) {
@@ -78,12 +77,10 @@ function AdminEvent(): ReactElement {
       } else {
         alert("Service temporarily unavailable. Please try again later.");
       }
-    }
-    catch {
+    } catch {
       alert("Service temporarily unavailable. Please try again later.");
     }
   }
-
 
   async function fetchEvents(abortSignal: AbortSignal | null) {
     setIsLoading(true);
@@ -146,7 +143,6 @@ function AdminEvent(): ReactElement {
     };
   }, [debounceName, debounceSort, reloadFlag]);
 
-
   return (
     <div className="flex bg-gray-50">
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -160,7 +156,10 @@ function AdminEvent(): ReactElement {
           <div className="flex justify-between items-center mb-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <FontAwesomeIcon icon={faSearch} className="h-4 w-4 text-gray-400" />
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="h-4 w-4 text-gray-400"
+                />
               </div>
               <input
                 type="text"
@@ -169,7 +168,12 @@ function AdminEvent(): ReactElement {
                 value={eventNameSearch}
                 onChange={(e) => setEventNameSearch(e.target.value)}
               />
-              {isLoading && (<FontAwesomeIcon icon={faSpinner} className="absolute right-3 top-2.5 text-gray-500 animate-spin" />)}
+              {isLoading && (
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  className="absolute right-3 top-2.5 text-gray-500 animate-spin"
+                />
+              )}
             </div>
             <Dropdown
               value={sortDirection}
@@ -178,7 +182,6 @@ function AdminEvent(): ReactElement {
               valueSetter={setSortDirection}
             />
           </div>
-
 
           {/* Events Table */}
           <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
@@ -242,7 +245,7 @@ function AdminEvent(): ReactElement {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {event.ID}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
                         {event.Name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -260,10 +263,11 @@ function AdminEvent(): ReactElement {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${event.Status === "Ongoing"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
-                            }`}
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+                            event.Status === "Ongoing"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
                         >
                           {event.Status === "Ongoing" ? "Ongoing" : "Completed"}
                         </span>
@@ -271,7 +275,7 @@ function AdminEvent(): ReactElement {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center space-x-3">
                           <Button
-                            className="w-8 h-8  text-white bg-red-500 "
+                            className="w-8 h-8 text-white bg-red-500"
                             animated={false}
                             size="icon"
                             onClick={(e) => {
@@ -279,7 +283,10 @@ function AdminEvent(): ReactElement {
                               e.stopPropagation();
                             }}
                           >
-                            <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              className="h-4 w-4"
+                            />
                           </Button>
                         </div>
                       </td>
@@ -295,9 +302,7 @@ function AdminEvent(): ReactElement {
       {isDeleteModalOpen && (
         <ConfirmModal
           title={"Delete Event"}
-          message={
-            `Are you sure you want to delete event ${deleteID}? This action cannot be undone.`
-          }
+          message={`Are you sure you want to delete event ${deleteID}? This action cannot be undone.`}
           onCancel={() => setDeleteModalOpen(false)}
           onConfirm={handleConfirmDelete}
         />
