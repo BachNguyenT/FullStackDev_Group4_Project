@@ -1,25 +1,46 @@
 import { StatusBarProps, UserRowProps } from "@/Types";
 import { User } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/general/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function Dashboard() {
   const [totalUser, setTotalUser] = useState(0);
   const [totalEvent, setTotalEvent] = useState(0);
-  const [rsvpData, setRsvpData] = useState<{ label: string; value: number }[]>([]);
+  const [rsvpData, setRsvpData] = useState<{ label: string; value: number }[]>(
+    []
+  );
   const [totalRsvp, setTotalRsvp] = useState(0);
-  const [eventStatusData, setEventStatusData] = useState<{ label: string; value: number }[]>([]);
+  const [eventStatusData, setEventStatusData] = useState<
+    { label: string; value: number }[]
+  >([]);
+  const [productiveUsers, setProductiveUsers] = useState<
+    { id: string; name: string; eventCount: number; pfp: string }[]
+  >([]);
+  const [typicalEvents, setTypicalEvents] = useState<
+    {
+      id: string;
+      name: string;
+      organizer: string;
+      eventCount: number;
+      avatar: string | null;
+    }[]
+  >([]);
 
   const StatusBar = ({ label, percentage, color }: StatusBarProps) => (
-    <div className="flex items-center justify-between mb-4">
-      <div className="w-3/4 bg-gray-200 rounded-full h-6 mr-3">
+    <div className="flex flex-col items-start mb-4">
+      <div className="text-sm text-gray-600 font-medium mb-1">{label}</div>
+      <div className="w-full bg-gray-200 rounded-full h-6">
         <div
           className={`${color} h-6 rounded-full flex items-center justify-center`}
           style={{ width: `${percentage}%` }}
         >
-          <span className="text-sm text-white font-medium">{percentage.toFixed(1)}%</span>
+          <span className="text-sm text-white font-medium">
+            {percentage.toFixed(1)}%
+          </span>
         </div>
       </div>
-      <span className="text-sm text-gray-600 font-medium">{label}</span>
     </div>
   );
 
@@ -38,7 +59,8 @@ export default function Dashboard() {
         <div className="flex justify-center items-end h-32 gap-4">
           {data.length > 0 ? (
             data.map((item, index) => {
-              const heightPercentage = total > 0 ? (item.value / total) * 100 : 0;
+              const heightPercentage =
+                total > 0 ? (item.value / total) * 100 : 0;
 
               const getColor = (label: string) => {
                 switch (label) {
@@ -142,12 +164,15 @@ export default function Dashboard() {
 
   async function fetchEventStatusGraph(signal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-event-status-graph`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        signal,
-      });
+      const response = await fetch(
+        `http://localhost:3000/get-event-status-graph`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          signal,
+        }
+      );
 
       const data = await response.json();
       if (response.status === 200 && Array.isArray(data)) {
@@ -170,11 +195,7 @@ export default function Dashboard() {
         <td className="py-4 text-sm">
           <div className="flex items-center space-x-3">
             {image ? (
-              <img
-                src={image || "/placeholder.svg"}
-                alt={name}
-                className="h-8 w-8 rounded-full"
-              />
+              <img src={image} alt={name} className="h-8 w-8 rounded-full" />
             ) : showDefaultAvatar ? (
               <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
                 <User className="h-4 w-4 text-gray-500" />
@@ -195,16 +216,68 @@ export default function Dashboard() {
     );
   }
 
+  async function getProductiveUsers(signal: AbortSignal | null) {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/get-productive-users`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          signal,
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setProductiveUsers(data);
+        }
+      } else {
+        console.error("Failed to fetch productive users:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching productive users:", error);
+    }
+  }
+
+  async function fetchTypicalEvents(signal: AbortSignal | null) {
+    try {
+      const response = await fetch(`http://localhost:3000/get-typical-events`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        signal,
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setTypicalEvents(data);
+        }
+      } else {
+        console.error("Failed to fetch typical events:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching typical events:", error);
+    }
+  }
+
   useEffect(() => {
     const abortController = new AbortController();
-    fetchTotalEvents(abortController.signal);
-    fetchTotalUsers(abortController.signal);
-    fetchRsvpGraph(abortController.signal);
-    fetchEventStatusGraph(abortController.signal);
+    fetchTotalEvents(abortController.signal); // Fetch total events
+    fetchTotalUsers(abortController.signal); // Fetch total users
+    fetchRsvpGraph(abortController.signal); // Fetch RSVP graph data
+    fetchEventStatusGraph(abortController.signal); // Fetch event status graph data
+    getProductiveUsers(abortController.signal); // Fetch productive users data
+    fetchTypicalEvents(abortController.signal); // Fetch typical events data
     return () => abortController.abort();
   }, []);
 
-  const totalStatus = eventStatusData.reduce((sum, item) => sum + item.value, 0);
+  const totalStatus = eventStatusData.reduce(
+    (sum, item) => sum + item.value,
+    0
+  );
 
   return (
     <div className="flex bg-gray-50">
@@ -213,7 +286,9 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
             <div className="col-span-1">
               <div className="rounded-lg border border-gray-200 bg-white p-4">
-                <div className="text-xs text-gray-500">Total Organizer/Attendee:</div>
+                <div className="text-xs text-gray-500">
+                  Total Organizer/Attendee:
+                </div>
                 <div className="mt-1 text-2xl font-bold">{totalUser}</div>
               </div>
             </div>
@@ -224,7 +299,6 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* RSVP Graph */}
             <div className="col-span-1">
               <div className="rounded-lg border border-gray-200 bg-white p-6 h-full flex flex-col items-center">
                 <h3 className="text-sm font-medium text-gray-500 text-center mb-4">
@@ -234,7 +308,6 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Event Status Bars */}
             <div className="col-span-1">
               <div className="rounded-lg border border-gray-200 bg-white p-6 h-full flex flex-col items-center">
                 <h3 className="text-sm font-medium text-gray-500 text-center mb-4">
@@ -256,44 +329,115 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Additional Sections Below */}
+          {/* Productive Users Section */}
           <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-lg font-medium">Productive Users</h2>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="pb-2 text-left text-sm font-medium text-gray-500">User ID</th>
-                    <th className="pb-2 text-left text-sm font-medium text-gray-500">Name</th>
-                    <th className="pb-2 text-right text-sm font-medium text-gray-500">Total event created</th>
+                    <th className="pb-2 text-left text-sm font-medium text-gray-500">
+                      User ID
+                    </th>
+                    <th className="pb-2 text-left text-sm font-medium text-gray-500">
+                      Name
+                    </th>
+                    <th className="pb-2 text-right text-sm font-medium text-gray-500">
+                      Total Events
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <UserRow id="0000001" name="Lebron James" events={120} image="/placeholder.svg?height=40&width=40" />
-                  <UserRow id="0000002" name="Ashton Hall" events={100} image="/placeholder.svg?height=40&width=40" />
-                  <UserRow id="0000003" name="Darian Jason Watkins Jr." events={98} image="" showDefaultAvatar />
+                  {productiveUsers.map((user) => (
+                    <UserRow
+                      key={user.id}
+                      id={user.id}
+                      name={user.name}
+                      events={user.eventCount}
+                      image={user.pfp}
+                      showDefaultAvatar
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="flex items-center justify-end align-item-center group">
+            <Button
+              variant="link"
+              to="/admin/user"
+              animated={false}
+              className="text-purple-600 p-2"
+            >
+              View All
+            </Button>
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              className="text-purple-600 transition-transform duration-300 transform group-hover:translate-x-1"
+            />
+          </div>
+
+          {/* Typical Events Section */}
+          <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
+            <h2 className="mb-4 text-lg font-medium">Typical Events</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="pb-2 text-left text-sm font-medium text-gray-500">
+                      Event ID
+                    </th>
+                    <th className="pb-2 text-left text-sm font-medium text-gray-500">
+                      Event Organizer
+                    </th>
+                    <th className="pb-2 text-right text-sm font-medium text-gray-500">
+                      Total event created
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {typicalEvents.map((event) => (
+                    <tr key={event.id} className="border-b border-gray-200">
+                      <td className="py-4 text-sm">
+                        <div className="flex items-center space-x-3">
+                          {event.avatar ? (
+                            <img
+                              src={event.avatar}
+                              alt={event.name}
+                              className="h-8 w-8 rounded-full"
+                            />
+                          ) : (
+                            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                              <User className="h-4 w-4 text-gray-500" />
+                            </div>
+                          )}
+                          <span>{event.id}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 text-sm">{event.organizer}</td>
+                      <td className="py-4 text-right text-sm">
+                        {event.eventCount}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
 
-          <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-lg font-medium">Event Information</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="pb-2 text-left text-sm font-medium text-gray-500">Event ID</th>
-                    <th className="pb-2 text-left text-sm font-medium text-gray-500">Event Organizer</th>
-                    <th className="pb-2 text-right text-sm font-medium text-gray-500">Total event created</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <UserRow id="0000001" name="Lebron James" events={120} image="/placeholder.svg?height=40&width=40" />
-                  <UserRow id="0000002" name="Ashton Hall" events={100} image="/placeholder.svg?height=40&width=40" />
-                </tbody>
-              </table>
-            </div>
+          <div className="flex items-center justify-end align-item-center group">
+            <Button
+              variant="link"
+              to="/admin/event"
+              animated={false}
+              className="text-purple-600 p-2"
+            >
+              View All
+            </Button>
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              className="text-purple-600 transition-transform duration-300 transform group-hover:translate-x-1"
+            />
           </div>
         </main>
       </div>
