@@ -5,98 +5,156 @@ import { useState, useEffect } from "react";
 export default function Dashboard() {
   const [totalUser, setTotalUser] = useState(0);
   const [totalEvent, setTotalEvent] = useState(0);
+  const [rsvpData, setRsvpData] = useState<{ label: string; value: number }[]>([]);
+  const [totalRsvp, setTotalRsvp] = useState(0);
+  const [eventStatusData, setEventStatusData] = useState<{ label: string; value: number }[]>([]);
 
-  function StatusBar({ label, percentage, color }: StatusBarProps) {
-    return (
-      <div className="flex items-center justify-between">
-        <div className="w-3/4 bg-gray-200 rounded-full h-4 mr-2">
-          <div
-            className={`${color} h-4 rounded-full`}
-            style={{ width: `${percentage}%` }}
-          >
-            <span className="flex h-full items-center justify-center text-xs text-white">
-              {percentage}%
-            </span>
-          </div>
+  const StatusBar = ({ label, percentage, color }: StatusBarProps) => (
+    <div className="flex items-center justify-between mb-4">
+      <div className="w-3/4 bg-gray-200 rounded-full h-6 mr-3">
+        <div
+          className={`${color} h-6 rounded-full flex items-center justify-center`}
+          style={{ width: `${percentage}%` }}
+        >
+          <span className="text-sm text-white font-medium">{percentage.toFixed(1)}%</span>
         </div>
-        <span className="text-xs text-gray-500">{label}</span>
+      </div>
+      <span className="text-sm text-gray-600 font-medium">{label}</span>
+    </div>
+  );
+
+  const Graph = ({
+    title,
+    data,
+    total,
+  }: {
+    title: string;
+    data: { label: string; value: number }[];
+    total: number;
+  }) => {
+    return (
+      <div className="bg-white p-4 rounded-lg shadow">
+        <h4 className="text-sm font-semibold mb-2">{title}</h4>
+        <div className="flex justify-center items-end h-32 gap-4">
+          {data.length > 0 ? (
+            data.map((item, index) => {
+              const heightPercentage = total > 0 ? (item.value / total) * 100 : 0;
+
+              const getColor = (label: string) => {
+                switch (label) {
+                  case "Pending":
+                    return "#D8B4FE";
+                  case "Accepted":
+                    return "#A78BFA";
+                  case "Declined":
+                    return "#C084FC";
+                  default:
+                    return "#D8B4FE";
+                }
+              };
+
+              return (
+                <div key={index} className="flex flex-col items-center">
+                  <div className="relative w-8 h-28 rounded-full overflow-hidden bg-black">
+                    <div
+                      className="absolute bottom-0 w-full"
+                      style={{
+                        height: `${heightPercentage}%`,
+                        backgroundColor: getColor(item.label),
+                        borderTopLeftRadius: "0.5rem",
+                        borderTopRightRadius: "0.5rem",
+                        transition: "height 0.3s ease-in-out",
+                      }}
+                    ></div>
+                  </div>
+                  <span className="mt-1 text-xs font-medium text-gray-700">
+                    {heightPercentage.toFixed(1)}%
+                  </span>
+                  <span className="text-xs text-gray-500">{item.label}</span>
+                </div>
+              );
+            })
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
       </div>
     );
-  }
+  };
 
-  async function fetchTotalEvents(abortSignal: AbortSignal | null) {
+  async function fetchTotalEvents(signal: AbortSignal | null) {
     try {
       const response = await fetch(`http://localhost:3000/event-count`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        signal: abortSignal,
+        signal,
       });
 
       const data = await response.json();
-
-      if (response.status === 200) {
-        if (data.totalEvents !== undefined) {
-          const totalEvents = typeof data.totalEvents === 'string' 
-            ? parseInt(data.totalEvents, 10) 
-            : data.totalEvents;
-          if (!isNaN(totalEvents)) {
-            setTotalEvent(totalEvents);
-          } else {
-            console.error("Invalid totalEvents value:", data.totalEvents);
-            alert("Invalid totalEvents value from server.");
-          }
-        } else {
-          console.error("No totalEvents in response:", data);
-          alert("Invalid response format from server.");
-        }
-      } else {
-        console.error("Fetch failed with status:", response.status);
-        alert(`Failed to fetch total event count. Status: ${response.status}`);
+      if (response.status === 200 && data.totalEvents !== undefined) {
+        const total = parseInt(data.totalEvents, 10);
+        if (!isNaN(total)) setTotalEvent(total);
       }
     } catch (error) {
-      console.error("Fetch error:", error);
-      alert("Error fetching total event count.");
+      console.error("Error fetching event count:", error);
     }
   }
 
-  async function fetchTotalUsers(abortSignal: AbortSignal | null) {
+  async function fetchTotalUsers(signal: AbortSignal | null) {
     try {
       const response = await fetch(`http://localhost:3000/user-count`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        signal: abortSignal,
+        signal,
       });
 
       const data = await response.json();
-
-      if (response.status === 200) {
-        if (data.totalUsers !== undefined) {
-          const totalUsers = typeof data.totalUsers === 'string' 
-            ? parseInt(data.totalUsers, 10) 
-            : data.totalUsers;
-          if (!isNaN(totalUsers)) {
-            setTotalUser(totalUsers);
-          } else {
-            console.error("Invalid totalUsers value:", data.totalUsers);
-            alert("Invalid totalUsers value from server.");
-          }
-        } else {
-          console.error("No totalUsers in response:", data);
-          alert("Invalid response format from server.");
-        }
-      } else {
-        console.error("Fetch failed with status:", response.status);
-        alert(`Failed to fetch total user count. Status: ${response.status}`);
+      if (response.status === 200 && data.totalUsers !== undefined) {
+        const total = parseInt(data.totalUsers, 10);
+        if (!isNaN(total)) setTotalUser(total);
       }
     } catch (error) {
-      console.error("Fetch error:", error);
-      alert("Error fetching total user count.");
+      console.error("Error fetching user count:", error);
+    }
+  }
+
+  async function fetchRsvpGraph(signal: AbortSignal | null) {
+    try {
+      const response = await fetch(`http://localhost:3000/get-rsvp-graph`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        signal,
+      });
+
+      const data = await response.json();
+      if (response.status === 200 && Array.isArray(data)) {
+        setRsvpData(data);
+        const total = data.reduce((sum, item) => sum + item.value, 0);
+        setTotalRsvp(total);
+      }
+    } catch (error) {
+      console.error("Error fetching RSVP graph:", error);
+    }
+  }
+
+  async function fetchEventStatusGraph(signal: AbortSignal | null) {
+    try {
+      const response = await fetch(`http://localhost:3000/get-event-status-graph`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        signal,
+      });
+
+      const data = await response.json();
+      if (response.status === 200 && Array.isArray(data)) {
+        setEventStatusData(data);
+      }
+    } catch (error) {
+      console.error("Error fetching event status graph:", error);
     }
   }
 
@@ -141,147 +199,98 @@ export default function Dashboard() {
     const abortController = new AbortController();
     fetchTotalEvents(abortController.signal);
     fetchTotalUsers(abortController.signal);
-    return () => {
-      abortController.abort();
-    };
+    fetchRsvpGraph(abortController.signal);
+    fetchEventStatusGraph(abortController.signal);
+    return () => abortController.abort();
   }, []);
+
+  const totalStatus = eventStatusData.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <div className="flex bg-gray-50">
       <div className="flex flex-1 flex-col overflow-hidden">
         <main className="flex-1 overflow-auto p-4 md:p-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-4">
             <div className="col-span-1">
-              <div className="rounded-lg border border-gray-200 bg-white p-6">
-                <div className="text-sm text-gray-500">Total Organizer/Attendee:</div>
-                <div className="mt-2 text-3xl font-bold">{totalUser}</div>
+              <div className="rounded-lg border border-gray-200 bg-white p-4">
+                <div className="text-xs text-gray-500">Total Organizer/Attendee:</div>
+                <div className="mt-1 text-2xl font-bold">{totalUser}</div>
               </div>
             </div>
             <div className="col-span-1">
-              <div className="rounded-lg border border-gray-200 bg-white p-6">
-                <div className="text-sm text-gray-500">Total Event:</div>
-                <div className="mt-2 text-3xl font-bold">{totalEvent}</div>
+              <div className="rounded-lg border border-gray-200 bg-white p-4">
+                <div className="text-xs text-gray-500">Total Event:</div>
+                <div className="mt-1 text-2xl font-bold">{totalEvent}</div>
               </div>
             </div>
-            <div className="col-span-1 lg:col-span-1">
-              <div className="h-full rounded-lg border border-gray-200 bg-white p-6">
-                <div className="mb-4 flex justify-between">
-                  <h3 className="text-sm font-medium text-gray-500">
-                    RSVP Response Breakdown
-                  </h3>
-                  <h3 className="text-sm font-medium text-gray-500">
-                    Event Status
-                  </h3>
-                </div>
-                <div className="flex justify-between">
-                  <div className="flex items-end space-x-4">
-                    <div className="flex flex-col items-center">
-                      <div className="h-16 w-8 bg-black rounded-t-md"></div>
-                      <div className="mt-2 text-xs text-gray-500">Pending</div>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="h-24 w-8 bg-black rounded-t-md"></div>
-                      <div className="mt-2 text-xs text-gray-500">Declined</div>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="h-20 w-8 bg-black rounded-t-md relative">
-                        <div className="absolute bottom-0 h-1/3 w-full bg-purple-300 rounded-t-md"></div>
-                      </div>
-                      <div className="mt-2 text-xs text-gray-500">Accepted</div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col space-y-3 w-32">
+
+            {/* RSVP Graph */}
+            <div className="col-span-1">
+              <div className="rounded-lg border border-gray-200 bg-white p-6 h-full flex flex-col items-center">
+                <h3 className="text-sm font-medium text-gray-500 text-center mb-4">
+                  RSVP Response Breakdown
+                </h3>
+                <Graph title="" data={rsvpData} total={totalRsvp} />
+              </div>
+            </div>
+
+            {/* Event Status Bars */}
+            <div className="col-span-1">
+              <div className="rounded-lg border border-gray-200 bg-white p-6 h-full flex flex-col items-center">
+                <h3 className="text-sm font-medium text-gray-500 text-center mb-4">
+                  Event Status
+                </h3>
+                <div className="flex flex-col space-y-4 w-full px-4">
+                  {eventStatusData.map((item, idx) => (
                     <StatusBar
-                      label="Active"
-                      percentage={52}
+                      key={idx}
+                      label={item.label}
+                      percentage={
+                        totalStatus > 0 ? (item.value / totalStatus) * 100 : 0
+                      }
                       color="bg-purple-300"
                     />
-                    <StatusBar
-                      label="Completed"
-                      percentage={32}
-                      color="bg-purple-300"
-                    />
-                    <StatusBar
-                      label="New"
-                      percentage={16}
-                      color="bg-purple-300"
-                    />
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Additional Sections Below */}
           <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-lg font-medium">Productive Users</h2>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="pb-2 text-left text-sm font-medium text-gray-500">
-                      User ID
-                    </th>
-                    <th className="pb-2 text-left text-sm font-medium text-gray-500">
-                      Name
-                    </th>
-                    <th className="pb-2 text-right text-sm font-medium text-gray-500">
-                      Total event created
-                    </th>
+                    <th className="pb-2 text-left text-sm font-medium text-gray-500">User ID</th>
+                    <th className="pb-2 text-left text-sm font-medium text-gray-500">Name</th>
+                    <th className="pb-2 text-right text-sm font-medium text-gray-500">Total event created</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <UserRow
-                    id="0000001"
-                    name="Lebron James"
-                    events={120}
-                    image="/placeholder.svg?height=40&width=40"
-                  />
-                  <UserRow
-                    id="0000002"
-                    name="Ashton Hall"
-                    events={100}
-                    image="/placeholder.svg?height=40&width=40"
-                  />
-                  <UserRow
-                    id="0000003"
-                    name="Darian Jason Watkins Jr."
-                    events={98}
-                    image=""
-                    showDefaultAvatar
-                  />
+                  <UserRow id="0000001" name="Lebron James" events={120} image="/placeholder.svg?height=40&width=40" />
+                  <UserRow id="0000002" name="Ashton Hall" events={100} image="/placeholder.svg?height=40&width=40" />
+                  <UserRow id="0000003" name="Darian Jason Watkins Jr." events={98} image="" showDefaultAvatar />
                 </tbody>
               </table>
             </div>
           </div>
+
           <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-lg font-medium">Event Information</h2>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="pb-2 text-left text-sm font-medium text-gray-500">
-                      Event ID
-                    </th>
-                    <th className="pb-2 text-left text-sm font-medium text-gray-500">
-                      Event Organizer
-                    </th>
-                    <th className="pb-2 text-right text-sm font-medium text-gray-500">
-                      Total event created
-                    </th>
+                    <th className="pb-2 text-left text-sm font-medium text-gray-500">Event ID</th>
+                    <th className="pb-2 text-left text-sm font-medium text-gray-500">Event Organizer</th>
+                    <th className="pb-2 text-right text-sm font-medium text-gray-500">Total event created</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <UserRow
-                    id="0000001"
-                    name="Lebron James"
-                    events={120}
-                    image="/placeholder.svg?height=40&width=40"
-                  />
-                  <UserRow
-                    id="0000002"
-                    name="Ashton Hall"
-                    events={100}
-                    image="/placeholder.svg?height=40&width=40"
-                  />
+                  <UserRow id="0000001" name="Lebron James" events={120} image="/placeholder.svg?height=40&width=40" />
+                  <UserRow id="0000002" name="Ashton Hall" events={100} image="/placeholder.svg?height=40&width=40" />
                 </tbody>
               </table>
             </div>
