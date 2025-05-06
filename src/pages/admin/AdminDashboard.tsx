@@ -1,7 +1,11 @@
 import { StatusBarProps, UserRowProps } from "@/Types";
 import { User } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
+  const [totalUser, setTotalUser] = useState(0);
+  const [totalEvent, setTotalEvent] = useState(0);
+
   function StatusBar({ label, percentage, color }: StatusBarProps) {
     return (
       <div className="flex items-center justify-between">
@@ -18,6 +22,82 @@ export default function Dashboard() {
         <span className="text-xs text-gray-500">{label}</span>
       </div>
     );
+  }
+
+  async function fetchTotalEvents(abortSignal: AbortSignal | null) {
+    try {
+      const response = await fetch(`http://localhost:3000/event-count`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal: abortSignal,
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        if (data.totalEvents !== undefined) {
+          const totalEvents = typeof data.totalEvents === 'string' 
+            ? parseInt(data.totalEvents, 10) 
+            : data.totalEvents;
+          if (!isNaN(totalEvents)) {
+            setTotalEvent(totalEvents);
+          } else {
+            console.error("Invalid totalEvents value:", data.totalEvents);
+            alert("Invalid totalEvents value from server.");
+          }
+        } else {
+          console.error("No totalEvents in response:", data);
+          alert("Invalid response format from server.");
+        }
+      } else {
+        console.error("Fetch failed with status:", response.status);
+        alert(`Failed to fetch total event count. Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      alert("Error fetching total event count.");
+    }
+  }
+
+  async function fetchTotalUsers(abortSignal: AbortSignal | null) {
+    try {
+      const response = await fetch(`http://localhost:3000/user-count`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal: abortSignal,
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        if (data.totalUsers !== undefined) {
+          const totalUsers = typeof data.totalUsers === 'string' 
+            ? parseInt(data.totalUsers, 10) 
+            : data.totalUsers;
+          if (!isNaN(totalUsers)) {
+            setTotalUser(totalUsers);
+          } else {
+            console.error("Invalid totalUsers value:", data.totalUsers);
+            alert("Invalid totalUsers value from server.");
+          }
+        } else {
+          console.error("No totalUsers in response:", data);
+          alert("Invalid response format from server.");
+        }
+      } else {
+        console.error("Fetch failed with status:", response.status);
+        alert(`Failed to fetch total user count. Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      alert("Error fetching total user count.");
+    }
   }
 
   function UserRow({
@@ -57,30 +137,32 @@ export default function Dashboard() {
     );
   }
 
+  useEffect(() => {
+    const abortController = new AbortController();
+    fetchTotalEvents(abortController.signal);
+    fetchTotalUsers(abortController.signal);
+    return () => {
+      abortController.abort();
+    };
+  }, []);
+
   return (
     <div className="flex bg-gray-50">
-      {/* Main Content */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Dashboard Content */}
         <main className="flex-1 overflow-auto p-4 md:p-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* Summary Cards */}
             <div className="col-span-1">
               <div className="rounded-lg border border-gray-200 bg-white p-6">
-                <div className="text-sm text-gray-500">
-                  Total Organizer/ Attendee:
-                </div>
-                <div className="mt-2 text-3xl font-bold">120</div>
+                <div className="text-sm text-gray-500">Total Organizer/Attendee:</div>
+                <div className="mt-2 text-3xl font-bold">{totalUser}</div>
               </div>
             </div>
             <div className="col-span-1">
               <div className="rounded-lg border border-gray-200 bg-white p-6">
                 <div className="text-sm text-gray-500">Total Event:</div>
-                <div className="mt-2 text-3xl font-bold">1200</div>
+                <div className="mt-2 text-3xl font-bold">{totalEvent}</div>
               </div>
             </div>
-
-            {/* RSVP and Status Section */}
             <div className="col-span-1 lg:col-span-1">
               <div className="h-full rounded-lg border border-gray-200 bg-white p-6">
                 <div className="mb-4 flex justify-between">
@@ -129,8 +211,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-
-          {/* Productive Users Table */}
           <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-lg font-medium">Productive Users</h2>
             <div className="overflow-x-auto">
@@ -172,8 +252,6 @@ export default function Dashboard() {
               </table>
             </div>
           </div>
-
-          {/* Event Information Table */}
           <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-lg font-medium">Event Information</h2>
             <div className="overflow-x-auto">
