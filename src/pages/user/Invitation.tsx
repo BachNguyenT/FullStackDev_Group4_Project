@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 // import components
 import { InvitationCard } from "@/components/invitation";
-import { Button } from "@/components/general/Button";
 import { Dropdown } from "@/components/general";
 import { useDebounce } from "@/hooks";
 
