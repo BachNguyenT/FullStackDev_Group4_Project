@@ -233,6 +233,7 @@ function Login() {
           )}
           <Button
             variant="link"
+            to="/forgot-password"
             className="w-full justify-end text-sm text-purple-500"
             disabled={isLoading}
             animated={false}
