@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // import components
-import {InvitationCard} from "@/components/invitation";
+import { InvitationCard } from "@/components/invitation";
 import { Button } from "@/components/general/Button";
-import {Dropdown} from "@/components/general";
+import { Dropdown } from "@/components/general";
+import { useDebounce } from "@/hooks";
 
 
 
@@ -27,11 +28,11 @@ function Invitation() {
   const [statusFilter, setStatusFilter] = useState<string>("Ongoing");
   const [invitations, setInvitations] = useState<invitation[]>([]);
   const navigate = useNavigate();
-
+  const debouncedStatusFilter = useDebounce(statusFilter, 500); // Debounce the status filter
   async function fetchInvitations(abortSignal: AbortSignal | undefined) {
     try {
       const queryParams = new URLSearchParams({
-        statusFilter: statusFilter,
+        statusFilter: debouncedStatusFilter,
       });
 
       const response = await fetch(
@@ -46,7 +47,7 @@ function Invitation() {
         }
       );
 
-      if(response.status == 200) {
+      if (response.status == 200) {
         const data = await response.json();
         setInvitations(data);
       }
@@ -72,7 +73,7 @@ function Invitation() {
       abortController.abort(); // Cleanup function to abort the fetch request
     };
 
-  }, []);
+  }, [debouncedStatusFilter]);
 
   return (
     <div className="p-4 sm:p-6 md:p-4">
@@ -94,7 +95,6 @@ function Invitation() {
             value={statusFilter}
             valueSetter={setStatusFilter}
           />
-          <Button variant="secondary" onClick={() => fetchInvitations(undefined)}>Test</Button>
         </div>
       </div>
 
@@ -105,15 +105,15 @@ function Invitation() {
             invitations.map((item, index) => {
               return (
                 <InvitationCard key={index}
-                organizerName = {item.OrganizerName}
-                visibility = {item.IsPrivate ? "Private" : "Public"}
-                dateTime = {(new Date(item.Date.slice(0, -1)))}
-                duration = {item.Duration}
-                venue = {item.Venue}
-                eventID = {item.ID}
-                eventName = {item.Name}
-                eventType = {item.Type}
-                rsvpStatus = {item.Rsvp} />
+                  organizerName={item.OrganizerName}
+                  visibility={item.IsPrivate ? "Private" : "Public"}
+                  dateTime={(new Date(item.Date.slice(0, -1)))}
+                  duration={item.Duration}
+                  venue={item.Venue}
+                  eventID={item.ID}
+                  eventName={item.Name}
+                  eventType={item.Type}
+                  rsvpStatus={item.Rsvp} />
               )
             })
           ) : (
