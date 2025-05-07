@@ -56,7 +56,7 @@ function EventInfo({
   status: string;
   description: string;
   venue: string;
-  isOrganizer: boolean;
+  isOrganizer?: boolean;
   isEdit?: boolean;
 }) {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
