@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 // import components
 import { EventInfo, AttendeeInfo } from "@/components/event";
-import { ConfirmModal } from "@/components/modals";
 import { useDebounce } from "@/hooks";
 import { fetchEventInfoAdmin, fetchEventImage, fetchEventAttendeeListAdmin } from "@/api/event-services.ts";
 import { FetchStatus } from "@/enum.ts";
@@ -32,7 +31,6 @@ interface AttendeeInfo {
 function AdminEventDashboard() {
   const { eventId } = useParams();
   const navigate = useNavigate();
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [eventInfo, setEventInfo] = useState<AttendeeInfo>({
     eventID: "",
     eventName: "",
@@ -122,11 +120,6 @@ function AdminEventDashboard() {
       return false;
     }
   }
-
-
-
-  // Handle logic for delete modal
-
 
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -245,17 +238,6 @@ function AdminEventDashboard() {
           </table>
         </div>
       </div>
-      {/* Delete modal */}
-      {isDeleteModalOpen && (
-        <ConfirmModal
-          title={"Delete Event"}
-          message={
-            `Are you sure you want to delete event ${deleteID}? This action cannot be undone.`
-          }
-          onCancel={() => setDeleteModalOpen(false)}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
     </div>
   );
 }
