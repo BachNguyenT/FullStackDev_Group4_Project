@@ -42,7 +42,7 @@ function InvitationCard({
   const [rsvp, setRsvp] = useState(rsvpStatus);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  
+
   async function handleAccept() {
     setIsLoading(true);
     const queryParams = new URLSearchParams({
@@ -145,27 +145,29 @@ function InvitationCard({
   }, [eventID]);
 
   return (
-    <div className="w-250 md:max-h-[250px] flex justify-around md:flex-row bg-white col rounded-md shadow p-3 mb-3 border border-gray-200 gap-x-4">
+    <div className="w-250 md:max-h-[250px] flex flex-col md:flex-row bg-white rounded-md shadow p-3 mb-3 border border-gray-200 gap-x-12">
       {/* Image Box */}
-      <div className="relative">
-        <img
-          className="w-[400px] h-[220px] flex-initial object-cover rounded-md"
-          src={imageURL}
-          alt="Image"
-        />
+      <div className="relative flex-shrink-0">
+        <div className="w-[400px] h-[220px] overflow-hidden rounded-md">
+          <img
+            className="object-cover h-full w-full rounded-md"
+            src={imageURL}
+            alt="Image"
+          />
+        </div>
         <div className="absolute top-0 left-0 bg-white mt-[10px] ml-[10px] flex flex-col items-center rounded-sm font-semibold px-2 py-1">
           <span className="text-gray-800 h-5">{dateTime.getDate()}</span>
           <span className="text-purple-500 text-xs">{dateTime.toLocaleString("en-US", { month: "short" }).toUpperCase()}</span>
         </div>
       </div>
-
+  
       {/* Invitation Information */}
-      <div className="flex flex-col items-center justify-between">
+      <div className="flex-1 flex flex-col justify-between">
         <div>
           <span className="bg-purple-600 text-xs px-2 py-1 rounded-sm text-white font-bold">
             {eventType}
           </span>
-          <h2 className="text-xl font-semibold text-black my-2">{eventName}</h2>
+          <h2 className="text-xl font-semibold text-black my-2 truncate">{eventName}</h2> {/* Truncate long eventName */}
           <div className="grid grid-cols-1 md:grid-cols-2 text-sm text-gray-700 gap-y-4 gap-x-20">
             <div className="flex items-start gap-2">
               <img src={Host} className="h-[18px]" />
@@ -191,12 +193,10 @@ function InvitationCard({
                 <p>{duration}</p>
               </div>
             </div>
-            <div className="flex items-start gap-2 ">
+            <div className="flex items-start gap-2">
               <img src={Venue} className="h-[18px]" />
               <div>
-                <p>
-                  {venue}
-                </p>
+                <p className="truncate">{venue}</p> {/* Truncate venue if needed */}
               </div>
             </div>
           </div>
