@@ -113,6 +113,7 @@ function AttendeeList({
                   status={attendee.rsvp}
                   invitationDate={attendee.date}
                   onDeleteHandler={handleOnDeleteClick}
+                  isEdit={true}
                 />
               ))}
             </tbody>

@@ -3,26 +3,47 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 // import components
-import { Button } from "@/components/general/Button";
 import { EventInfo, AttendeeInfo } from "@/components/event";
 import { ConfirmModal } from "@/components/modals";
 import { useDebounce } from "@/hooks";
 import { fetchEventInfoAdmin, fetchEventImage, fetchEventAttendeeListAdmin } from "@/api/event-services.ts";
 import { FetchStatus } from "@/enum.ts";
-import { FetchResult, EventInfoProps } from "@/Types";
+import { FetchResult } from "@/Types";
 
 
 // import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faSpinner,faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
+
+interface AttendeeInfo {
+  eventID: string;
+  eventName: string;
+  eventType: string;
+  eventVisibility: string;
+  eventDateTime: string;
+  eventDuration: string;
+  eventStatus: string;
+  eventDescription: string;
+  eventVenue: string;
+}
 
 
 function AdminEventDashboard() {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [eventInfo, setEventInfo] = useState<EventInfoProps>({});
+  const [eventInfo, setEventInfo] = useState<AttendeeInfo>({
+    eventID: "",
+    eventName: "",
+    eventType: "",
+    eventVisibility: "",
+    eventDateTime: "",
+    eventDuration: "",
+    eventStatus: "",
+    eventDescription: "",
+    eventVenue: "",
+  });
   const [attendeeList, setAttendeeList] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
@@ -209,7 +230,7 @@ function AdminEventDashboard() {
                   </td>
                 </tr>
               )}
-              {attendeeList.map((attendee, key) => (
+              {attendeeList.map((attendee : {attendeeID : string, attendeeName : string, rsvp : string, date : string}, key : number) => (
                 <AttendeeInfo
                   key={key}
                   id={attendee.attendeeID}
@@ -217,6 +238,7 @@ function AdminEventDashboard() {
                   status={attendee.rsvp}
                   invitationDate={attendee.date}
                   isEdit={false}
+                  onDeleteHandler = {(id : string, name : string) => { console.log(id + name); return;}}
                 />
               ))}
             </tbody>

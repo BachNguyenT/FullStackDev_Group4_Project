@@ -1,5 +1,4 @@
 // import components
-import { Event } from "@/Types";
 import { Button } from "@/components/general/Button";
 
 // import Icons
@@ -13,7 +12,16 @@ function AdminEventInfo({
   date,
   attendees,
   status,
-}: Event) {
+}: {
+  id: string;
+  name: string;
+  HostID: string;
+  date: string;
+  attendees: number;
+  status: string;
+}) {
+  // destructure props
+  // const { id, name, HostID, date, attendees, status } = props;
   const getStatusStyle = (status: string) => {
     switch (status) {
       case "Accepted":

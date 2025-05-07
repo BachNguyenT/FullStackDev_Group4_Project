@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
-function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler,isEdit = true } : {
+function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler = () => {}, isEdit = true } : {
   id: string;
   name: string;
   status: string;
