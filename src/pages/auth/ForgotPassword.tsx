@@ -3,7 +3,7 @@ import {Button} from "@/components/general/Button"
 
 // import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle, faSignInAlt, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faSignInAlt, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 function ForgotPassword(){
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-900 to-purple-400">
