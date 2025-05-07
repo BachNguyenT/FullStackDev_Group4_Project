@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Route, Routes,Navigate } from "react-router-dom";
 
 // import components
-import {Login , Register} from "./pages/auth";
+import {Login , Register, ForgotPassword} from "./pages/auth";
 import {About , PrivacyPolicy} from "./pages/info";
 import {NotFoundPage} from "./pages/others";
 import {Workspace} from "./pages/user";
@@ -20,6 +20,8 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
 
         {/* Info pages */}
         <Route path="/terms" element={<PrivacyPolicy />} />
