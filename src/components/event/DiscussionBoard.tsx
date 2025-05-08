@@ -39,8 +39,13 @@ function DiscussionBoard({
 
   async function handleSendMessage(message: string, timestamp: string) {
     setDisableSend(true);
+    
     try {
-      const response = await fetch("http://localhost:3000/send-message", {
+      const queryParams = new URLSearchParams({
+        id: eventID || "",
+    });
+
+      const response = await fetch(`http://localhost:3000/send-message?${queryParams.toString()}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

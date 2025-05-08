@@ -29,6 +29,7 @@ function AdminGlobalSetting() {
             if (response.status === 200 && data.totalEvents !== undefined) {
                 const total = parseInt(data.totalEvents, 10);
                 if (!isNaN(total)) {
+                    alert("Updated successfully!");
                     setMaxEventHosted(total);
                 } else {
                     console.error("Invalid totalEvents value:", data.totalEvents);
