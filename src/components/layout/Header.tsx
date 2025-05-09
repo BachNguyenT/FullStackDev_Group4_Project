@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 
 // import components
 import { Button } from "@/components/general/Button";
-import {NotificationBoard} from "@/components/general";
+import { NotificationBoard } from "@/components/general";
 import { useLayoutContext } from "@/context/LayoutContext";
 
 // import Icons
@@ -53,12 +53,17 @@ function Header({
         </svg>
       </button>
       <span
-        className={`justify-end flex flex-row gap-4 ${sidebarOpen ? "w-0 md:w-full" : "w-full"
-          }`}
+        className={`justify-end flex flex-row gap-4 w-full ${
+          sidebarOpen ? "invisivle md:visible" : ""
+        }`}
       >
-        <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <div
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className={` ${sidebarOpen ? "invisible md:visible" : ""}`}
+        >
           <Button size="icon" variant="ghost">
-            <div className="w-full h-full flex items-center justify-center text-white font-semibold ">
+            <div className="w-full h-full flex items-center justify-center text-white font-semibold">
               <img src={Notification} />
             </div>
           </Button>
@@ -66,7 +71,8 @@ function Header({
           {notificationOpen && (
             <div className="absolute top-16 right-4 z-50">
               <NotificationBoard />
-            </div>)}
+            </div>
+          )}
         </div>
         {/* Avatar Circle */}
         <Button

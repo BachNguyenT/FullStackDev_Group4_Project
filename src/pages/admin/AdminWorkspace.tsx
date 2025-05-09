@@ -5,7 +5,15 @@ import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 // import components
 import { LayoutContext } from "@/context/LayoutContext";
 import { AdminSidebar, AdminHeader, Footer } from "@/components/layout";
-import { AdminAccount, AdminDashboard, AdminEvent, AdminEventDashboard, AdminViewUsers, AdminViewUserInfo,AdminGlobalSetting } from "@/pages/admin";
+import {
+  AdminAccount,
+  AdminDashboard,
+  AdminEvent,
+  AdminEventDashboard,
+  AdminViewUsers,
+  AdminViewUserInfo,
+  AdminGlobalSetting,
+} from "@/pages/admin";
 import { fetchUserPFP } from "@/lib/api";
 
 // import icons
@@ -51,11 +59,12 @@ function AdminWorkspace() {
       <div className="w-screen h-screen flex overflow-hidden">
         <AdminSidebar />
         <div
-          className={`flex flex-col bg-white border-r border-gray-200 h-full ${sidebarOpen ? "w-[65px] md:w-full" : "w-full"
-            }`}
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
+            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+          }`}
         >
           <AdminHeader avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
-          <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
+          <div className="flex flex-col min-w-[200px] overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the admin workspace */}
               <Route
@@ -67,7 +76,10 @@ function AdminWorkspace() {
                 }
               />
               {/* Resolve invalid path */}
-              <Route path="*" element={<Navigate to="/not-found-pageAdmin" />} />
+              <Route
+                path="*"
+                element={<Navigate to="/not-found-pageAdmin" />}
+              />
               {/* Show all events */}
               <Route
                 path="event"
@@ -98,13 +110,12 @@ function AdminWorkspace() {
                 }
               />
               {/* Dashboard of a specific user */}
+              <Route path="user/:userId" element={<AdminViewUserInfo />} />
+
               <Route
-                path="user/:userId"
-                element={<AdminViewUserInfo />}
+                path="account"
+                element={<AdminAccount pfp={avatarURL} />}
               />
-
-
-              <Route path="account" element={<AdminAccount pfp={avatarURL} />} />
 
               <Route path="global-setting" element={<AdminGlobalSetting />} />
             </Routes>

@@ -145,10 +145,10 @@ function InvitationCard({
   }, [eventID]);
 
   return (
-    <div className="w-250 md:max-h-[250px] flex flex-col md:flex-row bg-white rounded-md shadow p-3 mb-3 border border-gray-200 gap-x-12">
+    <div className="w-full md:w-[1100px] md:max-h-[250px] flex flex-col md:flex-row bg-white rounded-md shadow p-3 mb-3 border border-gray-200 gap-x-12">
       {/* Image Box */}
       <div className="relative flex-shrink-0">
-        <div className="w-[400px] h-[220px] overflow-hidden rounded-md">
+        <div className="w-full md:w-[400px] h-[220px] overflow-hidden rounded-md mb-2 md:mb-0">
           <img
             className="object-cover h-full w-full rounded-md"
             src={imageURL}
@@ -168,7 +168,7 @@ function InvitationCard({
             {eventType}
           </span>
           <h2 className="text-xl font-semibold text-black my-2 truncate">{eventName}</h2> {/* Truncate long eventName */}
-          <div className="grid grid-cols-1 md:grid-cols-2 text-sm text-gray-700 gap-y-4 gap-x-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 text-sm text-gray-700 gap-y-1 md:gap-y-4 gap-x-20">
             <div className="flex items-start gap-2">
               <img src={Host} className="h-[18px]" />
               <div>
@@ -202,7 +202,7 @@ function InvitationCard({
           </div>
         </div>
         {/* Buttons */}
-        <div className="flex justify-between items-center gap-2 mt-4 w-full">
+        <div className="flex flex-col md:flex-row items-center justify-between mt-4 gap-2 md:gap-4 w-full">
           <Button
             variant="secondary"
             className={`hover:bg-green-500 hover:text-white w-full ${rsvp == "1" ? 'bg-green-500 text-white' : ''}`}
@@ -213,7 +213,7 @@ function InvitationCard({
             Accept
           </Button>
           <Button
-            variant="destructive"
+            variant="secondary"
             className={`hover:bg-red-500 hover:text-white w-full ${rsvp == "0" ? 'bg-red-500 text-white' : ''}`}
             onClick={handleDecline}
             disabled={isLoading}
@@ -223,7 +223,7 @@ function InvitationCard({
           </Button>
           <Button
             to={`/workspace/event/${eventID}`}
-            variant="outline"
+            variant="secondary"
             animated={false}
             className="hover:bg-purple-500 hover:text-white w-full"
             disabled={isLoading}

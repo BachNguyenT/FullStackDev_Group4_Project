@@ -213,10 +213,10 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
 
       {/* Event Cards Grid */}
       <div
-        className={`grid grid-cols-1 gap-x-[16px] gap-y-[24px] transition-all duration-300 ${
+        className={`grid grid-cols-1 place-items-center gap-x-[16px] gap-y-[24px] transition-all duration-300 ${
           sidebarOpen
-            ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
-            : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
+            ? "sm:grid-cols-2 xl:grid-cols-3"
+            : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         }`}
       >
         {isLoading ? (

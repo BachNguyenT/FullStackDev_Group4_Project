@@ -56,7 +56,7 @@ function Workspace() {
           }`}
         >
           <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
-          <div className="overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
+          <div className="flex flex-col min-w-[200px] overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">
             <Routes>
               {/* Dashboard of the workspace */}
               <Route
