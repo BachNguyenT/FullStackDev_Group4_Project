@@ -174,7 +174,7 @@ function Account({ pfp }: { pfp: string }) {
         } else if (response.status === 401) {
           alert("Session expired. Please log in again.");
         } else {
-          alert("Service temporarily unavailable. Please try again later.");
+          alert("Your information have exit in the system. Please try other information.");
         }
       })
       .catch(() => {
