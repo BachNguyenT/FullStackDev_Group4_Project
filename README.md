@@ -12,9 +12,10 @@ RMIT University
 
 ## Project Overview
 The Event Planning & Management System is a comprehensive full stack web application designed to facilitate event creation, management, and participation. It provides different interfaces for various user roles including admins, organizers, and attendees.
-Note: Admin account for system:
-UserName: admin123
-Password: admin123
+<br>
+<p>Note: Admin account for system:</p>
+<p>UserName: admin123</p>
+<p>Password: admin123</p>
 ### Key Features
 - User authentication and role-based access control
 - Event creation and management
