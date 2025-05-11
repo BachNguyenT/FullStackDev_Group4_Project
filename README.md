@@ -16,6 +16,7 @@ The Event Planning & Management System is a comprehensive full stack web applica
 <p>Note: Admin account for system:</p>
 <p>UserName: admin123</p>
 <p>Password: admin123</p>
+
 ### Key Features
 - User authentication and role-based access control
 - Event creation and management
