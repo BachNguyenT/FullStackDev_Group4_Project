@@ -1,54 +1,137 @@
-# React + TypeScript + Vite
+# Event Planning & Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Full Stack Development 2025A
+RMIT University
 
-Currently, two official plugins are available:
+## Group Members & Contribution Scores
+- Nguyen Trong Bach - s4044878 - Score: 5
+- Do Phan Viet Anh - s4063835 - Score: 5
+- Ngo Hoang Viet - s3998350 - Score: 5
+- Vu Van Tuan - s4040269 - Score: 5
+- Tran Thanh Lam - s4038329 - Score: 5
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Project Overview
+The Event Planning & Management System is a comprehensive full stack web application designed to facilitate event creation, management, and participation. It provides different interfaces for various user roles including admins, organizers, and attendees.
 
-## Expanding the ESLint configuration
+### Key Features
+- User authentication and role-based access control
+- Event creation and management
+- RSVP system for invitations
+- Public and private event handling
+- Discussion board for event-related communication
+- Notification system for reminders and updates
+- Real-time statistics and reporting
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
+- React.js for frontend
+- Node.js and Express.js for backend
+- PostgreSQL for database
+- Neon for database hosting
+- Tailwind for UI styling
+- RESTful API architecture
+- Cookie for authentication and authorization
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## System Requirements
+- Node.js 16 or later
+- NPM 8 or later
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+
+## Installation & Setup
+
+1. Clone the repository
+
+2. Install backend dependencies
+```bash
+cd ./FullStackDev_Group4_BackEnd
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+3. Configure environment variables
+```bash
+cp .env.example .env
+# Edit .env file with your database credentials and other config
 ```
+
+4. Install frontend dependencies
+```bash
+cd ./frontend
+npm install
+```
+
+5. Run the application
+```bash
+# In backend directory
+node main.js
+
+# In frontend directory (separate terminal)
+npm run dev
+```
+
+## User Roles & Functionalities
+
+### Attendee
+- Register and manage personal profile
+- View public events
+- Request to join public events
+- Respond to event invitations (RSVP)
+- Participate in event discussions
+- Receive notifications about event updates and reminders
+
+### Organizer
+- Create public or private events
+- Send invitations to potential participants
+- Track RSVP responses
+- Configure notification reminders
+- Manage event details and updates
+- View event statistics and insights
+- Moderate event discussions
+
+### Admin
+- Full system access
+- Configure system settings (max events per user, max invitations, etc.)
+- Access system-wide statistics
+- Manage user accounts
+- Monitor event activities
+
+## Database Schema
+The system uses a database with the following main entities:
+- Users (Admins, Organizers, Attendees)
+- Events
+- Invitations
+- RSVPs
+- Discussions
+- Notifications
+
+## Features Implemented
+
+### Frontend
+- User registration and login interfaces
+- Role-based UI components
+- Event creation and management dashboards
+- RSVP system with response tracking
+- Discussion board with threaded comments
+- Notification center for event reminders
+- Mobile-responsive design implementation
+- Settings management for administrators
+
+### Backend
+- RESTful API endpoints for all core features
+- JWT authentication and role-based authorization
+- File upload functionality for event images
+- Database models and relationships
+- Event statistics and reporting APIs
+- Input validation and sanitization
+- Error handling middleware
+
+## Future Enhancements
+- Calendar integration
+- Event location mapping
+- Advanced search and filtering
+- Email notification integration
+- Payment processing for paid events
+- Mobile application development
+
+## Acknowledgments
+- RMIT University Full Stack Development teaching team
+- React and Node.js documentations
+- MongoDB/MySQL documentations
