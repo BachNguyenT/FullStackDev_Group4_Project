@@ -72,13 +72,14 @@ function AdminEventDashboard() {
       abortSignal,
       eventId);
 
+    setIsLoading(false);
     if (eventInfo.status === FetchStatus.SUCCESS) {
       setEventInfo(eventInfo.result);
-      setIsLoading(false);
       return true;
     }
     else {
       processFetchFail(eventInfo);
+      setIsLoading(false);
       return false;
     }
   }
@@ -88,16 +89,17 @@ function AdminEventDashboard() {
       abortSignal,
       eventId);
 
+    setIsLoading(false);
     if (eventImage.status === FetchStatus.SUCCESS) {
       if (eventImage.result) {
         imageURLRef.current = eventImage.result;
         setImageURL(eventImage.result);
-        setIsLoading(false);
       }
       return true;
     }
     else {
       processFetchFail(eventImage);
+      setIsLoading(false);
       return false;
     }
   }
@@ -109,9 +111,9 @@ function AdminEventDashboard() {
       debouncedSearchQuery
     );
 
+    setIsSearchLoading(false);
     if (eventAttendeeList.status === FetchStatus.SUCCESS) {
       setAttendeeList(eventAttendeeList.result);
-      setIsSearchLoading(false);
       return true;
     }
     else {
