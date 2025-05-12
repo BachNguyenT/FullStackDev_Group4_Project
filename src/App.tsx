@@ -1,12 +1,12 @@
 //import libraries
-import { BrowserRouter as Router, Route, Routes,Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
 // import components
-import {Login , Register, ForgotPassword} from "./pages/auth";
-import {About , PrivacyPolicy} from "./pages/info";
-import {NotFoundPage} from "./pages/others";
-import {Workspace} from "./pages/user";
-import {AdminWorkspace} from "./pages/admin";
+import { Login, Register, ForgotPassword } from "./pages/auth";
+import { About, PrivacyPolicy } from "./pages/info";
+import { NotFoundPage } from "./pages/others";
+import { Workspace } from "./pages/user";
+import { AdminWorkspace } from "./pages/admin";
 import SessionValidator from "./route-protectors/SessionValidator";
 import SessionAdminValidator from "./route-protectors/SessionAdminValidator";
 

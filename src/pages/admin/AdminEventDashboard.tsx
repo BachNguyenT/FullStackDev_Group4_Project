@@ -223,7 +223,7 @@ function AdminEventDashboard() {
                   </td>
                 </tr>
               )}
-              {attendeeList.map((attendee : {attendeeID : string, attendeeName : string, rsvp : string, date : string}, key : number) => (
+              {attendeeList.map((attendee: { attendeeID: string, attendeeName: string, rsvp: string, date: string }, key: number) => (
                 <AttendeeInfo
                   key={key}
                   id={attendee.attendeeID}
@@ -231,7 +231,7 @@ function AdminEventDashboard() {
                   status={attendee.rsvp}
                   invitationDate={attendee.date}
                   isEdit={false}
-                  onDeleteHandler = {(id : string, name : string) => { console.log(id + name); return;}}
+                  onDeleteHandler={(id: string, name: string) => { console.log(id + name); return; }}
                 />
               ))}
             </tbody>

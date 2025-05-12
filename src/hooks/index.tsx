@@ -1,2 +1,2 @@
-export {default as useDebounce} from './useDebounce';
-export {default as useEvent} from './useEvent';
+export { default as useDebounce } from './useDebounce';
+export { default as useEvent } from './useEvent';

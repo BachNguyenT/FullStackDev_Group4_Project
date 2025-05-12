@@ -1,11 +1,11 @@
 // import libraries
-import {useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 
 // import components
 import { LayoutContext } from "@/context/LayoutContext";
-import {Header,Sidebar,Footer} from "@/components/layout";
-import {Event,EventBrowser,Invitation,Account,EventDashboard,EventForm,DashBoard} from "@/pages/user";
+import { Header, Sidebar, Footer } from "@/components/layout";
+import { Event, EventBrowser, Invitation, Account, EventDashboard, EventForm, DashBoard } from "@/pages/user";
 import SessionValidator from "@/route-protectors/SessionValidator";
 import { fetchUserPFP } from "@/lib/api";
 
@@ -51,9 +51,8 @@ function Workspace() {
       <div className="w-screen h-screen flex overflow-hidden">
         <Sidebar />
         <div
-          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
-            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
-          }`}
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+            }`}
         >
           <Header avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
           <div className="flex flex-col min-w-[200px] overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">

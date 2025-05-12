@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FetchResult } from "@/Types";
 import { FetchStatus } from "@/enum.ts";
 import { Button } from "@/components/general/Button";
-import {AttendeeAddModal,ConfirmModal} from "../modals";
+import { AttendeeAddModal, ConfirmModal } from "../modals";
 import { deleteAttendee } from "@/api/event-services";
 import AttendeeInfo from "./AttendeeInfo";
 

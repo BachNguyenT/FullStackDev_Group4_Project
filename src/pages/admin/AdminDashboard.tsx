@@ -406,7 +406,7 @@ function AdminDashboard() {
                 </thead>
                 <tbody>
                   {typicalEvents.map((event, id) => (
-                    <tr key={id} className="border-b border-gray-200 hover:bg-gray-50" onClick = {()=> navigate(`/admin/event/${event.ID}`)}>
+                    <tr key={id} className="border-b border-gray-200 hover:bg-gray-50" onClick={() => navigate(`/admin/event/${event.ID}`)}>
                       <td className="py-4 text-sm">
                         <div className="flex items-center space-x-3">
                           {event.avatar ? (

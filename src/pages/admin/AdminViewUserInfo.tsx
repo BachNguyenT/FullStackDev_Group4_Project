@@ -59,7 +59,7 @@ function AdminViewUserInfo(): ReactElement {
   const { userId } = useParams();
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteEventID, setDeleteEventID] = useState<string | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);  
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [reloadFlag, setReloadFlag] = useState(false);
 
 
@@ -240,7 +240,7 @@ function AdminViewUserInfo(): ReactElement {
         URL.revokeObjectURL(imageURLRef.current);
       }
     };
-  }, [userId, debounceSort,reloadFlag]);
+  }, [userId, debounceSort, reloadFlag]);
 
   if (loading || !user) {
     return (
@@ -264,7 +264,7 @@ function AdminViewUserInfo(): ReactElement {
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-semibold">User Profile</h1>
             <Button variant="destructive" className="hover:bg-red-500 hover:text-white"
-              onClick = {()=> {
+              onClick={() => {
                 setDeleteTarget("User");
                 setDeleteModalOpen(true);
               }}
@@ -385,7 +385,7 @@ function AdminViewUserInfo(): ReactElement {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {events.length === 0 && (
+                  {!events.length && (
                     <tr>
                       <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
                         No events found.
@@ -437,7 +437,7 @@ function AdminViewUserInfo(): ReactElement {
                             variant="destructive"
                             className="hover:bg-red-500 hover:text-white"
                             aria-label="Delete event"
-                            onClick ={ ()=> {
+                            onClick={() => {
                               setDeleteTarget("Event");
                               setDeleteEventID(event.ID);
                               setDeleteModalOpen(true);
@@ -460,7 +460,7 @@ function AdminViewUserInfo(): ReactElement {
       </div>
       {isDeleteModalOpen && (
         <ConfirmModal
-          title={deleteTarget === "User"? "Delete User" : "Delete Event"}
+          title={deleteTarget === "User" ? "Delete User" : "Delete Event"}
           message={
             deleteTarget === "User"
               ? "Are you sure you want to delete this user? This action cannot be undone."

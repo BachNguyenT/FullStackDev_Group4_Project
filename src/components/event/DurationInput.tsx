@@ -1,5 +1,5 @@
 // import libraries
-import {useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 // import components
 import { TimeDuration } from "@/Types";

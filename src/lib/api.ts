@@ -4,7 +4,7 @@ import { FetchUserPFPResponse } from "@/Types";
 async function fetchUserPFP(
   abortSignal: AbortSignal,
   userID: string | undefined
-) : Promise<FetchUserPFPResponse> {
+): Promise<FetchUserPFPResponse> {
   try {
     const searchParams = new URLSearchParams({
       id: userID ? userID : "#SENDER#",
@@ -49,10 +49,10 @@ async function fetchUserPFP(
       };
     }
   } catch {
-    return { 
-      status: 500, 
+    return {
+      status: 500,
       debugCode: "FEx001",
-      imageURL: undefined, 
+      imageURL: undefined,
     };
   }
 }

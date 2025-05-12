@@ -1,5 +1,5 @@
 // import libraries
-import { useState,useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // import components
@@ -39,11 +39,11 @@ function DiscussionBoard({
 
   async function handleSendMessage(message: string, timestamp: string) {
     setDisableSend(true);
-    
+
     try {
       const queryParams = new URLSearchParams({
         id: eventID || "",
-    });
+      });
 
       const response = await fetch(`http://localhost:3000/send-message?${queryParams.toString()}`, {
         method: "POST",

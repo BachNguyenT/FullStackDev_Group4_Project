@@ -1,5 +1,5 @@
 // import libraries
-import {useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // import components
@@ -20,7 +20,7 @@ function EventCard({
   visibility,
   attendeeCount,
   maxAttendeeCount,
-} : {
+}: {
   eventId: string;
   eventName: string;
   dateTime: Date;
@@ -32,7 +32,7 @@ function EventCard({
   const [imageURL, setImageURL] = useState<string>(eventImagePlaceholder);
   const imageURLRef = useRef<string>(eventImagePlaceholder);
   const navigate = useNavigate();
-  
+
   async function fetchEventImage(abortSignal: AbortSignal) {
     try {
       const queryParams = new URLSearchParams({

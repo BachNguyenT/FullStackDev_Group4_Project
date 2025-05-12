@@ -115,7 +115,7 @@ function Login() {
   useEffect(() => {
     async function verifySession() {
       setLoading(true);
-  
+
       try {
         // First, check if the session belongs to an admin
         const adminResponse = await fetch("http://localhost:3000/verify-admin-session", {
@@ -125,7 +125,7 @@ function Login() {
             "Content-Type": "application/json",
           },
         });
-  
+
         if (adminResponse.status === 200) {
           const resultCode = await adminResponse.text();
           if (resultCode === "0x000") {
@@ -133,7 +133,7 @@ function Login() {
             return;
           }
         }
-  
+
         // If not an admin, check for a regular user session
         const userResponse = await fetch("http://localhost:3000/verify-session", {
           method: "GET",
@@ -142,7 +142,7 @@ function Login() {
             "Content-Type": "application/json",
           },
         });
-  
+
         if (userResponse.status === 200) {
           const resultCode = await userResponse.text();
           if (resultCode === "0x000") {
@@ -150,13 +150,13 @@ function Login() {
             return;
           }
         }
-  
+
         setLoading(false); // No valid session found
       } catch {
         setLoading(false); // Handle API fetch error
       }
     }
-  
+
     verifySession();
   }, [navigate]);
 

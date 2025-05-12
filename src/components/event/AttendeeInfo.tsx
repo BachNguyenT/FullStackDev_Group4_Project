@@ -1,5 +1,5 @@
 // import libraries
-import { useState,useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // import components
@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRemove } from "@fortawesome/free-solid-svg-icons";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
-function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler = () => {}, isEdit = true } : {
+function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler = () => { }, isEdit = true }: {
   id: string;
   name: string;
   status: string;
@@ -108,9 +108,9 @@ function AttendeeInfo({ id, name, status, invitationDate, onDeleteHandler = () =
         <Button
           variant="destructive"
           className="hover:bg-red-500 hover:text-white"
-          onClick={() => {onDeleteHandler(id, name);}}
+          onClick={() => { onDeleteHandler(id, name); }}
         >
-          <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs"/>
+          <FontAwesomeIcon icon={faRemove} className="ml-1 text-xs" />
           Remove
         </Button>
       </td>)}

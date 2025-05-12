@@ -1,5 +1,5 @@
 // import libraries
-import {useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // import components
 import { Button } from "../general/Button";
@@ -77,7 +77,7 @@ function EventBrowserCard({
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                
+
             });
             if (response.status === 200) {
                 alert("Join request sent successfully!");
@@ -94,7 +94,7 @@ function EventBrowserCard({
         }
     }
 
-    
+
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -159,7 +159,7 @@ function EventBrowserCard({
                 </div>
             </div>
             {eventStatus === "Ongoing" && (<Button
-            onClick={sendJoinRequest} // Set the trigger state
+                onClick={sendJoinRequest} // Set the trigger state
                 className="w-full h-[30px] rounded-sm bg-purple-400 text-white font-semibold text-sm hover:bg-purple-600"
             >
                 Join Request

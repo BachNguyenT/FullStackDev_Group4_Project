@@ -42,10 +42,10 @@ function AdminAccount({ pfp }: { pfp: string }) {
     const day = String(date.getDate()).padStart(2, "0");
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
-  
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
-  
+
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -149,7 +149,7 @@ function AdminAccount({ pfp }: { pfp: string }) {
 
   const handleSave = () => {
     const formattedBirthday = birthday ? new Date(birthday).toISOString().split("T")[0] : null; // Format as YYYY-MM-DD
-  
+
     const updatedUser = {
       Name: name,
       PhoneNumber: phone,
@@ -157,7 +157,7 @@ function AdminAccount({ pfp }: { pfp: string }) {
       Birthday: formattedBirthday, // Use the formatted date
       Username: userName,
     };
-  
+
     fetch(`http://localhost:3000/update-user`, {
       method: "PUT",
       headers: {
@@ -472,11 +472,10 @@ function AdminAccount({ pfp }: { pfp: string }) {
               id="currentPassword"
               value={password}
               type="password"
-              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${
-                passwordMessage
-                  ? "border-red-500 text-gray-700"
-                  : "border-gray-300 text-gray-700"
-              }`}
+              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${passwordMessage
+                ? "border-red-500 text-gray-700"
+                : "border-gray-300 text-gray-700"
+                }`}
               onFocus={handleFocus}
               placeholder="Enter your password"
             />
@@ -493,11 +492,10 @@ function AdminAccount({ pfp }: { pfp: string }) {
               id="newPassword"
               value={newPassword}
               type="password" // Keep as password type for security
-              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${
-                newPasswordMessage
-                  ? "border-red-500 text-gray-700"
-                  : "border-gray-300 text-gray-700"
-              }`}
+              className={`border-2 rounded-md p-2 mb-4 w-full font-light text-sm ${newPasswordMessage
+                ? "border-red-500 text-gray-700"
+                : "border-gray-300 text-gray-700"
+                }`}
               onFocus={handleFocus}
               placeholder="Enter your new password"
             />

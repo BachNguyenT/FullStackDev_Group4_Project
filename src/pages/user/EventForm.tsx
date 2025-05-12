@@ -1,15 +1,15 @@
 // import libraries
 import { useState, useEffect, useRef } from "react";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 // import components
 import { EVENT_TYPE, EVENT_VISIBILITY } from "@/lib/enum";
 import { FetchStatus } from "@/enum";
 import { Button } from "@/components/general/Button";
-import {Dropdown} from "@/components/general";
-import {DurationInput} from "@/components/event";
+import { Dropdown } from "@/components/general";
+import { DurationInput } from "@/components/event";
 import { fetchEventImage } from "@/api/event-services";
-import { TimeDuration,FetchResult } from "@/Types";
+import { TimeDuration, FetchResult } from "@/Types";
 
 // import icons
 import eventImagePlaceholder from "@/assets/Pictures/event-image-placeholder.jpg";
@@ -107,20 +107,20 @@ const EventForm = () => {
     if (isValid) {
       // Process data to send to the server
       const eventDurationProcessed = `${eventDuration.hour}h ${eventDuration.minute}m ${eventDuration.second}s`;
-      
+
       const eventReminderProcessed = new Date(eventDate);
       eventReminderProcessed.setHours(
         eventReminderProcessed.getHours() - eventReminder.hour
       );
-      
+
       eventReminderProcessed.setMinutes(
         eventReminderProcessed.getMinutes() - eventReminder.minute
       );
-      
+
       eventReminderProcessed.setSeconds(
         eventReminderProcessed.getSeconds() - eventReminder.second
       );
-      
+
 
       const getImage = await fetch(image);
       const imageBlob = await getImage.blob();
@@ -219,7 +219,7 @@ const EventForm = () => {
           eventReminder.minute * 60 +
           eventReminder.second) * 1000;
       eventReminderProcessed.setTime(eventReminderProcessed.getTime() - reminderDurationInMs);
-      
+
 
       const getImage = await fetch(image);
       const imageBlob = await getImage.blob();
@@ -301,12 +301,12 @@ const EventForm = () => {
     const day = String(date.getDate()).padStart(2, "0");
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
-  
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
   async function handleFetchEvent() {
-    
+
     setIsLoading(true);
     try {
       if (eventID) {
@@ -327,7 +327,7 @@ const EventForm = () => {
 
         if (response.status === 200) {
           const data = await response.json();
-          
+
           setEventName(data.eventName);
           setEventDateTime(formatDateToInput(new Date(data.eventDateTime)));
           setEventVenue(data.eventVenue);
@@ -345,8 +345,8 @@ const EventForm = () => {
           });
 
           const eventDateTimeObj = new Date(data.eventDateTime);
-            const reminderDateTimeObj = new Date(data.eventReminderTime);
-            reminderDateTimeObj.setHours(reminderDateTimeObj.getHours() + 7);
+          const reminderDateTimeObj = new Date(data.eventReminderTime);
+          reminderDateTimeObj.setHours(reminderDateTimeObj.getHours() + 7);
           const diffInSeconds = Math.floor(
             (eventDateTimeObj.getTime() - reminderDateTimeObj.getTime()) / 1000
           );
@@ -361,7 +361,7 @@ const EventForm = () => {
             second: seconds,
           });
 
-          
+
         } else if (response.status === 401) {
           alert("Session expired. Please log in again.");
         } else {
@@ -375,7 +375,7 @@ const EventForm = () => {
     setIsLoading(false);
   }
 
-  function processFetchFail (fetchResult : FetchResult) {
+  function processFetchFail(fetchResult: FetchResult) {
     if (fetchResult.status === FetchStatus.UNAUTHORIZED) {
       alert("Session expired. Please log in again.");
       navigate("/login");
@@ -387,7 +387,7 @@ const EventForm = () => {
     }
   }
 
-  async function loadImage (abortSignal: AbortSignal | undefined) {
+  async function loadImage(abortSignal: AbortSignal | undefined) {
     const eventImage = await fetchEventImage(
       abortSignal,
       eventID);
@@ -398,7 +398,7 @@ const EventForm = () => {
         setImage(eventImage.result);
       }
       return true;
-    } 
+    }
     else {
       processFetchFail(eventImage);
       return false;

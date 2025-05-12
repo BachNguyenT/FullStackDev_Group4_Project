@@ -1,10 +1,10 @@
 // import libraries
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // import components
-import {AccountSearch} from "@/components/event";
-import {useDebounce} from "@/hooks";
+import { AccountSearch } from "@/components/event";
+import { useDebounce } from "@/hooks";
 
 // import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -120,16 +120,16 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
           <div className="h-80 overflow-y-auto">
             {userFound.map((user, index) => (
               <AccountSearch
-              eventID={eventID}
-              key={index}
-              id={user.ID}
-              refreshHandler={fetchInvitableAttendee}
-              isLoading={isLoading}
-              isLoadingSetter={setIsLoading}
-              name={user.Name}
-              email={user.Email}
-              phoneNumber={user.PhoneNumber}
-            />
+                eventID={eventID}
+                key={index}
+                id={user.ID}
+                refreshHandler={fetchInvitableAttendee}
+                isLoading={isLoading}
+                isLoadingSetter={setIsLoading}
+                name={user.Name}
+                email={user.Email}
+                phoneNumber={user.PhoneNumber}
+              />
             ))}
           </div>
         </div>

@@ -59,9 +59,8 @@ function AdminWorkspace() {
       <div className="w-screen h-screen flex overflow-hidden">
         <AdminSidebar />
         <div
-          className={`flex flex-col bg-white border-r border-gray-200 h-full ${
-            sidebarOpen ? "w-[65px] md:w-full" : "w-full"
-          }`}
+          className={`flex flex-col bg-white border-r border-gray-200 h-full ${sidebarOpen ? "w-[65px] md:w-full" : "w-full"
+            }`}
         >
           <AdminHeader avatarURL={avatarURL} sidebarOpen={sidebarOpen} />
           <div className="flex flex-col min-w-[200px] overflow-y-auto overflow-x-scroll h-[calc(100vh-4rem)] bg-gray-50 border-t-1 border-gray-200">

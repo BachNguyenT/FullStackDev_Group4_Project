@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import pfpPlaceholder from "@/assets/Icons/avatar-placeholder.svg";
 
-function ChatLine({ sender, senderName, message, timestamp } : {
+function ChatLine({ sender, senderName, message, timestamp }: {
   sender: string;
   senderName: string;
   message: string;
@@ -63,7 +63,7 @@ function ChatLine({ sender, senderName, message, timestamp } : {
           </h4>
           <div className="flex items-center text-xs text-gray-400 mb-1">
             <FontAwesomeIcon icon={faCalendar} className="mr-1" />
-            <span>{(new Date(timestamp)).toLocaleString("en-UK", {hour12: true, dateStyle: "short", timeStyle: "short"})}</span>
+            <span>{(new Date(timestamp)).toLocaleString("en-UK", { hour12: true, dateStyle: "short", timeStyle: "short" })}</span>
           </div>
         </div>
       </div>

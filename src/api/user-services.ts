@@ -42,20 +42,20 @@ async function fetchUserPFP(
         };
       }
     } else if (response.status == 401) {
-        return {
-            status: FetchStatus.UNAUTHORIZED,
-            result: undefined,
-        };
+      return {
+        status: FetchStatus.UNAUTHORIZED,
+        result: undefined,
+      };
     } else {
-        return {
-            status: FetchStatus.ERROR,
-            result: undefined,
-        };
+      return {
+        status: FetchStatus.ERROR,
+        result: undefined,
+      };
     }
   } catch {
     return {
-        status: FetchStatus.ERROR,
-        result: undefined,
+      status: FetchStatus.ERROR,
+      result: undefined,
     };
   }
 }

@@ -28,7 +28,7 @@ function AttendeeEntry({
   phoneNumber: string;
   isLoadingSetter: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
-  refreshHandler : () => Promise<void>;
+  refreshHandler: () => Promise<void>;
 }) {
   const [pfpURL, setPfpURL] = useState<string>(pfpPlaceholder);
   const avatarURLRef = useRef<string>(pfpPlaceholder);
@@ -55,7 +55,7 @@ function AttendeeEntry({
       const queryParams = new URLSearchParams({
         id: eventID || "",
       });
-  
+
       const response = await fetch(
         `http://localhost:3000/add-attendee?${queryParams.toString()}`,
         {

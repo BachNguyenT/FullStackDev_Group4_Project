@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 // import components
 import { Button } from "@/components/general/Button";
-import {useEvent} from "@/hooks";
-import {EventCard} from "@/components/event";
+import { useEvent } from "@/hooks";
+import { EventCard } from "@/components/event";
 
 // import icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -250,11 +250,10 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
 
       {/* Event Cards Grid */}
       <div
-        className={`ml-10 mr-2 grid grid-cols-1 gap-x-[0px] gap-y-[16px] transition-all duration-300 ${
-          sidebarOpen
-            ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
-            : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
-        }`}
+        className={`ml-10 mr-2 grid grid-cols-1 gap-x-[0px] gap-y-[16px] transition-all duration-300 ${sidebarOpen
+          ? "sm:grid-cols-2 xl:grid-cols-3 pl-16"
+          : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pl-4"
+          }`}
       >
         {isLoading ? (
           <div>Loading...</div>

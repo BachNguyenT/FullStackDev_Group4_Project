@@ -29,7 +29,7 @@ function Sidebar() {
     if (!userConfirmed) {
       return; // Exit if the user clicks "Cancel"
     }
-    
+
     setLoading(true);
     try {
       const response = await fetch("http://localhost:3000/logout", {
@@ -58,9 +58,8 @@ function Sidebar() {
 
   return (
     <div
-      className={`flex flex-col bg-white border-r border-gray-200 h-full ${
-        sidebarOpen ? "w-full md:w-[300px]" : "w-0 md:w-[95px]"
-      }`}
+      className={`flex flex-col bg-white border-r border-gray-200 h-full ${sidebarOpen ? "w-full md:w-[300px]" : "w-0 md:w-[95px]"
+        }`}
     >
       {/* Sidebar Header */}
       <div
@@ -105,9 +104,8 @@ function Sidebar() {
                   <span className="ml-1 text-base">Events</span>
                   <img
                     src={Arrow}
-                    className={` w-[18px] h-[18px] ${
-                      eventsOpen ? "rotate-90" : ""
-                    }`}
+                    className={` w-[18px] h-[18px] ${eventsOpen ? "rotate-90" : ""
+                      }`}
                   />
                 </div>
               )}

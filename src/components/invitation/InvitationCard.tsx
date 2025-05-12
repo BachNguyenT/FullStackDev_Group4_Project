@@ -160,7 +160,7 @@ function InvitationCard({
           <span className="text-purple-500 text-xs">{dateTime.toLocaleString("en-US", { month: "short" }).toUpperCase()}</span>
         </div>
       </div>
-  
+
       {/* Invitation Information */}
       <div className="flex-1 flex flex-col justify-between">
         <div>

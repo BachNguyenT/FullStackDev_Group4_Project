@@ -187,9 +187,9 @@ function Register() {
   }, []);
 
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) =>{
-    if(e.key === "Enter" && !isLoading){
-        handleRegister();
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isLoading) {
+      handleRegister();
     }
   }
 
@@ -324,7 +324,7 @@ function Register() {
                   <input
                     id="avatar"
                     onChange={(e) => handleSetImage(e.target.files?.[0])}
-                    onKeyDown = {handleKeyDown}
+                    onKeyDown={handleKeyDown}
                     type="file"
                     accept="image/png,image/jpeg"
                     className="hidden"
@@ -363,7 +363,7 @@ function Register() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                   value={fullName}
                   onChange={(e) => handleFullNameChange(e.target.value)}
-                  onKeyDown = {handleKeyDown}
+                  onKeyDown={handleKeyDown}
                   onBlur={handleFullNameBlur}
                   aria-invalid={!!fullNameCheck}
                   aria-describedby={fullNameCheck ? "fullName-error" : undefined}
@@ -398,7 +398,7 @@ function Register() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
                   value={email}
                   onChange={(e) => handleEmailChange(e.target.value)}
-                  onKeyDown = {handleKeyDown}
+                  onKeyDown={handleKeyDown}
                   onBlur={handleEmailBlur}
                   aria-invalid={!!emailCheck}
                   aria-describedby={emailCheck ? "email-error" : undefined}
@@ -434,7 +434,7 @@ function Register() {
                   value={phone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
                   onBlur={handlePhoneBlur}
-                  onKeyDown = {handleKeyDown}
+                  onKeyDown={handleKeyDown}
                   aria-invalid={!!phoneCheck}
                   aria-describedby={phoneCheck ? "phone-error" : undefined}
                   disabled={isLoading}
@@ -468,7 +468,7 @@ function Register() {
                   value={birthday}
                   onChange={(e) => handleBirthdayChange(e.target.value)}
                   onBlur={handleBirthdayBlur}
-                  onKeyDown = {handleKeyDown}
+                  onKeyDown={handleKeyDown}
                   aria-invalid={!!birthdayCheck}
                   aria-describedby={birthdayCheck ? "birthday-error" : undefined}
                   max={new Date().toISOString().split("T")[0]}
@@ -504,7 +504,7 @@ function Register() {
                   value={username}
                   onChange={(e) => handleUsernameChange(e.target.value)}
                   onBlur={handleUsernameBlur}
-                  onKeyDown = {handleKeyDown}
+                  onKeyDown={handleKeyDown}
                   aria-invalid={!!usernameCheck}
                   aria-describedby={usernameCheck ? "username-error" : undefined}
                   disabled={isLoading}
@@ -539,7 +539,7 @@ function Register() {
                   value={password}
                   onChange={(e) => handlePasswordChange(e.target.value)}
                   onBlur={handlePasswordBlur}
-                  onKeyDown = {handleKeyDown}
+                  onKeyDown={handleKeyDown}
                   aria-invalid={!!passwordCheck}
                   aria-describedby={passwordCheck ? "password-error" : undefined}
                   disabled={isLoading}
@@ -574,7 +574,7 @@ function Register() {
                   value={confirmPassword}
                   onChange={(e) => handleConfirmPasswordChange(e.target.value)}
                   onBlur={handleConfirmPasswordBlur}
-                  onKeyDown = {handleKeyDown}
+                  onKeyDown={handleKeyDown}
                   aria-invalid={!!confirmPasswordCheck}
                   aria-describedby={
                     confirmPasswordCheck ? "confirmPassword-error" : undefined
@@ -605,7 +605,7 @@ function Register() {
                 checked={isTermsAgreed}
                 onChange={(e) => setIsTermsAgreed(e.target.checked)}
                 onBlur={handleTermsBlur}
-                onKeyDown = {handleKeyDown}
+                onKeyDown={handleKeyDown}
                 disabled={isLoading}
               />
               <label htmlFor="terms" className="text-sm text-gray-700">

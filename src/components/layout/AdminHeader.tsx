@@ -53,9 +53,8 @@ function AdminHeader({
         </svg>
       </button>
       <span
-        className={`justify-end flex flex-row gap-4 w-full ${
-          sidebarOpen ? "invisivle md:visible" : ""
-        }`}
+        className={`justify-end flex flex-row gap-4 w-full ${sidebarOpen ? "invisivle md:visible" : ""
+          }`}
       >
         <div
           onMouseEnter={handleMouseEnter}

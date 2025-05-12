@@ -8,7 +8,7 @@ import { SessionValidatorProps } from "@/Types";
 
 
 
-function SessionValidator({ children } : SessionValidatorProps) {
+function SessionValidator({ children }: SessionValidatorProps) {
   const [renderChildren, setRenderChildren] = useState<number>(-1);
 
   useEffect(() => {
