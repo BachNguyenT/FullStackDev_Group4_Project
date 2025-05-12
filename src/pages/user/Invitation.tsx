@@ -116,7 +116,7 @@ function Invitation() {
               )
             })
           ) : (
-            <div>No invitation.</div>
+            <div className="min-h-[20vh] text-center" >No invitation.</div>
           )
         }
       </div>

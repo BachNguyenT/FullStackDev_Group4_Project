@@ -10,7 +10,7 @@ function ForgotPassword() {
             <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
                 <h2 className="text-2xl font-semibold text-purple-600 mb-4">Forgot Password</h2>
                 <p className="text-gray-600 mb-6">
-                    Sorry bro, we haven't implemented the forgot password feature yet.
+                    Sorry, we haven't implemented the forgot password feature yet.
                 </p>
                 <div className="flex flex-col space-y-4">
                     <Button
