@@ -237,7 +237,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
             );
           })
         ) : (
-          <div>No events found.</div>
+          <div className="min-h-[20vh]">No events found.</div>
         )}
       </div>
     </div>
