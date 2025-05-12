@@ -388,7 +388,7 @@ function AdminDashboard() {
 
           {/* Typical Events Section */}
           <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-lg font-medium">Typical Events</h2>
+            <h2 className="mb-4 text-lg font-medium">Popular Events</h2>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
