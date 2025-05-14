@@ -53,8 +53,9 @@ function Header({
         </svg>
       </button>
       <span
-        className={`justify-end flex flex-row gap-4 w-full ${sidebarOpen ? "invisivle md:visible" : ""
-          }`}
+        className={`justify-end flex flex-row gap-4 w-full ${
+          sidebarOpen ? "invisivle md:visible" : ""
+        }`}
       >
         <div
           onMouseEnter={handleMouseEnter}
@@ -80,7 +81,11 @@ function Header({
           onClick={() => navigate("/workspace/account")}
         >
           <div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold overflow-hidden">
-            <img src={avatarURL} />
+            <img
+              src={avatarURL}
+              alt="avatar"
+              className="w-full h-full object-cover" /* ⬅️ this line does the magic */
+            />
           </div>
         </Button>
       </span>
