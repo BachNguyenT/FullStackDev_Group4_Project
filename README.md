@@ -16,7 +16,7 @@ The Event Planning & Management System is a comprehensive full stack web applica
 <p>Note: Admin account for system:</p>
 <p>UserName: admin123</p>
 <p>Password: admin123</p>
-<p> Video link: https://rmiteduau-my.sharepoint.com/:v:/r/personal/s4038329_rmit_edu_vn/Documents/Fullstack%20Development%20Group%20Project/FSvideo.mp4?csf=1&web=1&e=YR1sRS&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
+<p> Application Demo Video link: https://rmiteduau-my.sharepoint.com/:v:/r/personal/s4038329_rmit_edu_vn/Documents/Fullstack%20Development%20Group%20Project/FSvideo.mp4?csf=1&web=1&e=YR1sRS&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
 
 ### Key Features
 - User authentication and role-based access control
