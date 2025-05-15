@@ -20,7 +20,7 @@ The Event Planning & Management System is a comprehensive full stack web applica
 <p>User account for testing:</p>
 <p>UserName: testaccount1</p>
 <p>Password: Testing123</p>
-<p> Application Demo Video link: [https://rmiteduau-my.sharepoint.com/:v:/r/personal/s4038329_rmit_edu_vn/Documents/Fullstack%20Development%20Group%20Project/FSvideo.mp4?csf=1&web=1&e=YR1sRS&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://rmiteduau-my.sharepoint.com/:v:/g/personal/s4038329_rmit_edu_vn/EZwJtpHwbsNHmm_Ljx0mohcBjCxRSL3PaRmM40KYNZ6iwA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=oxQba3)
+<p> Application Demo Video link: https://rmiteduau-my.sharepoint.com/:v:/g/personal/s4038329_rmit_edu_vn/EZwJtpHwbsNHmm_Ljx0mohcBjCxRSL3PaRmM40KYNZ6iwA?e=4hDTR6&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifSwicGxheWJhY2tPcHRpb25zIjp7InN0YXJ0VGltZUluU2Vjb25kcyI6MTEuMjR9fQ%3D%3D
 
 ### Key Features
 - User authentication and role-based access control
