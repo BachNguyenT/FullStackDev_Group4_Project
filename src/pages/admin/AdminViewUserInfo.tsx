@@ -152,7 +152,7 @@ function AdminViewUserInfo(): ReactElement {
         userId: userId || "",
       });
       const response = await fetch(
-        `http://localhost:3000/admin-get-user-info?${queryParams.toString()}`,
+        `http://localhost:3000/admin/userInfo?${queryParams.toString()}`,
         {
           method: "GET",
           headers: {
@@ -196,7 +196,7 @@ function AdminViewUserInfo(): ReactElement {
           .toString(),
       });
       const response = await fetch(
-        `http://localhost:3000/admin-get-organizer-events?${searchParams.toString()}`,
+        `http://localhost:3000/admin/EventOrganizer?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {

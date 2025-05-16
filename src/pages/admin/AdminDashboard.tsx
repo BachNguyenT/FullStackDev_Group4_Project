@@ -113,7 +113,7 @@ function AdminDashboard() {
 
   async function fetchTotalEvents(signal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/event-count`, {
+      const response = await fetch(`http://localhost:3000/admin/totalEvents`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -132,7 +132,7 @@ function AdminDashboard() {
 
   async function fetchTotalUsers(signal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/user-count`, {
+      const response = await fetch(`http://localhost:3000/admin/totalUsers`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -151,7 +151,7 @@ function AdminDashboard() {
 
   async function fetchRsvpGraph(signal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-rsvp-graph`, {
+      const response = await fetch(`http://localhost:3000/admin/RSVPgraph`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -172,7 +172,7 @@ function AdminDashboard() {
   async function fetchEventStatusGraph(signal: AbortSignal | null) {
     try {
       const response = await fetch(
-        `http://localhost:3000/get-event-status-graph`,
+        `http://localhost:3000/admin/EventStatusGraph`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
