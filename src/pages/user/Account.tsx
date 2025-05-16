@@ -228,6 +228,7 @@ function Account({ pfp }: { pfp: string }) {
           if (res.status === 200) {
             alert("Avatar updated successfully.");
             setAvatar(previewURL); // Set the new avatar in state
+            window.location.reload();
           } else if (res.status === 401) {
             alert("Session expired. Please log in again.");
           } else {

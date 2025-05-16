@@ -79,7 +79,7 @@ function EventCard({
 
   return (
     <div
-      className="p-[10px] min-w-[250px] max-w-[320px] rounded-md overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+      className="p-[10px] w-[300px] rounded-md overflow-hidden shadow-lg bg-white hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer"
       onClick={() => {
         navigate(`/workspace/event/${eventId}`);
       }}
