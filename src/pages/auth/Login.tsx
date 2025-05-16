@@ -75,7 +75,7 @@ function Login() {
     // Call API if front end validation passed
     try {
       const authRequestResponse = await fetch(
-        "http://localhost:3000/authenticate-user",
+        "http://localhost:3000/user-account/authenticate-user",
         {
           method: "POST",
           headers: {
@@ -118,7 +118,7 @@ function Login() {
 
       try {
         // First, check if the session belongs to an admin
-        const adminResponse = await fetch("http://localhost:3000/verify-admin-session", {
+        const adminResponse = await fetch("http://localhost:3000/user-account/verify-admin-session", {
           method: "GET",
           credentials: "include",
           headers: {
@@ -135,7 +135,7 @@ function Login() {
         }
 
         // If not an admin, check for a regular user session
-        const userResponse = await fetch("http://localhost:3000/verify-session", {
+        const userResponse = await fetch("http://localhost:3000/user-account/verify-session", {
           method: "GET",
           credentials: "include",
           headers: {

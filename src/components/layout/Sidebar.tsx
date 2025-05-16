@@ -32,7 +32,7 @@ function Sidebar() {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/logout", {
+      const response = await fetch("http://localhost:3000/user-account/logout", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

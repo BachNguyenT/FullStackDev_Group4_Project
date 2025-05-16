@@ -13,7 +13,7 @@ function SessionAdminValidator({ children }: SessionValidatorProps) {
 
   useEffect(() => {
     function checkSession() {
-      fetch("http://localhost:3000/verify-admin-session", {
+      fetch("http://localhost:3000/user-account/verify-admin-session", {
         method: "GET",
         credentials: "include", // Send cookies with the request
         headers: {
