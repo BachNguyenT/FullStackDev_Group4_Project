@@ -193,7 +193,7 @@ async function fetchEventImage(
     });
 
     const response = await fetch(
-      `http://localhost:3000/get-event-image?${queryParams.toString()}`,
+      `http://localhost:3000/event/image?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {
