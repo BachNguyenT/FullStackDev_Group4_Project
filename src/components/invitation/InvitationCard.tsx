@@ -15,7 +15,6 @@ import Visibility from "@/assets/Icons/eye2.svg";
 import Duration from "@/assets/Icons/timer.svg";
 import Venue from "@/assets/Icons/location.svg";
 
-
 function InvitationCard({
   organizerName,
   visibility,
@@ -56,7 +55,7 @@ function InvitationCard({
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include"
+        credentials: "include",
       }
     );
 
@@ -84,7 +83,7 @@ function InvitationCard({
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include"
+        credentials: "include",
       }
     );
 
@@ -157,7 +156,9 @@ function InvitationCard({
         </div>
         <div className="absolute top-0 left-0 bg-white mt-[10px] ml-[10px] flex flex-col items-center rounded-sm font-semibold px-2 py-1">
           <span className="text-gray-800 h-5">{dateTime.getDate()}</span>
-          <span className="text-purple-500 text-xs">{dateTime.toLocaleString("en-US", { month: "short" }).toUpperCase()}</span>
+          <span className="text-purple-500 text-xs">
+            {dateTime.toLocaleString("en-US", { month: "short" }).toUpperCase()}
+          </span>
         </div>
       </div>
 
@@ -167,7 +168,10 @@ function InvitationCard({
           <span className="bg-purple-600 text-xs px-2 py-1 rounded-sm text-white font-bold">
             {eventType}
           </span>
-          <h2 className="text-xl font-semibold text-black my-2 truncate">{eventName}</h2> {/* Truncate long eventName */}
+          <h2 className="text-xl font-semibold text-black my-2 truncate">
+            {eventName}
+          </h2>{" "}
+          {/* Truncate long eventName */}
           <div className="grid grid-cols-1 md:grid-cols-2 text-sm text-gray-700 gap-y-1 md:gap-y-4 gap-x-20">
             <div className="flex items-start gap-2">
               <img src={Host} className="h-[18px]" />
@@ -184,7 +188,13 @@ function InvitationCard({
             <div className="flex items-start gap-2">
               <img src={Calender} className="h-[18px]" />
               <div>
-                <p>{dateTime.toLocaleString("en-UK", { hour12: true, dateStyle: "long", timeStyle: "short" })}</p>
+                <p>
+                  {dateTime.toLocaleString("en-UK", {
+                    hour12: true,
+                    dateStyle: "long",
+                    timeStyle: "short",
+                  })}
+                </p>
               </div>
             </div>
             <div className="flex items-start gap-2">
@@ -196,7 +206,8 @@ function InvitationCard({
             <div className="flex items-start gap-2">
               <img src={Venue} className="h-[18px]" />
               <div>
-                <p className="truncate">{venue}</p> {/* Truncate venue if needed */}
+                <p className="truncate">{venue}</p>{" "}
+                {/* Truncate venue if needed */}
               </div>
             </div>
           </div>
@@ -205,7 +216,9 @@ function InvitationCard({
         <div className="flex flex-col md:flex-row items-center justify-between mt-4 gap-2 md:gap-4 w-full">
           <Button
             variant="secondary"
-            className={`hover:bg-green-500 hover:text-white w-full ${rsvp == "1" ? 'bg-green-500 text-white' : ''}`}
+            className={`hover:bg-green-500 hover:text-white w-full ${
+              rsvp == "1" ? "bg-green-500 text-white" : ""
+            }`}
             onClick={handleAccept}
             disabled={isLoading}
           >
@@ -214,7 +227,9 @@ function InvitationCard({
           </Button>
           <Button
             variant="secondary"
-            className={`hover:bg-red-500 hover:text-white w-full ${rsvp == "0" ? 'bg-red-500 text-white' : ''}`}
+            className={`hover:bg-red-500 hover:text-white w-full ${
+              rsvp == "0" ? "bg-red-500 text-white" : ""
+            }`}
             onClick={handleDecline}
             disabled={isLoading}
           >

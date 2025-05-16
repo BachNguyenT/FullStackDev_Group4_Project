@@ -48,7 +48,7 @@ function AdminViewUsers(): ReactElement {
       });
 
       const response = await fetch(
-        `http://localhost:3000/admin-get-all-user?${queryParams.toString()}`,
+        `http://localhost:3000/admin/GetAllUsers?${queryParams.toString()}`,
         {
           method: "GET",
           headers: {
@@ -81,7 +81,7 @@ function AdminViewUsers(): ReactElement {
         id: deleteID || "",
       });
       const response = await fetch(
-        `http://localhost:3000/admin-delete-user?${queryParams.toString()}`,
+        `http://localhost:3000/admin/DeleteUser?${queryParams.toString()}`,
         {
           method: "DELETE",
           headers: {

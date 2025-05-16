@@ -17,7 +17,7 @@ function AdminGlobalSetting() {
     async function fetchMaxEventHosted(signal: AbortSignal | null) {
         try {
             const response = await fetch(
-                `http://localhost:3000/get-max-event-hosted`,
+                `http://localhost:3000/admin/MaxEventHosted`,
                 {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
@@ -56,7 +56,7 @@ function AdminGlobalSetting() {
     async function fetchMaxAttendee(signal: AbortSignal | null) {
         try {
             const response = await fetch(
-                `http://localhost:3000/get-max-attendee`,
+                `http://localhost:3000/admin/MaxAttendee`,
                 {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
@@ -100,7 +100,7 @@ function AdminGlobalSetting() {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/update-max-event-hosted`,
+                `http://localhost:3000/admin/UpdateMaxEventHosted`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -132,7 +132,7 @@ function AdminGlobalSetting() {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/update-max-attendee`,
+                `http://localhost:3000/admin/UpdateMaxAttendee`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },

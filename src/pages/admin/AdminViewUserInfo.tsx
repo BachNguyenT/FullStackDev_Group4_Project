@@ -18,8 +18,6 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
-
-
 // Define types for our data and components
 interface UserProfile {
   ID: string;
@@ -62,28 +60,26 @@ function AdminViewUserInfo(): ReactElement {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [reloadFlag, setReloadFlag] = useState(false);
 
-
   async function handleConfirmDeleteUser() {
     try {
       const queryParams = new URLSearchParams({
         id: userId || "",
       });
       const response = await fetch(
-        `http://localhost:3000/admin-delete-user?${queryParams.toString()}`,
+        `http://localhost:3000/admin/DeleteUser?${queryParams.toString()}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include"
+          credentials: "include",
         }
       );
 
       if (response.status == 200) {
         setDeleteModalOpen(false);
         navigate("/admin/user");
-      }
-      else if (response.status == 401) {
+      } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
       } else if (response.status == 404) {
@@ -103,21 +99,20 @@ function AdminViewUserInfo(): ReactElement {
       });
 
       const response = await fetch(
-        `http://localhost:3000/admin-delete-event?${queryParams.toString()}`,
+        `http://localhost:3000/admin/DeleteEvent?${queryParams.toString()}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include"
+          credentials: "include",
         }
       );
 
       if (response.status == 200) {
         setDeleteModalOpen(false);
-        setReloadFlag(prev => !prev);
-      }
-      else if (response.status == 401) {
+        setReloadFlag((prev) => !prev);
+      } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
       } else if (response.status == 404) {
@@ -125,14 +120,16 @@ function AdminViewUserInfo(): ReactElement {
       } else {
         alert("Service temporarily unavailable. Please try again later.");
       }
-    }
-    catch {
+    } catch {
       alert("Service temporarily unavailable. Please try again later.");
     }
   }
 
   // Function to convert Buffer data to a usable image URL
-  const convertBufferToImageURL = (buffer: { type: "Buffer"; data: number[] }): string => {
+  const convertBufferToImageURL = (buffer: {
+    type: "Buffer";
+    data: number[];
+  }): string => {
     try {
       const byteArray = new Uint8Array(buffer.data);
       const blob = new Blob([byteArray], { type: "image/jpeg" }); // Assuming JPEG, adjust if needed
@@ -152,12 +149,12 @@ function AdminViewUserInfo(): ReactElement {
         userId: userId || "",
       });
       const response = await fetch(
-        `http://localhost:3000/admin-get-user-info?${queryParams.toString()}`,
+        `http://localhost:3000/admin/UserInfo?${queryParams.toString()}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            Accept: "application/json",
           },
           credentials: "include",
         }
@@ -196,7 +193,7 @@ function AdminViewUserInfo(): ReactElement {
           .toString(),
       });
       const response = await fetch(
-        `http://localhost:3000/admin-get-organizer-events?${searchParams.toString()}`,
+        `http://localhost:3000/admin/EventOrganizer?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {
@@ -263,7 +260,9 @@ function AdminViewUserInfo(): ReactElement {
         <main className="flex-1 overflow-auto p-6">
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-semibold">User Profile</h1>
-            <Button variant="destructive" className="hover:bg-red-500 hover:text-white"
+            <Button
+              variant="destructive"
+              className="hover:bg-red-500 hover:text-white"
               onClick={() => {
                 setDeleteTarget("User");
                 setDeleteModalOpen(true);
@@ -296,9 +295,7 @@ function AdminViewUserInfo(): ReactElement {
                   <div className="text-lg font-medium text-gray-900">
                     {user.Name}
                   </div>
-                  <div className="text-sm text-gray-500">
-                    ID: {user.ID}
-                  </div>
+                  <div className="text-sm text-gray-500">ID: {user.ID}</div>
                 </div>
               </div>
 
@@ -306,19 +303,27 @@ function AdminViewUserInfo(): ReactElement {
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-4">
                 <div>
                   <div className="text-sm text-gray-500">Username:</div>
-                  <div className="text-lg font-medium text-gray-900">{user.Username}</div>
+                  <div className="text-lg font-medium text-gray-900">
+                    {user.Username}
+                  </div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">Email:</div>
-                  <div className="text-lg font-medium text-gray-900">{user.Email}</div>
+                  <div className="text-lg font-medium text-gray-900">
+                    {user.Email}
+                  </div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">Phone number:</div>
-                  <div className="text-lg font-medium text-gray-900">{user.PhoneNumber}</div>
+                  <div className="text-lg font-medium text-gray-900">
+                    {user.PhoneNumber}
+                  </div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">Birthday:</div>
-                  <div className="text-lg font-medium text-gray-900">{user.Birthday}</div>
+                  <div className="text-lg font-medium text-gray-900">
+                    {user.Birthday}
+                  </div>
                 </div>
               </div>
             </div>
@@ -338,8 +343,7 @@ function AdminViewUserInfo(): ReactElement {
               </div>
             </div>
             {/* Hosted Events Section */}
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            </div>
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden"></div>
 
             {/* Events Table */}
             <div className="overflow-x-auto">
@@ -387,7 +391,10 @@ function AdminViewUserInfo(): ReactElement {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {!events.length && (
                     <tr>
-                      <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                      <td
+                        colSpan={6}
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
                         No events found.
                       </td>
                     </tr>
@@ -409,10 +416,11 @@ function AdminViewUserInfo(): ReactElement {
                       </td>
                       <td className="px-5 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${event.Status === "Ongoing"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
-                            }`}
+                          className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
+                            event.Status === "Ongoing"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
                         >
                           {event.Status === "Ongoing" ? "Ongoing" : "Completed"}
                         </span>
@@ -428,10 +436,7 @@ function AdminViewUserInfo(): ReactElement {
                             to={`/admin/event/${event.ID}`}
                             aria-label="View event details"
                           >
-                            <FontAwesomeIcon
-                              icon={faEye}
-                              className="h-6 w-6"
-                            />
+                            <FontAwesomeIcon icon={faEye} className="h-6 w-6" />
                           </Button>
                           <Button
                             variant="destructive"
@@ -467,7 +472,11 @@ function AdminViewUserInfo(): ReactElement {
               : "Are you sure you want to delete this event? This action cannot be undone."
           }
           onCancel={() => setDeleteModalOpen(false)}
-          onConfirm={deleteTarget === "User" ? handleConfirmDeleteUser : handleConfirmDeleteOrganizeEvent}
+          onConfirm={
+            deleteTarget === "User"
+              ? handleConfirmDeleteUser
+              : handleConfirmDeleteOrganizeEvent
+          }
         />
       )}
     </div>
