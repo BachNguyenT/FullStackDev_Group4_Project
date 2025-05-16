@@ -34,6 +34,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
   };
 
   async function fetchInvitableAttendee() {
+    setUserFound([]);
     setIsLoading(true);
 
     try {
