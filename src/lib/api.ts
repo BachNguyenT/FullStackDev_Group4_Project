@@ -10,7 +10,7 @@ async function fetchUserPFP(
       id: userID ? userID : "#SENDER#",
     });
 
-    const response = await fetch(`http://localhost:3000/get-user-pfp?${searchParams.toString()}`, {
+    const response = await fetch(`http://localhost:3000/user-data/pfp?${searchParams.toString()}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

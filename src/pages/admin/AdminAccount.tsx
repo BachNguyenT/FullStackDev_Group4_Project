@@ -70,7 +70,7 @@ function AdminAccount({ pfp }: { pfp: string }) {
       });
 
       const response = await fetch(
-        `http://localhost:3000/get-user-pfp?${searchParams.toString()}`,
+        `http://localhost:3000/user-data/pfp?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {
@@ -118,7 +118,7 @@ function AdminAccount({ pfp }: { pfp: string }) {
   }
   async function handleDisplayUserInformation() {
     try {
-      const response = await fetch("http://localhost:3000/get-user", {
+      const response = await fetch("http://localhost:3000/user-data/info", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -158,8 +158,8 @@ function AdminAccount({ pfp }: { pfp: string }) {
       Username: userName,
     };
 
-    fetch(`http://localhost:3000/update-user`, {
-      method: "PUT",
+    fetch(`http://localhost:3000/user-data/info`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -216,8 +216,8 @@ function AdminAccount({ pfp }: { pfp: string }) {
       setNewAvatar(previewURL);
 
       // Send the Base64 string to backend
-      fetch("http://localhost:3000/update-user-pfp", {
-        method: "PUT",
+      fetch("http://localhost:3000/user-data/pfp", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -263,8 +263,8 @@ function AdminAccount({ pfp }: { pfp: string }) {
       NewPassword: newPassword,
     };
 
-    fetch("http://localhost:3000/update-user-password", {
-      method: "PUT",
+    fetch("http://localhost:3000/user-data/password", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },

@@ -73,7 +73,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Fetch hosted events stats
   async function fetchHostedEventsStats(abortSignal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-hosted-events-stats-graph`, {
+      const response = await fetch(`http://localhost:3000/user-data/hosted-events-stats-graph`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +96,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Fetch joined events stats
   async function fetchJoinedEventsStats(abortSignal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-joined-events-stats-graph`, {
+      const response = await fetch(`http://localhost:3000/user-data/joined-events-stats-graph`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -119,7 +119,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
   // Fetch invitations stats
   async function fetchInvitationsStats(abortSignal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-invitations-stats-graph`, {
+      const response = await fetch(`http://localhost:3000/user-data/invitations-stats-graph`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

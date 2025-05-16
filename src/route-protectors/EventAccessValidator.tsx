@@ -9,7 +9,7 @@ function EventAccessValidator({ children }: any) {
   const [renderChildren, setRenderChildren] = useState<number>(-1);
 
   function checkSession() {
-    fetch("http://localhost:3000/verify-event-access", {
+    fetch("http://localhost:3000/event/verify-event-access", {
       method: "GET",
       credentials: "include", // Send cookies with the request
       headers: {

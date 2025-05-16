@@ -45,8 +45,8 @@ function DiscussionBoard({
         id: eventID || "",
       });
 
-      const response = await fetch(`http://localhost:3000/send-message?${queryParams.toString()}`, {
-        method: "POST",
+      const response = await fetch(`http://localhost:3000/user-data/message?${queryParams.toString()}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },

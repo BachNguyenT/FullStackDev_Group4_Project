@@ -11,7 +11,7 @@ async function verifyEventAccess(
     });
 
     const response = await fetch(
-      `http://localhost:3000/verify-event-access?${queryParams.toString()}`,
+      `http://localhost:3000/event/verify-event-access?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {

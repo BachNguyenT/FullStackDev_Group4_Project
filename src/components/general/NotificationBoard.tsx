@@ -10,7 +10,7 @@ function NotificationBoard() {
 
         async function fetchNotifications() {
             try {
-                const response = await fetch("http://localhost:3000/notifications", {
+                const response = await fetch("http://localhost:3000/user-data/notifications", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
