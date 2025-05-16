@@ -305,7 +305,7 @@ async function fetchEventAttendeeListAdmin(
     });
 
     const response = await fetch(
-      `http://localhost:3000/admin-get-attendees?${queryParams.toString()}`,
+      `http://localhost:3000/admin/GetAttendee?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {

@@ -34,7 +34,6 @@ function AdminEvent(): ReactElement {
     { text: "Oldest" },
   ];
 
-
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [eventNameSearch, setEventNameSearch] = useState<string>("");
@@ -58,7 +57,7 @@ function AdminEvent(): ReactElement {
       });
 
       const response = await fetch(
-        `http://localhost:3000/admin-delete-event?${queryParams.toString()}`,
+        `http://localhost:3000/admin/DeleteEvent?${queryParams.toString()}`,
         {
           method: "DELETE",
           headers: {
@@ -137,10 +136,6 @@ function AdminEvent(): ReactElement {
     }
   }
 
-
-
-
-
   // Fetch events
   useEffect(() => {
     const abortController = new AbortController();
@@ -149,8 +144,6 @@ function AdminEvent(): ReactElement {
       abortController.abort();
     };
   }, [debounceName, debounceSort, reloadFlag]);
-
-
 
   return (
     <div className="flex bg-gray-50">
@@ -271,10 +264,11 @@ function AdminEvent(): ReactElement {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${event.Status === "Ongoing"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
-                            }`}
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+                            event.Status === "Ongoing"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
                         >
                           {event.Status === "Ongoing" ? "Ongoing" : "Completed"}
                         </span>

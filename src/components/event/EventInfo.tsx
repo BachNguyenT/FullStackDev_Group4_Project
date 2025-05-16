@@ -1,4 +1,4 @@
-// import libraries 
+// import libraries
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,8 +7,7 @@ import { Button } from "@/components/general/Button";
 import { Card, CardContent } from "@/components/general/Card";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 
-
-// import  icons 
+// import  icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCommentDots,
@@ -73,25 +72,20 @@ function EventInfo({
       });
 
       const deleteUrl = isEdit
-        ? `http://localhost:3000/admin-delete-event?${queryParams.toString()}`
+        ? `http://localhost:3000/admin/DeleteEvent?${queryParams.toString()}`
         : `http://localhost:3000/delete-event?${queryParams.toString()}`;
-      const response = await fetch(deleteUrl,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include"
-        }
-      );
+      const response = await fetch(deleteUrl, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
       if (response.status == 200) {
-        const navigateUrl = isEdit
-          ? `/admin/event`
-          : `/workspace/event`;
+        const navigateUrl = isEdit ? `/admin/event` : `/workspace/event`;
         navigate(navigateUrl);
-      }
-      else if (response.status == 401) {
+      } else if (response.status == 401) {
         alert("Session expired. Please log in again.");
         navigate("/login");
       } else if (response.status == 404) {
@@ -102,8 +96,7 @@ function EventInfo({
       } else {
         alert("Service temporarily unavailable. Please try again later.");
       }
-    }
-    catch {
+    } catch {
       alert("Service temporarily unavailable. Please try again later.");
     }
   }
@@ -123,11 +116,11 @@ function EventInfo({
         <div className="flex items-center justify-center w-8 h-8 rounded-full text-gray-600">
           {icon}
         </div>
-        <div className="flex flex-col" >
+        <div className="flex flex-col">
           <div className="font-semibold mb-1">{label}:</div>
-          <div className={`text-gray-700  ${getStatusStyle(
-            value
-          )}`}>{value}</div>
+          <div className={`text-gray-700  ${getStatusStyle(value)}`}>
+            {value}
+          </div>
         </div>
       </div>
     );
@@ -141,22 +134,26 @@ function EventInfo({
         </h1>
         <div className="flex-end">
           <div>
-            {isOrganizer && (<Button
-              to={`/workspace/event/${eventId}/edit`}
-              animated={false}
-              variant="secondary"
-            >
-              <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
-              Edit
-            </Button>)}
-            {(isOrganizer || isEdit) && (<Button
-              animated={false}
-              variant="destructive"
-              className="bg-red-500 text-white ml-4"
-              onClick={handleDeleteClick}
-            >
-              <FontAwesomeIcon icon={faTrashCan} />
-            </Button>)}
+            {isOrganizer && (
+              <Button
+                to={`/workspace/event/${eventId}/edit`}
+                animated={false}
+                variant="secondary"
+              >
+                <FontAwesomeIcon icon={faPenToSquare} className="mr-2" />
+                Edit
+              </Button>
+            )}
+            {(isOrganizer || isEdit) && (
+              <Button
+                animated={false}
+                variant="destructive"
+                className="bg-red-500 text-white ml-4"
+                onClick={handleDeleteClick}
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -167,7 +164,7 @@ function EventInfo({
           className="w-full h-100 object-cover rounded-lg shadow-md"
         />
         <h1 className="text-2xl font-semibold mb-4 mt-8 ">Event Information</h1>
-        <Card >
+        <Card>
           {/* Add the button edit */}
           <CardContent className="grid gap-4 p-6 text-sm">
             {/* Top info grid */}
@@ -222,7 +219,6 @@ function EventInfo({
               label="Venue"
               value={venue}
             />
-
           </CardContent>
         </Card>
       </div>

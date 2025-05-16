@@ -113,7 +113,7 @@ function AdminDashboard() {
 
   async function fetchTotalEvents(signal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/admin/totalEvents`, {
+      const response = await fetch(`http://localhost:3000/admin/TotalEvents`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -132,7 +132,7 @@ function AdminDashboard() {
 
   async function fetchTotalUsers(signal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/admin/totalUsers`, {
+      const response = await fetch(`http://localhost:3000/admin/TotalUsers`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -227,7 +227,7 @@ function AdminDashboard() {
   async function getProductiveUsers(signal: AbortSignal | null) {
     try {
       const response = await fetch(
-        `http://localhost:3000/get-productive-users`,
+        `http://localhost:3000/admin/ProductiveUsers`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -251,7 +251,7 @@ function AdminDashboard() {
 
   async function fetchTypicalEvents(signal: AbortSignal | null) {
     try {
-      const response = await fetch(`http://localhost:3000/get-typical-events`, {
+      const response = await fetch(`http://localhost:3000/admin/TypicalEvent`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
