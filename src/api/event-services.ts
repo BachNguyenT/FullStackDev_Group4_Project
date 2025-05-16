@@ -127,7 +127,7 @@ async function fetchEventInfoAdmin(
     });
 
     const response = await fetch(
-      `http://localhost:3000/admin-get-event-info?${queryParams.toString()}`,
+      `http://localhost:3000/admin/GetEventInfo?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {
