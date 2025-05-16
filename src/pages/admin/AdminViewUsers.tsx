@@ -48,7 +48,7 @@ function AdminViewUsers(): ReactElement {
       });
 
       const response = await fetch(
-        `http://localhost:3000/admin-get-all-user?${queryParams.toString()}`,
+        `http://localhost:3000/admin/GetAllUsers?${queryParams.toString()}`,
         {
           method: "GET",
           headers: {

@@ -95,7 +95,7 @@ function AdminEvent(): ReactElement {
       });
 
       const response = await fetch(
-        `http://localhost:3000/admin-get-events?${searchParams.toString()}`,
+        `http://localhost:3000/admin/GetEvents?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {
