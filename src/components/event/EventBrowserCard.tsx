@@ -42,7 +42,7 @@ function EventBrowserCard({
             });
 
             const response = await fetch(
-                `http://localhost:3000/get-event-image?${queryParams.toString()}`,
+                `http://localhost:3000/event/image?${queryParams.toString()}`,
                 {
                     method: "GET",
                     headers: {
@@ -71,7 +71,7 @@ function EventBrowserCard({
             const queryParams = new URLSearchParams({
                 id: eventId || "",
             });
-            const response = await fetch(`http://localhost:3000/send-join-request?${queryParams.toString()}`, {
+            const response = await fetch(`http://localhost:3000/event/send-join-request?${queryParams.toString()}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

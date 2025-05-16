@@ -32,7 +32,7 @@ function JoinRequestList({
       });
 
       const response = await fetch(
-        `http://localhost:3000/accept-join-request?${searchParams.toString()}`,
+        `http://localhost:3000/event/accept-join-request?${searchParams.toString()}`,
         {
           method: "POST",
           headers: {
@@ -71,7 +71,7 @@ function JoinRequestList({
       });
 
       const response = await fetch(
-        `http://localhost:3000/decline-join-request?${searchParams.toString()}`,
+        `http://localhost:3000/event/decline-join-request?${searchParams.toString()}`,
         {
           method: "POST",
           headers: {

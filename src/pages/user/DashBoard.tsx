@@ -36,7 +36,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
       });
 
       const response = await fetch(
-        `http://localhost:3000/query-organizing-events?${searchParams.toString()}`,
+        `http://localhost:3000/event/organizing-events?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {
@@ -46,6 +46,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
           signal: abortSignal,
         }
       );
+
 
       if (response.status === 200) {
         const data = await response.json();
@@ -62,7 +63,7 @@ function DashBoard({ sidebarOpen }: { sidebarOpen: boolean }) {
         setIsLoading(false);
         return;
       }
-    } catch {
+    } catch (e) {
       alert("Service temporarily unavailable. Please try again later.");
       setIsLoading(false);
       return;

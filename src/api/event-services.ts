@@ -61,7 +61,7 @@ async function fetchEventInfo(
     });
 
     const response = await fetch(
-      `http://localhost:3000/get-event-info?${queryParams.toString()}`,
+      `http://localhost:3000/event/info?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {
@@ -193,7 +193,7 @@ async function fetchEventImage(
     });
 
     const response = await fetch(
-      `http://localhost:3000/get-event-image?${queryParams.toString()}`,
+      `http://localhost:3000/event/image?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {
@@ -252,7 +252,7 @@ async function fetchEventAttendeeList(
     });
 
     const response = await fetch(
-      `http://localhost:3000/get-attendees?${queryParams.toString()}`,
+      `http://localhost:3000/event/attendee?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {
@@ -356,7 +356,7 @@ async function fetchEventChatLog(
     });
 
     const response = await fetch(
-      `http://localhost:3000/get-event-chatlog?${queryParams.toString()}`,
+      `http://localhost:3000/event/chatlog?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {
@@ -407,7 +407,7 @@ async function deleteAttendee(
       id: eventId || "",
     });
 
-    const response = await fetch(`http://localhost:3000/delete-attendee?${queryParams.toString()}`, {
+    const response = await fetch(`http://localhost:3000/event/attendee?${queryParams.toString()}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -458,7 +458,7 @@ async function fetchJoinRequestList(
     });
 
     const response = await fetch(
-      `http://localhost:3000/get-join-requests?${queryParams.toString()}`,
+      `http://localhost:3000/event/join-requests?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {

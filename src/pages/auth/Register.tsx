@@ -247,7 +247,7 @@ function Register() {
         .join("");
 
       const registerResult = await fetch(
-        "http://localhost:3000/register-user",
+        "http://localhost:3000/user-account/register",
         {
           method: "POST",
           headers: {

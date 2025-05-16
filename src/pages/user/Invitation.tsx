@@ -35,7 +35,7 @@ function Invitation() {
       });
 
       const response = await fetch(
-        `http://localhost:3000/get-invitations?${queryParams.toString()}`,
+        `http://localhost:3000/event/invitations?${queryParams.toString()}`,
         {
           method: "GET",
           headers: {

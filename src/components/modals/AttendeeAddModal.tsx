@@ -43,7 +43,7 @@ function AttendeeAddModal({ onCancel, eventID }: ConfirmModalProps) {
       });
 
       const response = await fetch(
-        `http://localhost:3000/get-invitable-attendee?${queryParams.toString()}`,
+        `http://localhost:3000/event/invitable-attendee?${queryParams.toString()}`,
         {
           method: "GET",
           headers: {

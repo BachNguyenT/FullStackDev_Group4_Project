@@ -57,7 +57,7 @@ function AttendeeEntry({
       });
 
       const response = await fetch(
-        `http://localhost:3000/add-attendee?${queryParams.toString()}`,
+        `http://localhost:3000/event/attendee?${queryParams.toString()}`,
         {
           method: "POST",
           headers: {

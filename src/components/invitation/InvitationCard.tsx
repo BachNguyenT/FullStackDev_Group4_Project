@@ -50,7 +50,7 @@ function InvitationCard({
     });
 
     const response = await fetch(
-      `http://localhost:3000/set-rsvp-yes?${queryParams.toString()}`,
+      `http://localhost:3000/event/rsvp-yes?${queryParams.toString()}`,
       {
         method: "PUT",
         headers: {
@@ -78,7 +78,7 @@ function InvitationCard({
     });
 
     const response = await fetch(
-      `http://localhost:3000/set-rsvp-no?${queryParams.toString()}`,
+      `http://localhost:3000/event/rsvp-no?${queryParams.toString()}`,
       {
         method: "PUT",
         headers: {
@@ -106,7 +106,7 @@ function InvitationCard({
       });
 
       const response = await fetch(
-        `http://localhost:3000/get-event-image?${queryParams.toString()}`,
+        `http://localhost:3000/event/image?${queryParams.toString()}`,
         {
           method: "GET",
           headers: {

@@ -74,7 +74,7 @@ function EventInfo({
 
       const deleteUrl = isEdit
         ? `http://localhost:3000/admin-delete-event?${queryParams.toString()}`
-        : `http://localhost:3000/delete-event?${queryParams.toString()}`;
+        : `http://localhost:3000/event/delete-event?${queryParams.toString()}`;
       const response = await fetch(deleteUrl,
         {
           method: "DELETE",

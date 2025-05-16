@@ -72,7 +72,7 @@ function EventBrowser({ sidebarOpen }: { sidebarOpen: boolean }) {
       });
 
       const response = await fetch(
-        `http://localhost:3000/browse-event?${searchParams.toString()}`,
+        `http://localhost:3000/event/public-events?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {

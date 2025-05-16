@@ -132,7 +132,7 @@ const EventForm = () => {
           .map((byte) => byte.toString(16).padStart(2, "0"))
           .join("");
 
-      const response = await fetch("http://localhost:3000/create-event", {
+      const response = await fetch("http://localhost:3000/event/create-event", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -236,7 +236,7 @@ const EventForm = () => {
       });
 
       const response = await fetch(
-        `http://localhost:3000/update-event?${queryParams.toString()}`,
+        `http://localhost:3000/event/info?${queryParams.toString()}`,
         {
           method: "PUT",
           headers: {
@@ -314,7 +314,7 @@ const EventForm = () => {
           id: eventID || "",
         });
         const response = await fetch(
-          `http://localhost:3000/get-event-info?${queryParams.toString()}`,
+          `http://localhost:3000/event/info?${queryParams.toString()}`,
           {
             method: "GET",
             headers: {

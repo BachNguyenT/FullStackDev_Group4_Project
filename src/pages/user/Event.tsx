@@ -73,7 +73,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
       });
 
       const response = await fetch(
-        `http://localhost:3000/query-organizing-events?${searchParams.toString()}`,
+        `http://localhost:3000/event/organizing-events?${searchParams.toString()}`,
         {
           method: "GET",
           headers: {
@@ -113,7 +113,7 @@ function Event({ sidebarOpen }: { sidebarOpen: boolean }) {
   async function checkMaxEventHosted(): Promise<boolean> {
     try {
       const response = await fetch(
-        "http://localhost:3000/check-max-event-hosted",
+        "http://localhost:3000/event/event-hosted-limit",
         {
           method: "GET",
           headers: {
