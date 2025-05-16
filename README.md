@@ -1,6 +1,7 @@
 # Event Planning & Management System
 
 Full Stack Development 2025A
+Group 4
 RMIT University
 
 ## Group Members & Contribution Scores
@@ -11,16 +12,17 @@ RMIT University
 - Tran Thanh Lam - s4038329 - Score: 5
 
 ## Project Overview
-The Event Planning & Management System is a comprehensive full stack web application designed to facilitate event creation, management, and participation. It provides different interfaces for various user roles including admins, organizers, and attendees.
-<br>
-<p>Note: Admin account for system:</p>
-<p>UserName: admin123</p>
-<p>Password: admin123</p>
-<br>
-<p>User account for testing:</p>
-<p>UserName: testaccount1</p>
-<p>Password: Testing123</p>
-<p> Application Demo Video link: https://rmiteduau-my.sharepoint.com/:v:/g/personal/s4038329_rmit_edu_vn/EZwJtpHwbsNHmm_Ljx0mohcBjCxRSL3PaRmM40KYNZ6iwA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=qLk8rT
+The Event Planning & Management System is a comprehensive full stack web application using the PERN stack, including PostgreSQL database hosted with Neon services, ExpressJS and NodeJS for RESTful Backend APIs, and React for frontend user interfaces. The application is designed to facilitate event creation, management, and participation. It provides different interfaces for various user roles including admins, organizers, and attendees.
+
+Note: Admin account for system:
+UserName: admin123
+Password: admin123
+
+User account with preset events:
+UserName: bonabona
+Password: bonabona
+
+Application Demo Video link: https://rmiteduau-my.sharepoint.com/:v:/r/personal/s4038329_rmit_edu_vn/Documents/Fullstack%20Development%20Group%20Project/FSvideo.mp4?csf=1&web=1&e=YR1sRS&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
 
 ### Key Features
 - User authentication and role-based access control
@@ -41,8 +43,8 @@ The Event Planning & Management System is a comprehensive full stack web applica
 - Cookie for authentication and authorization
 
 ## System Requirements
-- Node.js 16 or later
-- NPM 8 or later
+- Node.js 16 or later (Download at https://nodejs.org/en/download)
+- NPM 8 or later (https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 
 ## Installation & Setup
@@ -51,28 +53,33 @@ The Event Planning & Management System is a comprehensive full stack web applica
 
 2. Install backend dependencies
 ```bash
+# In the root directory
 cd ./FullStackDev_Group4_BackEnd
 npm install
 ```
 
 3. Configure environment variables
 ```bash
+# In the backend directory
 cp .env.example .env
-# Edit .env file with your database credentials and other config
 ```
 
 4. Install frontend dependencies
 ```bash
-cd ./frontend
+# In the root directory
+cd ./FullStackDev_Group4_Project
 npm install
 ```
 
 5. Run the application
 ```bash
-# In backend directory
+# In the root directory
+cd ./FullStackDev_Group4_BackEnd
 node main.js
+________
 
-# In frontend directory (separate terminal)
+# In the root directory (separate terminal)
+cd ./FullStackDev_Group4_Project
 npm run dev
 ```
 
