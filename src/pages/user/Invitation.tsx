@@ -106,7 +106,7 @@ function Invitation() {
                 <InvitationCard key={index}
                   organizerName={item.OrganizerName}
                   visibility={item.IsPrivate ? "Private" : "Public"}
-                  dateTime={(new Date(item.Date.slice(0, -1)))}
+                  dateTime={(new Date(item.Date))}
                   duration={item.Duration}
                   venue={item.Venue}
                   eventID={item.ID}
